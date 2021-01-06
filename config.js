@@ -1,7 +1,7 @@
 const config = {
   gatsby: {
-    pathPrefix: '/',
-    siteUrl: 'https://hasura.io',
+    pathPrefix: '/gitbook',
+    siteUrl: 'https://green-labs.github.io/gitbook',
     gaTrackingId: null,
     trailingSlash: false,
   },
@@ -51,7 +51,7 @@ const config = {
       "<a href='https://hasura.io/learn/'>graphql </a><div class='greenCircle'></div><a href='https://hasura.io/learn/graphql/react/introduction/'>react</a>",
   },
   siteMetadata: {
-    title: 'Gatsby Gitbook Boilerplate | Hasura',
+    title: 'Greenlabs Gitbook',
     description: 'Documentation built with mdx. Powering hasura.io/learn ',
     ogImage: null,
     docsLocation: 'https://github.com/hasura/gatsby-gitbook-boilerplate/tree/master/content',
@@ -60,9 +60,9 @@ const config = {
   pwa: {
     enabled: false, // disabling this will also remove the existing service worker.
     manifest: {
-      name: 'Gatsby Gitbook Starter',
-      short_name: 'GitbookStarter',
-      start_url: '/',
+      name: 'Greenlabs Gitbook',
+      short_name: 'GreenlabsGitbook',
+      start_url: '/gitbook',
       background_color: '#6b37bf',
       theme_color: '#6b37bf',
       display: 'standalone',
