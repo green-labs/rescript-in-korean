@@ -19,8 +19,8 @@
     "emotion": "^10.0.23",
     "emotion-server": "^10.0.17",
     "emotion-theming": "^10.0.19",
-    "gatsby": "^2.18.10",
-    "gatsby-link": "^2.2.27",
+    "gatsby": "^2.30.0",
+    "gatsby-link": "^2.9.0",
     "gatsby-plugin-algolia": "^0.5.0",
     "gatsby-plugin-emotion": "^4.1.18",
     "gatsby-plugin-gtag": "^1.0.12",
@@ -40,14 +40,14 @@
     "is-absolute-url": "^3.0.3",
     "lodash.flatten": "^4.4.0",
     "lodash.startcase": "^4.4.0",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
-    "react-feather": "^2.0.3",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-feather": "^2.0.9",
     "react-github-btn": "^1.1.1",
-    "react-helmet": "^5.2.1",
+    "react-helmet": "^6.1.0",
     "react-id-generator": "^3.0.0",
     "react-instantsearch-dom": "^6.0.0",
-    "react-live": "^2.2.2",
+    "react-live": "^2.2.3",
     "react-loadable": "^5.5.0",
     "styled-components": "^4.4.1",
     "styled-icons": "^9.0.1"
@@ -58,7 +58,8 @@
     "start": "gatsby develop",
     "build": "gatsby build --prefix-paths",
     "format": "prettier --write \"src/**/*.{js,jsx,css,json}\"",
-    "lint": "eslint --fix \"src/**/*.{js,jsx}\""
+    "lint": "eslint --fix \"src/**/*.{js,jsx}\"",
+    "deploy": "yarn build && yarn gh-pages -d public"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
@@ -69,6 +70,7 @@
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-react": "^7.19.0",
     "gatsby-plugin-remove-trailing-slashes": "^2.1.17",
+    "gh-pages": "^3.1.0",
     "prettier": "^1.19.1",
     "prism-react-renderer": "^1.0.2"
   }
