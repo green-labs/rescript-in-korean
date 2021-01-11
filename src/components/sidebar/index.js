@@ -9,7 +9,7 @@ import config from '../../../config';
 const ListItem = styled(({ className, active, level, ...props }) => {
   return (
     <li className={className}>
-      <a href={props.to} {...props} target="_blank" rel="noopener noreferrer">
+      <a href={props.to} {...props} target="_blank" rel="noopener noreferrer"  style={{ display: 'flex', paddingLeft: '15px', justifyContent: 'space-between', alignItems: 'center'}}>
         {props.children}
       </a>
     </li>
@@ -26,7 +26,7 @@ const ListItem = styled(({ className, active, level, ...props }) => {
     position: relative;
 
     &:hover {
-      color: #1ed3c6 !important;
+      color: #29c389 !important;
     }
 
     ${props =>
@@ -39,8 +39,7 @@ const ListItem = styled(({ className, active, level, ...props }) => {
       background-color: #fff;
     `} // external link icon
     svg {
-      float: right;
-      margin-right: 1rem;
+      
     }
   }
 `;
@@ -109,12 +108,12 @@ const SidebarLayout = ({ location }) => (
     render={({ allMdx }) => {
       return (
         <Sidebar>
-          {config.sidebar.title ? (
+          {/* {config.sidebar.title ? (
             <div
               className={'sidebarTitle hiddenMobile'}
               dangerouslySetInnerHTML={{ __html: config.sidebar.title }}
             />
-          ) : null}
+          ) : null} */}
           <ul className={'sideBarUL'}>
             <Tree edges={allMdx.edges} />
             {config.sidebar.links && config.sidebar.links.length > 0 && <Divider />}

@@ -29,11 +29,14 @@ const config = {
 		  </li>`,
     links: [{ text: '', link: '' }],
     search: {
-      enabled: false,
-      indexName: '',
-      algoliaAppId: process.env.GATSBY_ALGOLIA_APP_ID,
-      algoliaSearchKey: process.env.GATSBY_ALGOLIA_SEARCH_KEY,
-      algoliaAdminKey: process.env.ALGOLIA_ADMIN_KEY,
+      enabled: true,
+      indexName: 'prod_gitbook',
+      // algoliaAppId: process.env.GATSBY_ALGOLIA_APP_ID,
+      algoliaAppId: "AWJNYMZ5J7",
+      // algoliaSearchKey: process.env.GATSBY_ALGOLIA_SEARCH_KEY,
+      algoliaSearchKey: "f09ab4cb7e4940cfafa619c094341740",
+      // algoliaAdminKey: process.env.ALGOLIA_ADMIN_KEY,
+      algoliaAdminKey: "8e26469b632427e1af1552dccf2deed8",
     },
   },
   sidebar: {
@@ -44,7 +47,7 @@ const config = {
     collapsedNav: [
       '/codeblock', // add trailing slash if enabled above
     ],
-    links: [{ text: 'Hasura', link: 'https://hasura.io' }],
+    links: [{ text: '기술 블로그', link: 'https://green-labs.github.io' }],
     frontline: false,
     ignoreIndex: true,
     title:
@@ -54,7 +57,7 @@ const config = {
     title: 'Greenlabs Gitbook',
     description: 'Documentation built with mdx. Powering hasura.io/learn ',
     ogImage: null,
-    docsLocation: 'https://github.com/hasura/gatsby-gitbook-boilerplate/tree/master/content',
+    docsLocation: 'https://github.com/green-labs/gitbook/tree/master/content',
     favicon: 'https://graphql-engine-cdn.hasura.io/img/hasura_icon_black.svg',
   },
   pwa: {

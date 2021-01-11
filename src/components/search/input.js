@@ -11,7 +11,10 @@ const SearchIcon = styled(Search)`
   margin-right: 10px;
   position: absolute;
   left: 15px;
-  color: #2fd2c5;
+  color: #29c389;
+  path {
+    fill: #29c389 !important;
+  }
 `;
 
 const focus = props => css`
@@ -61,6 +64,7 @@ const Input = styled.input`
   background: white;
   transition: ${props => props.theme.shortTrans};
   border-radius: ${props => props.theme.smallBorderRadius};
+  color: white;
   {collapseExpand}
 `;
 
@@ -87,6 +91,7 @@ export default connectSearchBox(({ refine, ...rest }) => {
         placeholder="Search"
         aria-label="Search"
         onChange={e => refine(e.target.value)}
+        style={{color: "white"}}
         {...rest}
       />
     </Form>

@@ -142,7 +142,7 @@ export const baseStyles = css`
 
   .navbar-default .navbar-toggle:focus,
   .navbar-default .navbar-toggle:hover {
-    background-color: #001933;
+    background-color: #29c389;
   }
 
   .headerWrapper {
@@ -317,6 +317,7 @@ export const baseStyles = css`
     display: flex;
     align-items: center;
   }
+  
   .navBarUL li a img,
   .navBarUL li a .shareIcon {
     width: 20px;
@@ -458,7 +459,7 @@ export const baseStyles = css`
   }
 
   .hideFrontLine .active > a {
-    background-color: #1ed3c6;
+    background-color: #29c389;
     color: #fff !important;
   }
   .firstLevel ul li .collapser svg path {
@@ -478,7 +479,7 @@ export const baseStyles = css`
   }
 
   .sideBarUL .item > a {
-    color: #1ED3C6;
+    color: #29c389;
     text-decoration: none;
     display: flex;
     align-items: center;
@@ -489,12 +490,12 @@ export const baseStyles = css`
   }
 
   .showFrontLine .item > a:hover {
-    background-color: #001933;
+    background-color: #29c389;
   }
 
   .showFrontLine .active > a {
     /* color: #fff; */
-    background-color: #001933;
+    background-color: #29c389;
   }
 
   .sideBarUL .item .item {
@@ -516,7 +517,7 @@ export const baseStyles = css`
     border-color: rgb(230, 236, 241) !important;
     border-style: solid none solid solid;
     border-width: 1px 0px 1px 1px;
-    background-color: #1ed3c6 !important;
+    background-color: #29c389 !important;
     color: #fff;
   }
 
@@ -741,6 +742,9 @@ export const baseStyles = css`
   }
 
   @media (max-width: 767px) {
+    .navBarNav .switch {
+      display:none;
+    }
     .formElement svg path {
       fill: #001934;
     }

@@ -22,7 +22,7 @@ const darkTheme = {
     heading: '#fff',
     text: '#fff',
     preFormattedText: '#000',
-    link: '#1ED3C6',
+    link: '#29c389',
   },
 };
 
