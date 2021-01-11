@@ -1,8 +1,11 @@
 import { css } from '@emotion/core';
 
 export const baseStyles = css`
-  @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap');
-  @import url('https://fonts.googleapis.com/css?family=Poppins:300,400,500,600&display=swap');
+  /* @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap'); */
+  /* @import url('https://fonts.googleapis.com/css?family=Poppins:300,400,500,600&display=swap'); */
+  @import url('https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,400,500,700,900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Fira+Code&display=swap');
+
   * {
     margin: 0;
     padding: 0;
@@ -24,21 +27,26 @@ export const baseStyles = css`
   }
   html,
   body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Roboto Light', 'Oxygen',
+    font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Roboto Light', 'Oxygen',
       'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif,
       'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 
     font-size: 16px;
     scroll-behavior: smooth;
   }
-
+  .topnav {
+    margin-left: auto;
+  }
+  .prism-code {
+    font-family: 'Fira Code', monospace; 
+  }
   a {
     transition: color 0.15s;
     /* color: #663399; */
   }
 
   body {
-    font-family: 'Roboto';
+    font-family: 'Noto Sans KR';
   }
   .visibleMobile {
     display: none;
@@ -223,12 +231,12 @@ export const baseStyles = css`
   }
   .headerTitle {
     height: auto;
-    font-size: 16px;
+    font-size: 20px;
     line-height: 1.5;
     font-weight: 300;
     color: #fff !important;
-    margin-top: 16px;
-    text-transform: uppercase;
+    
+    /* text-transform: uppercase; */
   }
   .headerTitle a {
     color: #fff;
@@ -244,7 +252,7 @@ export const baseStyles = css`
   }
 
   .logoContent {
-    font-family: 'Roboto';
+    font-family: 'Noto Sans KR';
     margin-left: 16px;
     font-size: 28px;
     line-height: 1.5;
@@ -257,7 +265,7 @@ export const baseStyles = css`
     padding: 0 !important;
   }
   .navBarDefault {
-    background-color: #001934;
+    background-color: #1a202c;
     border-radius: 0;
     border-top: 0;
     margin-bottom: 0;
@@ -297,7 +305,7 @@ export const baseStyles = css`
     -webkit-overflow-scrolling: touch;
   }
   .navBarUL li a {
-    font-family: 'Roboto';
+    font-family: 'Noto Sans KR';
     color: #fff !important;
     font-size: 16px;
     font-weight: 500;
@@ -371,7 +379,7 @@ export const baseStyles = css`
     /* box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16); */
     background-color: #f8f8f8;
     padding: 18px 16px;
-    font-family: 'Poppins';
+    font-family: 'Noto Sans KR';
     font-size: 18px;
     font-weight: 600;
     color: #001934;
@@ -396,7 +404,7 @@ export const baseStyles = css`
   }
 
   .headerNav {
-    font-family: 'Roboto';
+    font-family: 'Noto Sans KR';
     padding: 0px 24px;
     color: #001933;
     font-size: 16px;
@@ -751,7 +759,7 @@ export const baseStyles = css`
       margin-top: 15px;
       position: relative;
       padding-bottom: 20px;
-      border-top: 1px solid #fff;
+      /* border-top: 1px solid #fff; */
     }
     .headerTitle {
       padding-right: 50px;

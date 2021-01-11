@@ -1,5 +1,6 @@
 import React from 'react';
-import { Algolia } from 'styled-icons/fa-brands/Algolia';
+import styled from 'styled-components'
+import { Algolia } from '@styled-icons/fa-brands/Algolia'
 
 export const PoweredBy = () => (
   <span className="poweredBy">

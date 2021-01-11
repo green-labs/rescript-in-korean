@@ -86,7 +86,7 @@ const Divider = styled(props => (
     margin: 0;
     padding: 0;
     border: 0;
-    border-bottom: 1px solid #ede7f3;
+    border-bottom: 1px solid #1a202c;
   }
 `;
 

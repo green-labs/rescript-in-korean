@@ -46,7 +46,7 @@ const StyledBgDiv = styled('div')`
   background-color: #f8f8f8;
   position: relative;
   display: none;
-  background: ${props => (props.isDarkThemeActive ? '#001932' : undefined)};
+  background: ${props => (props.isDarkThemeActive ? '#1a202c' : undefined)};
 
   @media (max-width: 767px) {
     display: block;
@@ -90,30 +90,17 @@ const Header = ({ location, isDarkThemeActive, toggleActiveTheme }) => (
         },
       } = data;
 
-      const finalLogoLink = logo.link !== '' ? logo.link : 'https://hasura.io/';
+      const finalLogoLink = logo.link !== '' ? logo.link : 'https://green-labs.github.io/';
 
       return (
         <div className={'navBarWrapper'}>
           <nav className={'navBarDefault'}>
             <div className={'navBarHeader'}>
               <Link to={finalLogoLink} className={'navBarBrand'}>
-                <img
-                  className={'img-responsive displayInline'}
-                  src={logo.image !== '' ? logo.image : logoImg}
-                  alt={'logo'}
-                />
+              <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200' width='35' height='35' class='logo'><g id='logo_svg__\uB808\uC774\uC5B4_1' style={{fill: "#3bbd5a"}}><path fill='#009943' d='M149.74 140.97l-34.8-71.71-2.48-5.11-19.89-40.99H57.78l22.37 46.1 17.39 35.86 19.88 40.98 14.91 30.73h.01l14.91-30.73h4.98z'></path><path class='logo_svg__st17' d='M67.72 94.87l-39.77 81.97h34.81l29.99-61.72-17.4-35.86zM177.36 146.1h-30.11l-14.91 30.73h34.8l10.22-21.07 4.69-9.66zM57.78 23.16l-14.9 30.72h34.79l14.9-30.72z'></path></g></svg> <span className={'headerTitle displayInline'} style={{marginLeft: "6px"}}>그린랩스 Gitbook</span>
               </Link>
-              <div
-                className={'headerTitle displayInline'}
-                dangerouslySetInnerHTML={{ __html: headerTitle }}
-              />
             </div>
-            {config.header.social ? (
-              <ul
-                className="socialWrapper visibleMobileView"
-                dangerouslySetInnerHTML={{ __html: config.header.social }}
-              ></ul>
-            ) : null}
+            
             {isSearchEnabled ? (
               <div className={'searchWrapper hiddenMobile navBarUL'}>
                 <LoadableComponent collapse={true} indices={searchIndices} />
@@ -140,7 +127,7 @@ const Header = ({ location, isDarkThemeActive, toggleActiveTheme }) => (
                     );
                   }
                 })}
-                {helpUrl !== '' ? (
+                {/* {helpUrl !== '' ? (
                   <li>
                     <a href={helpUrl}>
                       <img src={help} alt={'Help icon'} />
@@ -158,8 +145,8 @@ const Header = ({ location, isDarkThemeActive, toggleActiveTheme }) => (
                       <img className={'shareIcon'} src={twitter} alt={'Twitter'} />
                     </a>
                   </li>
-                ) : null}
-                {tweetText !== '' || githubUrl !== '' ? (
+                ) : null} */}
+                {/* {tweetText !== '' || githubUrl !== '' ? (
                   <li className="divider hiddenMobile"></li>
                 ) : null}
                 {config.header.social ? (
@@ -169,8 +156,8 @@ const Header = ({ location, isDarkThemeActive, toggleActiveTheme }) => (
                       dangerouslySetInnerHTML={{ __html: config.header.social }}
                     ></ul>
                   </li>
-                ) : null}
-                {githubUrl !== '' ? (
+                ) : null} */}
+                {/* {githubUrl !== '' ? (
                   <li className={'githubBtn'}>
                     <GitHubButton
                       href={githubUrl}
@@ -180,7 +167,7 @@ const Header = ({ location, isDarkThemeActive, toggleActiveTheme }) => (
                       Star
                     </GitHubButton>
                   </li>
-                ) : null}
+                ) : null} */}
                 <li>
                   <DarkModeSwitch
                     isDarkThemeActive={isDarkThemeActive}
