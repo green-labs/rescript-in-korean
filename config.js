@@ -1,15 +1,15 @@
 const config = {
   gatsby: {
-    pathPrefix: '/gitbook',
-    siteUrl: 'https://green-labs.github.io/gitbook',
+    pathPrefix: '/rescript-in-korean',
+    siteUrl: 'https://green-labs.github.io/rescript-in-korean',
     gaTrackingId: null,
     trailingSlash: false,
   },
   header: {
     logo: "",
-    logoLink: 'https://green-labs.github.io/gitbook',
+    logoLink: 'https://green-labs.github.io/rescript-in-korean',
     title:
-      "그린랩스 Gitbook",
+      "ReScript in Korean",
     githubUrl: 'https://github.com/green-labs',
     helpUrl: '',
     tweetText: '',
@@ -47,7 +47,7 @@ const config = {
     collapsedNav: [
       '/codeblock', // add trailing slash if enabled above
     ],
-    links: [{ text: '기술 블로그', link: 'https://green-labs.github.io' }],
+    links: [],
     frontline: false,
     ignoreIndex: true,
     title:
@@ -63,9 +63,9 @@ const config = {
   pwa: {
     enabled: false, // disabling this will also remove the existing service worker.
     manifest: {
-      name: 'Greenlabs Gitbook',
-      short_name: 'GreenlabsGitbook',
-      start_url: '/gitbook',
+      name: 'ReScript in KR',
+      short_name: 'ReScript-in-KR',
+      start_url: '/rescript-in-kr',
       background_color: '#6b37bf',
       theme_color: '#6b37bf',
       display: 'standalone',
