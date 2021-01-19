@@ -63,7 +63,7 @@ const config = {
     description: 'Documentation built with mdx. ',
     ogImage: null,
     docsLocation: 'https://github.com/green-labs/rescript-in-korean/tree/main/content',
-    favicon: 'src/pwa-512.png',
+    favicon: 'https://github.com/green-labs/rescript-in-korean/blob/main/src/pwa-512.png',
   },
   pwa: {
     enabled: false, // disabling this will also remove the existing service worker.
