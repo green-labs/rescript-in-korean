@@ -41,11 +41,16 @@ const config = {
   },
   sidebar: {
     forcedNavOrder: [
-      '/introduction', // add trailing slash if enabled above
-      '/codeblock',
+      '/Overview', // add trailing slash if enabled above  
+      '/Language-Features',
+      '/JavaScript-Interop',
+      '/Build-System',
+      '/Guides',
+      '/Extra'
     ],
     collapsedNav: [
-      '/codeblock', // add trailing slash if enabled above
+      '/Overview/Introduction', // add trailing slash if enabled above
+      '/Installation', // add trailing slash if enabled above
     ],
     links: [],
     frontline: false,
@@ -54,11 +59,11 @@ const config = {
       "<a href='https://hasura.io/learn/'>graphql </a><div class='greenCircle'></div><a href='https://hasura.io/learn/graphql/react/introduction/'>react</a>",
   },
   siteMetadata: {
-    title: 'Greenlabs Gitbook',
-    description: 'Documentation built with mdx. Powering hasura.io/learn ',
+    title: 'ReScript in Korean',
+    description: 'Documentation built with mdx. ',
     ogImage: null,
-    docsLocation: 'https://github.com/green-labs/gitbook/tree/master/content',
-    favicon: 'https://graphql-engine-cdn.hasura.io/img/hasura_icon_black.svg',
+    docsLocation: 'https://github.com/green-labs/rescript-in-korean/tree/main/content',
+    favicon: 'src/pwa-512.png',
   },
   pwa: {
     enabled: false, // disabling this will also remove the existing service worker.

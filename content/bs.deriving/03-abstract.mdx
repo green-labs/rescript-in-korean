@@ -1,5 +1,5 @@
 ---
-title: "[@bs.deriving abstract]"
+title: '[@bs.deriving abstract]'
 ---
 
 이 어노테이션은 대개 권장되지 않으며 가급적 평범한 레코드를 사용하는 것이 바람직하다.
@@ -35,7 +35,7 @@ type person = {
 
 JS쪽에 이미 있는 person 객체를 위해 바인딩을 할 필요는 없다. 그러한 person JS 객체를 뤼스크립트쪽에서 만들 수 있다. (?)
 
-왜냐면 deriving(abstract)는 위 person 레코드를 추상 타입으로 바꾸기 때문에, 흔히 하던 대로 레코드 타입을 바로 만들 수 가 없다.  다시 말해 `{name: "Joe", age: 20, job: "teacher"}`이게 안된다.
+왜냐면 deriving(abstract)는 위 person 레코드를 추상 타입으로 바꾸기 때문에, 흔히 하던 대로 레코드 타입을 바로 만들 수 가 없다. 다시 말해 `{name: "Joe", age: 20, job: "teacher"}`이게 안된다.
 
 대신 레코드 이름과 동일하게 생긴 생성 함수(creation function)를 쓸 수 있다. 이 함수는 deriving(abstract)가 암묵적으로 만들어준 것이다.
 
@@ -141,7 +141,7 @@ joe->ageSet(21);
 
 ### 메서드
 
-임의의 메서드를 타입에 붙일 수 있따. (사실 deriving(abstract) 레코드 뿐만이 아니라 *아무* 타입이라도 붙일 수 있다.) [Object Method](https://rescript-lang.org/docs/manual/latest/bind-to-js-function#object-method) 페이지의 "JS 함수 바인드" 섹션을 보시라.
+임의의 메서드를 타입에 붙일 수 있따. (사실 deriving(abstract) 레코드 뿐만이 아니라 _아무_ 타입이라도 붙일 수 있다.) [Object Method](https://rescript-lang.org/docs/manual/latest/bind-to-js-function#object-method) 페이지의 "JS 함수 바인드" 섹션을 보시라.
 
 ### Tips & Tricks
 

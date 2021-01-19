@@ -1,6 +1,6 @@
 ---
-title: 'Index'
-metaTitle: 'Index'
+title: 'Overview'
+metaTitle: 'Overview'
 metaDescription: 'ReScript in Korean'
 ---
 
