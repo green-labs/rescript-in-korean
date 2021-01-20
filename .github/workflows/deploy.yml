@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  Client-Build-Deploy:
+  Deploy:
     runs-on: ubuntu-18.04
     steps:
       - name: Checkout source code
@@ -26,6 +26,6 @@ jobs:
       - name: Install Packages
         run: yarn
 
-      - name: Deploy - Master
-        if: github.ref == 'refs/heads/master'
+      - name: Deploy
+        if: github.ref == 'refs/heads/main'
         run: yarn deploy
