@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Highlight, { defaultProps } from 'prism-react-renderer';
-import prismTheme from 'prism-react-renderer/themes/vsDark';
+import prismTheme from 'prism-react-renderer/themes/oceanicNext';
 import Loadable from 'react-loadable';
 import LoadingProvider from './loading';
 
