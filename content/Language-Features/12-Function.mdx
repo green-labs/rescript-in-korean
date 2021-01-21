@@ -1,5 +1,466 @@
 ---
-title: 'Function'
-metaTitle: 'Function'
-metaDescription: 'This is the meta description'
+title: 'Function(함수)'
+metaTitle: 'Function(함수)'
+metaDescription: 'Function syntax in ReScript'
+sourceUrl: 'https://rescript-lang.org/docs/manual/latest/function'
+canonical: '/rescript-in-korean/function'
 ---
+
+_Cheat sheet for the full function syntax at the end_.
+_페이지 끝에 전체 함수 문법 치트 시트가 있습니다_.
+
+Functions are declared with an arrow and return an expression.
+함수는 화살표와 반환 표현식으로 선언됩니다.
+
+```reason
+let greet = (name) => "Hello " ++ name
+```
+
+This declares a function and assigns to it the name `greet`, which you can call like so:
+이 함수 선언은 `greet` 이름으로 할당됩니다. 다음과 같이 호출할 수 있습니다.
+
+```reason
+greet("world!") // "Hello world!"
+```
+Multi-arguments functions have arguments separated by comma:
+함수가 여러 인수를 받는 경우 콤마(,)를 구분자로 선언합니다.
+
+```reason
+let add = (x, y, z) => x + y + z
+add(1, 2, 3) // 6
+```
+
+For longer functions, you'd surround the body with a block:
+긴 함수를 작성하려면 내용을 블록으로 감쌉니다.
+
+```reason
+let greetMore = (name) => {
+  let part1 = "Hello"
+  part1 ++ " " ++ name
+}
+```
+
+If your function has no argument, just write `let greetMore = () => {...}`.
+함수에 인수가 없다면 다음과 같이 작성하세요. `let greetMore = () => {...}`
+
+## Labeled Arguments
+## 레이블이 있는 인수
+
+Multi-arguments functions, especially those whose arguments are of the same type, can be confusing to call.
+여러 인수를 받는 함수, 특히 인수가 동일한 타입인 함수는 호출할 때 혼동 될 수 있습니다. 
+
+```reason
+let addCoordinates = (x, y) => {
+  // 여기서 x, y를 사용
+}
+// ...
+addCoordinates(5, 6) // 어떤게 x고 y지?
+```
+You can attach labels to an argument by prefixing the name with the `~` symbol:
+인수 이름 앞에 `~` 기호를 붙여 인수에 레이블을 붙일 수 있습니다.
+
+```reason
+let addCoordinates = (~x, ~y) => {
+  // 여기서 x, y를 사용
+}
+// ...
+addCoordinates(~x=5, ~y=6)
+```
+
+You can provide the arguments in **any order**:
+**순서에 관계없이** 인수를 전달할 수 있습니다.
+
+```reason
+addCoordinates(~y=6, ~x=5)
+```
+The `~x` part in the declaration means the function accepts an argument labeled `x` and can refer to it in the function body by the same name.
+선언에서 `~x` 부분은 함수가 `x`로 표시된 인수를 받아들이고 동일한 이름으로 함수 본문에서 참조 할 수 있음을 의미합니다.
+You can also refer to the arguments inside the function body by a different name for conciseness:
+간결하게 작성하기 위해 함수 본문 내부에서 다른 이름으로 인수를 참조 할 수도 있습니다.
+
+```reason
+let drawCircle = (~radius as r, ~color as c) => {
+  setColor(c)
+  startAt(r, r)
+  // ...
+}
+
+drawCircle(~radius=10, ~color="red")
+```
+As a matter of fact, `(~radius)` is just a shorthand for `(~radius as radius)`.
+사실 `(~radius)`는 `(~radius as radius)`의 축약일뿐입니다.
+
+Here's the syntax for typing the arguments:
+인수에 타입을 정의하는 문법은 다음과 같습니다.
+
+```reason
+let drawCircle = (~radius as r: int, ~color as c: string) => {
+  // 여기에 코드 작성
+}
+```
+
+## 레이블이있는 선택적 인수
+
+Labeled function arguments can be made optional during declaration. You can then omit them when calling the function.
+레이블이있는 함수 인수는 선언시 선택 사항으로 만들 수 있습니다. 그리고 함수를 호출 할 때 생략 할 수 있습니다.
+
+```reason
+// radius 는 생략 가능
+let drawCircle = (~color, ~radius=?, ()) => {
+  setColor(color)
+  switch radius {
+  | None => startAt(1, 1)
+  | Some(r_) => startAt(r_, r_)
+  }
+}
+```
+
+When given in this syntax, `radius` is **wrapped** in the standard library's `option` type, defaulting to `None`.
+이 구문에서 `radius`는 `option` 타입에 **래핑**되며 기본값은 `None`입니다.
+If provided, it'll be wrapped with a `Some`. So `radius`'s type value is `None | Some(int)` here.
+값이 전달되는 경우 `Some` 으로 래핑됩니다. 따라서 `radius`의 타입 값은 `None | Some(int)` 입니다.
+
+More on `option` type [here](null-undefined-option.md).
+`option` 타입에 대해 더 알아보려면 [여기](10-Null-Undefined-and-Option)을 참고하세요.
+
+**Note** for the sake of the type system, whenever you have an optional argument, you need to ensure that there's also at least one positional argument (aka non-labeled, non-optional argument) after it.
+**참고** 타입 시스템을 위해 선택적 인수가 있을때마다 그 뒤에 위치 인수(라벨이 지정되지 않고 선택적 인수가 아닌 인수)가 하나 이상 있는지 확인해야합니다.
+If there's none, provide a dummy `unit` (aka `()`) argument.
+없는 경우 더미 `unit` (일명 `()`) 인수를 기재합니다.
+
+### Signatures and Type Annotations
+### 시그니쳐 및 타입 어노테이션
+
+Functions with optional labeled arguments can be confusing when it comes to signature and type annotations.
+선택적 레이블 인수가 있는 함수는 시그니쳐 및 타입 어노테이션과 관련하여 혼란스러울 수 있습니다.
+Indeed, the type of an optional labeled argument looks different depending on whether you're calling the function, or working inside the function body.
+실제로 선택적 레이블이 지정된 인수의 타입은 함수를 호출하는지, 함수 본문 내부에서 작업하는지에 따라 다르게 보입니다.
+Outside the function, a raw value is either passed in (`int`, for example), or left off entirely.
+함수 외부에서 원시 값을 전달하거나 (예:`int`) 전달하지 않습니다.
+Inside the function, the parameter is always there, but its value is an option (`option<int>`).
+함수 내부에는 매개 변수가 항상 있지만 그 값은 option 입니다 (`option <int>`).
+This means that the type signature is different, depending on whether you're writing out the function type, or the parameter type annotation.
+즉, 함수 타입을 작성하는지, 매개 변수 타입 어노테이션을 작성하는지에따라 타입 시그니쳐가 다릅니다.
+The first being a raw value, and the second being an option.
+첫 번째는 원시 값이고 두 번째는 option 입니다.
+
+If we get back to our previous example and both add a signature and type annotations to its argument, we get this:
+이전 예제로 돌아가서 인수에 시그니쳐와 타입 어노테이션을 모두 추가하면 다음과 같은 결과를 얻을 수 있습니다.
+
+```reason
+let drawCircle: (~color: color, ~radius: int=?, unit) => unit =
+  (~color: color, ~radius: option<int>=?, ()) => {
+    setColor(color)
+    switch radius {
+    | None => startAt(1, 1)
+    | Some(r_) => startAt(r_, r_)
+    }
+  }
+```
+
+The first line is the function's signature, we would define it like that in an interface file (see [Signatures](module.md#signatures)).
+첫 번째 줄은 함수의 시그니처이며, 인터페이스 파일에서 정의합니다. ([Signatures](21-Module#signatures) 참조)
+The function's signature describes the types that the **outside world** interacts with, hence the type `int` for `radius` because it indeed expects an `int` when called.
+함수의 시그니처는 **외부 세계**와 상호 작용하는 유형을 설명하므로 실제로 호출 될 때 `int`를 예상하기 때문에 `radis`가 `int` 타입이됩니다.
+
+In the second line, we annotate the arguments to help us remember the types of the arguments when we use them **inside** the function's body, here indeed `radius` will be an `option<int>` inside the function.
+두 번째 줄에서는 함수 **내부**에서 인수를 사용할 때 인수 타입을 기억할 수 있도록 인수에 어노테이션을 추가합니다.
+여기서 실제로 `radius`는 함수 내부에서 `option<int>` 가됩니다.
+
+So if you happen to struggle when writing the signature of a function with optional labeled arguments, try to remember this!
+따라서 레이블이 지정된 선택적 인수를 사용해 함수 시그니처를 작성할 때 어려움을 겪는 경우 이것을 기억하십시오!
+
+### Explicitly Passed Optional
+### 명시적으로 전달되는 선택적 인수
+
+Sometimes, you might want to forward a value to a function without knowing whether the value is `None` or `Some(a)`. Naively, you'd do:
+값이 `None`인지 `Some(a)`인지 모르는 상태에서 값을 함수에 전달하고 싶을 때가 있습니다. 이렇게 말이죠.
+
+```reason
+let result =
+  switch payloadRadius {
+  | None => drawCircle(~color, ())
+  | Some(r) => drawCircle(~color, ~radius=r, ())
+  }
+```
+
+This quickly gets tedious. We provide a shortcut:
+코드가 불필요하게 길어지네요. 이렇게 쓸 수 있습니다.
+
+```reason
+let result = drawCircle(~color, ~radius=?payloadRadius, ())
+```
+
+This means "I understand `radius` is optional,
+and that when I pass it a value it needs to be an `int`,
+but I don't know whether the value I'm passing is `None` or `Some(val)`,
+so I'll pass you the whole `option` wrapper".
+이것은 "`radius`가 선택 사항이고
+`int` 값을 전달해야 한다는 것을 알지만,
+전달하려는 값이 `None`인지 `Some(val)` 모른다.
+그래서 `option` 전체를 전달하겠다."
+
+### Optional with Default Value
+### 기본값이 있는 선택적 인수
+
+Optional labeled arguments can also be provided a default value. In this case, they aren't wrapped in an `option` type.
+레이블이있는 선택적 인수도 기본값을 설정할 수 있습니다. 이 경우 `option` 타입으로 래핑되지 않습니다.
+
+```reason
+let drawCircle = (~radius=1, ~color, ()) => {
+  setColor(color)
+  startAt(radius, radius)
+}
+```
+
+## Recursive Functions
+## 재귀함수
+
+ReScript chooses the sane default of preventing a function to be called recursively within itself.
+ReScript는 기본적으로 함수내에서 재귀적으로 호출되는 것을 방지하고 있습니다.
+To make a function recursive, add the `rec` keyword after the `let`:
+재귀함수를 만들려면 `let`뒤에 `rec` 키워드를 추가합니다.
+
+```reason
+let rec neverTerminate = () => neverTerminate()
+```
+
+A simple recursive function may look like this:
+간단한 재귀함수는 다음과 같습니다.
+
+```reason
+// Recursively check every item on the list until one equals the `item`
+// argument. If a match is found, return `true`, otherwise return `false`
+// 리스트 중 하나가 `item`과 같을 때까지 모든 항목을 재귀적으로 확인합니다.
+// 일치하는 항목이 있으면 'true'를 반환하고, 그렇지 않으면 'false'를 반환합니다.
+let rec listHas = (list, item) =>
+  switch list {
+  | list{} => false
+  | list{a, ...rest} => a === item || listHas(rest, item)
+  }
+```
+```javascript
+function listHas(_list, item) {
+  while(true) {
+    var list = _list;
+    if (!list) {
+      return false;
+    }
+    if (list.hd === item) {
+      return true;
+    }
+    _list = list.tl;
+    continue ;
+  };
+}
+```
+
+Recursively calling a function is bad for performance and the call stack.
+함수를 재귀적으로 호출하는 것은 성능과 호출 스택에 좋지 않습니다.
+However, ReScript intelligently compiles [tail recursion](https://stackoverflow.com/questions/33923/what-is-tail-recursion) into a fast JavaScript loop.
+그러나 ReScript는 지능적으로 [꼬리 재귀](https://stackoverflow.com/questions/33923/what-is-tail-recursion)을 사용해 빠른 JavaScript 루프로 컴파일합니다.
+Try checking the JS output of the above code!
+위 코드의 JS 결과물을 확인해보세요!
+
+### Mutually Recursive Functions
+### 상호 재귀 함수
+
+Mutually recursive functions start like a single recursive function using the `rec` keyword, and then are chained together with `and`:
+상호 재귀 함수는 `rec` 키워드를 사용해 단일 재귀 함수처럼 시작된 다음 `and` 와 함께 연결됩니다.
+
+```reason
+let rec callSecond = () => callFirst()
+and callFirst = () => callSecond()
+```
+```javascript
+function callSecond(_param) {
+  while(true) {
+    _param = undefined;
+    continue ;
+  };
+}
+
+function callFirst(_param) {
+  while(true) {
+    _param = undefined;
+    continue ;
+  };
+}
+```
+
+## Uncurried Function
+## 언커리드 함수
+
+ReScript's functions are curried by default, which is one of the few performance penalties we pay in the compiled JS output.
+ReScript의 함수는 기본적으로 커리드 함수며, 이는 컴파일 된 JS 결과물에서 우리가 지불하는 몇 가지 성능 패널티 중 하나입니다.
+The compiler does a best-effort job at removing those currying whenever possible.
+컴파일러는 가능한 한 이러한 커링을 제거하기 위해 최선을 다합니다.
+However, in certain edge cases, you might want guaranteed uncurrying.
+그러나 특정 상황에서는 언커링을 보장 할 수 있습니다.
+In those cases, put a dot in the function's parameter list:
+이 경우 함수의 매개 변수 목록에 점을 넣으십시오.
+
+```reason
+let add = (. x, y) => x + y
+
+add(. 1, 2)
+```
+```javascript
+function add(x, y) {
+  return x + y | 0;
+}
+
+add(1, 2);
+```
+
+If you need to call a curried function with a single unit `()` argument, you can use the `ignore()` function:
+단일 단위 `()` 인수로 커리드 함수를 호출해야하는 경우 `ignore()` 함수를 사용할 수 있습니다.
+
+```reason
+let echo = (. a) => a
+
+echo(. ignore())
+```
+```javascript
+function echo(a) {
+  return a;
+}
+
+echo(undefined);
+```
+
+If you write down the uncurried function's type, you'll add a dot there as well.
+언커리드 함수의 타입을 적어두면 거기에도 점을 추가합니다.
+
+**Note**: both the declaration site and the call site need to have the uncurry annotation. That's part of the guarantee/requirement.
+**참고**: 선언과 호출 모두에 언커리 어노테이션이 있어야합니다. 이는 보증/요구 사항의 일부입니다.
+
+**This feature seems trivial**, but is actually one of our most important features, as a primarily functional language.
+**이 기능은 사소 해 보이지만** 실제로는 주로 기능적인 언어로서 가장 중요한 기능 중 하나입니다.
+We encourage you to use it if you'd like to remove any mention of `Curry` runtime in the JS output.
+JS 출력에서 `커리`런타임에 대한 언급을 제거하려면 사용하는 것이 좋습니다.
+
+## Tips & Tricks
+## 팁
+Cheat sheet for the function syntaxes:
+함수 문법의 치트시트입니다.
+
+### Declaration
+### 선언
+
+```reason
+// 익명함수
+(x, y) => 1
+// 함수에 이름을 붙이다
+let add = (x, y) => 1
+
+// 이름 있는 인수와 약어 정의
+let add = (~first as x, ~second as y) => x + y
+// 약어 정의 빼기
+let add = (~first, ~second) => first + second
+
+// 기본값과 이름 있는 인수와 약어 정의
+let add = (~first as x=1, ~second as y=2) => x + y
+// 약어 정의 빼기
+let add = (~first=1, ~second=2) => first + second
+
+// 선택적 인수와 약어 정의
+let add = (~first as x=?, ~second as y=?) => switch x {...}
+// 약어 정의 빼기
+let add = (~first=?, ~second=?) => switch first {...}
+```
+
+#### + 타입 어노테이션
+
+```reason
+// 익명 함수
+(x: int, y: int): int => 1
+// 함수에 이름을 붙이다
+let add = (x: int, y: int): int => 1
+
+// 이름 있는 인수와 약어 정의
+let add = (~first as x: int, ~second as y: int) : int => x + y
+// 약어 정의 빼기
+let add = (~first: int, ~second: int) : int => first + second
+
+// 기본값과 이름 있는 인수와 약어 정의
+let add = (~first as x: int=1, ~second as y: int=2) : int => x + y
+// 약어 정의 빼기
+let add = (~first: int=1, ~second: int=2) : int => first + second
+
+// 선택적 인수와 약어 정의
+let add = (~first as x: option<int>=?, ~second as y: option<int>=?) : int => switch x {...}
+// 약어 정의 빼기
+// 참고로 호출하는 곳에서는 `option<int>`가 아닌 `int`로 호출 합니다.
+// 함수 내부에서는 `first`, `second`는 `option<int>` 입니다.
+let add = (~first: option<int>=?, ~second: option<int>=?) : int => switch first {...}
+```
+
+### 호출
+
+```reason
+add(x, y)
+
+// 이름 있는 인수에 명시적으로 전달
+add(~first=1, ~second=2)
+// 동일한 이름을 가진 값을 암묵적으로 전달
+add(~first, ~second)
+
+// 기본값이 있는 함수 호출, 일반 호출과 동일
+add(~first=1, ~second=2)
+
+// 명시적으로 선택 인자 호출
+add(~first=?Some(1), ~second=?Some(2))
+// 동일한 이름을 가진 값을 암묵적으로 전달
+add(~first?, ~second?)
+```
+
+#### + 타입 어노테이션
+
+```reason
+// 이름 있는 인수에 명시적으로 전달
+add(~first=1: int, ~second=2: int)
+// 동일한 이름을 가진 값을 암묵적으로 전달
+add(~first: int, ~second: int)
+
+// 기본값이 있는 함수 호출, 일반 호출과 동일
+add(~first=1: int, ~second=2: int)
+
+// 명시적으로 선택 인자 호출
+add(~first=?Some(1): option<int>, ~second=?Some(2): option<int>)
+// 타입 어노테이션을 사용하는 경우 동일한 이름을 가진 값을 암묵적으로 전달 하는 방법은 없습니다.
+```
+
+### Standalone Type Signature
+### 독립적인 함수 시그니쳐
+
+```reason
+// 첫번째, 두번째 인수 타입, 반환 타입
+type add = (int, int) => int
+
+// 이름있는 인수
+type add = (~first: int, ~second: int) => int
+
+// 이름 있는 인수
+type add = (~first: int=?, ~second: int=?, unit) => int
+```
+
+#### In Interface Files
+#### 인터페이스 파일 내부에서
+
+To annotate a function from the implementation file (`.res`) in your interface file (`.resi`):
+인터페이스 파일 (`.resi`)의 구현 파일 (`.res`)에서 함수 어노테이션을 달려면 이렇게 하세요.
+
+```reason
+let add: (int, int) => int
+```
+
+The type annotation part is the same as the previous section on With Type Annotation.
+타입 어노테이션 부분은 이전 "+ 타입 어노테이션" 섹션과 동일합니다.
+
+**Don't** confuse `let add: myType` with `type add = myType`.
+`let add: myType`을 `type add = myType`과 **혼동하지 마세요**.
+When used in `.resi` interface files, the former exports the binding `add` while annotating it as type `myType`.
+`.resi` 인터페이스 파일에서 사용되는 경우 전자는 `myType` 타입으로 어노테이션을 달면서 `add`를 내 보냅니다.
+The latter exports the type `add`, whose value is the type `myType`.
+후자는 값이 `myType` 타입 인 `add` 타입을 내보냅니다.
