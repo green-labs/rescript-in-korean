@@ -2,11 +2,13 @@
 title: '튜플 (Tuple)'
 metaTitle: '튜플 (Tuple)'
 metaDescription: '튜플 자료구조'
+sourceUrl: 'https://rescript-lang.org/docs/manual/latest/tuple'
 ---
 
 튜플(Tuple)은 JavaScript에 존재하지 않는 ReScript만의 자료구조입니다.
 
 튜플은 다음 특성을 가지고 있습니다.
+
 - 불변
 - 순서가 있음
 - 생성 시점에 크기가 결정됨
@@ -17,8 +19,8 @@ let ageAndName = (24, "Lil' ReScript")
 let my3dCoordinates = (20.0, 30.5, 100.0)
 ```
 
-
 튜플 타입의 타입 어노테이션도 작성할 수 있습니다. 튜플의 값은 튜플 타입의 타입 어노테이션과 닮야합니다.
+
 ```reason
 let ageAndName: (int, string) = (24, "Lil' ReScript")
 
@@ -29,16 +31,18 @@ let my3dCoordinates: coord3d = (20.0, 30.5, 100.0)
 
 **참고**: 크기가 1인 튜플은 없습니다. 크기가 1인 튜플은 값으로 사용됩니다.
 
-
 ### 사용법
 
 튜플의 특정 요소를 얻으려면 튜플을 구조분해하세요.
+
 ```reason
 let (_, y, _) = my3dCoordinates // 두번째 요소를 y에 할당합니다.
 ```
+
 튜플의 일부 요소를 무시하려면 위치에 `_` 를 기재합니다.
 
 튜플은 구성 요소를 변경 할 수 없습니다. 구성 요소를 변경하려면 튜플을 구조분해하고 새로운 튜플을 생성합니다.
+
 ```reason
 let coordinates1 = (10, 20, 30)
 let (c1x, _, _) = coordinates1
@@ -48,6 +52,7 @@ let coordinates2 = (c1x + 50, 20, 30)
 ### 팁
 
 여러 값을 전달하려 하는 경우, 큰 작업 없이 손쉽게 이용할 수 있습니다. 다음은 여러값을 반환하는 예제입니다.
+
 ```reason
 let getCenterCoordinates = () => {
   let x = doSomeOperationsHere()
