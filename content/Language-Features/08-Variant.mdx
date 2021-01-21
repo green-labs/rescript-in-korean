@@ -1,5 +1,261 @@
 ---
-title: 'Variant'
+title: '배리언트(Variant)'
 metaTitle: 'Variant'
 metaDescription: 'This is the meta description'
 ---
+
+지금까지 ReScript 자료구조 대부분은 익숙해 보일것입니다.
+이 섹션에서는 매우 중요하지만 익숙하지 않은 `배리언트`(Variant) 자료구조를 소개합니다.
+대부분의 언어에서 대부분의 자료구조는 "foo **그리고** bar"에 관한 것입니다. 이제 배리언트를 통해 "foo **또는** bar"를 표현할 수 있습니다.
+
+```reason
+type myResponse =
+  | Yes
+  | No
+  | PrettyMuch
+
+let areYouCrushingIt = Yes
+```
+`myResponse` 배리언트 타입은 `Yes`, `No`, `PrettyMuch` 를 가지고 있습니다. 각각 "배리언트 생성자"(또는 "배리언트 태그") 라고 합니다.
+`|`(바)로 각 생성자를 구분합니다.
+
+**참고**: 배리언트 생성자는 대문자로 시작해야합니다. _(역주: 원문은 대문자만 사용하는 것으로 기재되어 있는데, 대문자로 시작만 하면 됩니다.)_
+
+### 배리언트는 명시적으로 정의해야합니다.
+사용하려는 배리언트가 다른 파일에 있는 경우 [레코드](06-Record)처럼 명시적으로 기재해야합니다.
+
+```reason
+// Zoo.res
+type animal = Dog | Cat | Bird
+
+// Example.res
+let pet: Zoo.animal = Dog // 선호함
+// or
+let pet2 = Zoo.Dog
+```
+
+### 생성자 인자
+배리언트 생성자는 추가 값을 가질 수 있습니다. 쉼표로 구분해 선언해주세요.
+
+```reason
+type account =
+  | None
+  | Instagram(string)
+  | Facebook(string, int)
+```
+`Instagram` 은 `string` 을, `Facebook` 은 `string`와 `int`를 가집니다.
+
+활용 예시
+```reason 
+let myAccount = Facebook("Josh", 26)
+let friendAccount = Instagram("Jenny")
+```
+
+#### 레이블이 있는 배리언트 페이로드 (인라인 레코드)
+배리언트 생성자가 여러 값을 가질때 가독성을 높이기 위해 레이블을 지정할 수 있습니다. 레코드와 문법이 비슷합니다.
+
+```reason
+type user =
+  | Number(int)
+  | Id({name: string, password: string})
+
+let me = Id({name: "Joe", password: "123"})
+```
+```javascript
+var me = {
+  TAG: /* Id */1,
+  name: "Joe",
+  password: "123"
+};
+```
+이를 "인라인 레코드" 라고하며 배리언트 생성자 내에서만 허용됩니다.
+ReScript의 다른 곳에서는 인라인으로 레코드 타입 선언을 할 수 없습니다.
+
+물론 일반 레코드 타입도 배리언트에 넣을 수 있습니다.
+
+```reason 
+type u = {name: string, password: string}
+type user =
+  | Number(int)
+  | Id(u)
+
+let me = Id({name: "Joe", password: "123"})
+```
+```javascript
+var me = {
+  TAG: /* Id */1,
+  _0: {
+    name: "Joe",
+    password: "123"
+  }
+};
+```
+다만 결과물은 인라인 레코드보다 약간 지저분하고 성능이 떨어집니다. _(역주: 이레 JavaScript 결과물에서 이유가 나옵니다)_
+
+#### 배리언트 패턴 매칭
+[패턴 매칭/구조분해](14-Pipe-Pattern-Matching-Destructuring) 섹션을 확인하세요.
+
+### JavaScript 결과물
+컴파일 된 배리언트 값은 타입 선언에 따라 세가지 JavaScript 결과물로 컴파일됩니다.
+
+- 페이로드가 없는 생성자인 경우 숫자로 컴파일됩니다.
+- 페이로드가 있는 생성자인 경우, `TAG` 필드와 함께 첫 번째 페이로드는 `_0` 필드, 두 번째 페이로드는 `_1` ... 과 같이 순서가 적용된 객체로 컴파일됩니다.
+- 예외로 배리언트 타입 선언에 페이로드가 있는 생성자가 하나만 있는 경우, 생성자는 `TAG` 필드가 없는 객체로 컴파일됩니다.
+- 레이블이 지정된 배리언트 페이로드(=인라인 레코드)는 `_0`, `_1` ... 대신 레이블 이름을 사용한 객체로 컴파일됩니다. 객체는 이전 규칙에 따라 `TAG` 필드가 있을수도 있고 없을수도 있습니다.
+
+다음 예제에서 출력을 확인하십시오.
+```reason 
+type greeting = Hello | Goodbye
+let g1 = Hello
+let g2 = Goodbye
+
+type outcome = Good | Error(string)
+let o1 = Good
+let o2 = Error("oops!")
+
+type family = Child | Mom(int, string) | Dad (int)
+let f1 = Child
+let f2 = Mom(30, "Jane")
+let f3 = Dad(32)
+
+type person = Teacher | Student({gpa: float})
+let p1 = Teacher
+let p2 = Student({gpa: 99.5})
+
+type s = {score: float}
+type adventurer = Warrior(s) | Wizard(string)
+let a1 = Warrior({score: 10.5})
+let a2 = Wizard("Joe")
+```
+
+```javascript
+var g1 = /* Hello */0;
+var g2 = /* Goodbye */1;
+
+var o1 = /* Good */0;
+var o2 = /* Error */{
+  _0: "oops!"
+};
+
+var f1 = /* Child */0;
+var f2 = {
+  TAG: /* Mom */0,
+  _0: 30,
+  _1: "Jane"
+};
+var f3 = {
+  TAG: /* Dad */1,
+  _0: 32
+};
+
+var p1 = /* Teacher */0;
+var p2 = /* Student */{
+  gpa: 99.5
+};
+
+var a1 = {
+  TAG: /* Warrior */0,
+  _0: {
+    score: 10.5
+  }
+};
+var a2 = {
+  TAG: /* Wizard */1,
+  _0: "Joe"
+};
+```
+
+### 팁
+**주의** 인자 2개를 전달하는 생성자와 인자로 단일 튜플을 전달하는 생성자를 혼동하지 마십시오.
+
+```reason 
+type account =
+  | Facebook(string, int) // 인자 2개
+type account2 =
+  | Instagram((string, int)) // 인자 1개 - 요소가 2개인 튜플
+```
+
+#### 배리언트는 반드시 생성자가 있어야 함
+타입이 지정되지 않은 언어를 경험했었다면, `type myType = int | string` 와 같이 정의하고 싶을 수 있습니다.
+하지만 ReScript 에서는 불가능합니다. 각각 생성자를 제공해야합니다. 예: `type myType = Int(int) | String(string)`
+전자의 방식이 좋아보이겠지만, 정말 많은 문제들을 야기합니다.
+
+#### JavaScript 인터롭
+_이 섹션은 JavaScript 인터롭 지식이 있다고 가정하고 있습니다. 아직 JS 함수를 래핑하기위해 배리언트를 사용할 필요성을 느끼지 않았다면 건너 뛰십시오._
+
+상당수의 JS 라이브러리는 여러 타입의 인수를 허용하는 함수로 사용합니다. 이 경우 배리언트로 모델링하는게 매우 적합해 보입니다.
+예를 들어 `number` 또는 `string`을 받는 `myLibrary.draw` 함수가 있다고 가정해 보겠습니다.
+
+이렇게 모델링하고 싶을 수 있습니다.
+```reason
+// 내부용으로 예약 됨
+@bs.module("myLibrary") external draw : 'a => unit = "draw"
+
+type animal =
+  | MyFloat(float)
+  | MyString(string)
+
+let betterDraw = (animal) =>
+  switch animal {
+  | MyFloat(f) => draw(f)
+  | MyString(s) => draw(s)
+  }
+
+betterDraw(MyFloat(1.5))
+```
+
+**절대 시도하지 마십시오.** 이로 인해 난잡한 결과물이 생성됩니다. 대신 동일한 JS를 호출하는 `externals` 두 개를 정의하세요.
+
+```reason 
+@bs.module("myLibrary") external drawFloat: float => unit = "draw"
+@bs.module("myLibrary") external drawString: string => unit = "draw"
+```
+ReScript 는 이를 위해 [몇 가지 다른 방법](../JavaScript-Interop/05-Bind-to-JS-Function#modeling-polymorphic-function)을 제공합니다.
+
+#### 필드 이름으로 배리언트 타입을 찾기
+[레코드 섹션](06-Record)을 참고하세요.
+배리언트도 동일합니다. 함수는 두 가지 다른 배리언트를 공유하는 임의의 생성자를 허용하지 않습니다.
+그런데... 이를 가능하게 하는 기능이 있습니다! [폴리모픽 배리언트](09-Polymorphic-Variant)라고합니다.
+[나중에](09-Polymorphic-Variant) 이야기 할 것입니다 =).
+
+### 디자인 결정
+다양한 형태 (폴리모픽 배리언트, 오픈 배리언트, GADT 등)의 배리언트는 ReScript와 같은 타입 시스템의 기능일 가능성이 높습니다.
+예를 들어 앞서 언급 한 `option` 배리언트는 다른 언어의 주요 버그 원인인 `nullable` 타입의 필요성을 제거합니다.
+철학적으로 말하자면, 각 문제는 여러 분기/조건으로 구성되는데, 이 조건을 잘못 처리할 때 우리가 "버그"라고 부르는 것이 발생합니다.
+**타입 시스템은 마술처럼 버그를 제거하지 않습니다. 처리되지 않은 상태를 지적하고 이를 보완하도록 요청합니다.**
+"foo 또는 bar"를 올바르게 모델링하는 능력이 중요합니다.
+
+예를 들어, 일부 사람들은 타입 시스템에서 형식이 잘못된 JSON 데이터가 프로그램으로 전파되는 것을 안전하게 제거하는 방법을 궁금해합니다.
+하지만 타입 시스템이 하는게 아닙니다!
+파서가 `option` 타입 `None | Some(actualData)`을 반환하면, 호출하는 곳에서 명시적으로 `None` 케이스를 처리해야합니다.
+그게 전부입니다.
+
+잠재적으로 성능 측면에서 배리언트는 프로그램 로직 속도를 엄청나게 높일 수 있습니다.
+
+여기 JavaScript 코드 조각이 있습니다.
+
+```javascript
+let data = 'dog'
+if (data === 'dog') {
+  ...
+} else if (data === 'cat') {
+  ...
+} else if (data === 'bird') {
+  ...
+}
+```
+이 코드 조각은 선형적으로 분기를 검사하고 있습니다. (`O (n)`). ReScript 배리언트를 사용한 것과 비교하면..
+
+```reason 
+type animal = Dog | Cat | Bird
+let data = Dog
+switch data {
+| Dog => Js.log("Wof")
+| Cat => Js.log("Meow")
+| Bird => Js.log("Kashiiin")
+}
+```
+
+컴파일러는 배리언트를 본 다음,
+1. `type animal = 0 | 1 | 2` 으로 변환하고
+2. `switch`를 상수 시간에 조회할 수 있게 변환합니다. (`O(1)`).
