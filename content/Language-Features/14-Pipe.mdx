@@ -1,5 +1,143 @@
 ---
 title: 'Pipe'
 metaTitle: 'Pipe'
-metaDescription: 'This is the meta description'
+metaDescription: 'The Pipe operator (->)'
+sourceUrl: 'https://rescript-lang.org/docs/manual/latest/pipe'
+canonical: '/rescript-in-korean/pipe'
 ---
+
+리스크립트는 파이프 연산자(`->`)를 지원합니다. 파이프를 이용하면 `a(b)`를 `b->a`와 같이 작성할 수 있습니다. 파이프는 단순히 방향을 바꿔주는 문법일 뿐이어서 사용함에 있어서 별도의 성능 저하는 없습니다.
+
+이 문법이 유용한 이유를 살펴보겠습니다.
+
+```reason
+validateAge(getAge(parseData(person)))
+```
+
+위의 코드는 읽기 어렵습니다. 왜냐하면 가장 안쪽의 코드를 찾아서 그곳에서부터 읽어야하기 때문입니다. 하지만 파이프를 사용한다면 다음과 같이 바꿀 수 있습니다.
+
+```reason
+person
+  ->parseData
+  ->getAge
+  ->validateAge
+```
+
+위에서 설명한 것과 같이 `person->parseData`는 `parseData(person)`로 변환됩니다. `getAge`와 `validateAge` 또한 마찬가지입니다.
+
+**파이프는 함수가 한개 이상의 인자를 넘겨받을 때도 동작합니다**
+
+```reason
+a(one, two, three)
+```
+
+위의 코드는 아래와 같습니다.
+
+```reason
+one->a(two, three)
+```
+
+또한 파이프는 이름이 있는 인자(labeld arguments)에서도 동작합니다.
+
+자바와 같은 객체 지향 프로그래밍 언어에서는 `myStudent.getName`과 같이 접근할 수 있습니다. 이로써 얻어지는 좋은 가독성은 객체 지향 프로그래밍의 장점입니다. 파이프를 사용하면 리스크립트에서도 `getName(myStudent)`를 `myStudent->getName`처럼 변경하여 가독성을 높일 수 있습니다.
+
+### 팁과 트릭
+파이프를 남용하지는 마세요. 파이프는 목적이 아니라 수단일 뿐입니다. 때때로 경험이 없는 개발자들은 파이프를 사용할 것을 생각하고 API의 모양을 설계하는데, 이것은 좋지 않은 접근입니다.
+
+## 자바스크립트 메소드 체이닝
+*이 파트는 바인딩에 대한 이해가 필요합니다.*
+
+자바스크립트에서는 함수를 연쇄적으로 호출할때가 있습니다.
+
+```javascript
+const result = [1, 2, 3].map(a => a + 1).filter(a => a % 2 === 0);
+
+asyncRequest()
+  .setWaitDuration(4000)
+  .send();
+```
+
+위의 코드를 리스크립트로 작성하기 위해서 바인딩을 합니다.
+```reason
+@bs.send external map: (array<'a>, 'a => 'b) => array<'b> = "map"
+@bs.send external filter: (array<'a>, 'a => bool) => array<'a> = "filter"
+
+type request
+@bs.val external asyncRequest: unit => request = "asyncRequest"
+@bs.send external setWaitDuration: (request, int) => request = "setWaitDuration"
+@bs.send external send: request => unit = "send"
+```
+
+그리고 아래와 같은 리스크립트 코드를 작성합니다.
+
+```reason
+let result = Js.Array2.filter(
+  Js.Array2.map([1, 2, 3], a => a + 1),
+  a => mod(a, 2) == 0
+)
+
+send(setWaitDuration(asyncRequest(), 4000))
+```
+
+바인딩 함수를 호출하면서 가독성이 안좋아졌는데, 파이프를 사용하면 자바스크립트 메소드 체이닝과 동일한 모양새로 바꿀 수 있습니다.
+
+```reason
+let result = [1, 2, 3]
+  ->map(a => a + 1)
+  ->filter(a => mod(a, 2) == 0)
+
+asyncRequest()->setWaitDuration(4000)->send
+```
+
+## 배리언트와 파이프
+
+배리언트의 생성자도 파이프와 함게 사용할 수 있습니다.
+
+```reason
+let result = name->preprocess->Some
+```
+
+위의 코드는 아래처럼 변경됩니다.
+
+```reason
+let result = Some(preprocess(name))
+```
+
+참고로, 배리언트 생성자를 함수처럼 사용하는 것은 여기를 제외하고 다른 곳에서는 동작하지 않습니다.
+
+## 파이프 플레이스홀더
+플레이스홀더는 언더스코어(`_`)를 이용하여 작성할 수 있습니다. 이것은 해당 인자를 나중에 채우겠다는 의미입니다. 아래의 두 함수는 의미가 같습니다.
+
+```reason
+let addTo7 = (x) => add3(3, x, 4)
+let addTo7 = add3(3, _, 4)
+```
+
+때때로, 파이프가 인자의 첫번째 위치하는 값을 가리키게 하고 싶지 않을 수 있습니다. 이럴 때, 파이프로 전달하고자 하는 위치에 플레이스홀더를 두면 됩니다.
+
+```reason
+getName(input)
+  ->namePerson(personDetails, _)
+```
+
+위의 코드는 아래와 같이 컴파일 됩니다.
+
+```javascript
+var __x = getName(input);
+namePerson(personDetails, __x);
+```
+
+파이프를 사용할 때, 전달하고 싶은 인자의 위치에 플레이스홀더를 두는 것은 이름이 있는 인자에 대해서도 작동합니다.
+
+```reason
+getName(input)
+  ->namePerson(~person=personDetails, ~name=_)
+```
+
+## 삼각 파이프 (Deprecated)
+아마도 여러 코드에서 삼각 파이프(`|>`)를 사용하는 것을 볼 수 있을 것입니다. 파이프(`->`)와는 다르게 삼각 파이프(`|>`)는 가장 마지막 인자의 위치에 값을 전달합니다. 즉, `a |> f(b)`는 `f(b, a)`와 같습니다.
+삼각 파이프는 더 이상 사용하지 않습니다.[^1] 이유는 [Javier Chávarri의 Data-first and Data-last comparison](https://www.javierchavarri.com/data-first-and-data-last-a-comparison/) 포스트를 참고하세요.
+
+이와 관련한 이유는 [Javier Chávarri의 Data-first and Data-last comparison](https://www.javierchavarri.com/data-first-and-data-last-a-comparison/) 포스트를 참고하세요.
+
+[^1]: 역주) 삼각 파이프는 최신 버전(v8.4.2) 리스크립트 컴파일러에서도 잘 동작하고, 아직 사용할 수 있는 문법입니다. 하지만 공식적으로 삼각 파이프의 Deprecated를 선언함으로써, 점차 사용을 줄여나가는 한편, 리스크립트에서는 data-first를 추구함을 드러낸다고 이해하면 좋을 것 같습니다. 그 예로 표준 라이브러리인 Belt의 인터페이스 또한 파이프(`->`)에 적합하게 만들어져 있습니다.
