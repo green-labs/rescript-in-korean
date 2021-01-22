@@ -4,21 +4,16 @@ metaTitle: '패턴 매칭 / 구조분해'
 metaDescription: 'Pattern matching and destructuring complex data structures in ReScript'
 ---
 
-One of ReScript's **best** feature is our pattern matching. Pattern matching combines 3 brilliant features into one:
 리스크립트의 **최고** 기능 중 하나는 패턴 매칭입니다. 패턴 매칭은 세가지 뛰어난 기능을 하나로 결합합니다.
 
 - 구조분해
-- `switch` based on shape of data.
 - 데이터 형태에 따른 `switch` 구문
-- Exhaustiveness check.
 - 완전성 검사
 
-We'll dive into each aspect below.
 각 기능별로 자세히 살펴보겠습니다.
 
 ## 구조분해
 
-Even JavaScript has destructuring, which is "opening up" a data structure to extract the parts we want and assign variable names to them:
 자바스크립트 조차도 우리가 원하는 부분을 추출하고 변수 이름을 할당하기 위해 자료구조를 "개방"하는 구조분해 기능이 있습니다.
 
 ```reason
@@ -32,7 +27,6 @@ var x = 10;
 console.log(10);
 ```
 
-Destructuring works with most built-in data structures:
 구조분해는 기본적으로 제공하는 대부분의 자료구조에서 작동합니다.
 
 ```reason
@@ -48,7 +42,6 @@ let myResult = Success("You did it!")
 let Success(message) = myResult // "You did it!" 값을 `message` 으로 할당
 ```
 
-You can also use destructuring anywhere you'd usually put a binding:
 일반적으로 바인딩을 배치하는 모든 곳에서 구조분해를 사용할 수 있습니다.
 
 ```reason
@@ -61,14 +54,12 @@ let displayMessage = (Success(m)) => {
 displayMessage(Success("You did it!"))
 ```
 
-For a record, you can rename the field while destructuring:
-레코드는 구조분해시 필드 이름을 바꿀 수 있습니다.
+레코드는 구조분해시 필드 이름도 바꿀 수 있습니다.
 
 ```reason
 let {name: n} = student1 // "John" 값을 `n` 으로 할당
 ```
 
-You _can_ in theory destructure array and list at the top level too:
 최상위 수준에서 배열, 리스트를 구조분해할 수 있습니다.
 
 ```reason
@@ -82,20 +73,21 @@ let list{head, ...tail} = myList
 ```
 
 But the array example is **highly disrecommended** (use tuple instead) and the list example will error on you.
-하지만 위 배열 예제는 **매우 권장하지 않습니다.**(대신 튜플을 사용하세요) 또한 목록 예제는 오류가 발생합니다.
 They're only there for completeness' sake.
-그들은 완전성을 위해서만 거기에 있습니다. <- ??
 As you'll see below, the proper way of using destructuring array and list is using `switch`.
+
+하지만 위 배열 예제는 **매우 권장하지 않습니다.** (튜플을 사용하세요) 또한 목록 예제는 오류가 발생합니다.
+각 예제는 형식만 완전합니다.
 다음 섹션에서 볼 수 있듯이 배열과 목록을 올바르게 구조분해하는 방법은 `switch`를 사용하는 것입니다.
 
 ## 데이터 형태에 따른 switch 구문
 
 While the destructuring aspect of pattern matching is nice, it doesn't really change the way you think about structuring your code.
-패턴 매칭의 구조분해 측면은 좋지만 코드 구조에 대해 생각하는 방식을 변경하지는 않습니다. <- ??
 One paradigm-changing way of thinking about your code is to execute some code based on the shape of the data.
+
+패턴 매칭의 구조분해 측면은 좋습니다만, 실제로 코드 구조를 생각하는 방식이 변경되지는 않습니다.
 생각하는 패러다임을 바꾸는 한 가지 방법은 데이터 형태를 보고 코드를 실행하는 것입니다.
 
-Consider a variant:
 배리언트를 고려하세요.
 
 ```reason
@@ -105,15 +97,14 @@ type payload =
   | NoResult
 ```
 
-We'd like to handle each of the 3 cases differently.
 위 세 가지 케이스를 각각 다르게 처리하고 싶습니다.
-For example, print a success message if the value is `GoodResult(...)`, do something else when the value is `NoResult`, etc.
 예를 들어 값이 `GoodResult(...)`면 성공 메시지를 출력하고, `NoResult`면 다른 작업을 수행합니다.
 
 In other languages, you'd end up with a series of if-elses that are hard to read and error-prone.
-다른 언어에서는 읽기 어렵고 오류가 발생하기 쉬운 if-eles 조합을 작성합니다.
 In ReScript, you can instead use the supercharged `switch` pattern matching facility to destructure the value while calling the right code based on what you destructured:
-리스크립트는 대신 강화 된 `switch` 패턴 매칭 기능을 사용해 구조화 한 내용으로 올바른 코드를 호출하면서 값을 구조화 할 수 있습니다. <- 흠...
+
+다른 언어에서는 읽기 어렵고 오류가 발생하기 쉬운 if-eles 조합으로 작성합니다.
+리스크립트는 대신 강화 된 `switch` 패턴 매칭 기능을 사용해 구조분해를 기반으로한 올바른 코드를 호출하면서 값을 구조분해 할 수 있습니다. <-----
 
 ```reason
 let data = GoodResult("Product shipped!")
@@ -141,16 +132,15 @@ if (typeof data === "number") {
 }
 ```
 
-In this case, `message` will have the value `"Success! Product shipped!"`.
 이 경우 `message` 값은 `"Success! Product shipped!"` 입니다.
 
 Suddenly, your if-elses that messily checks some structure of the value got turned into a clean, compiler-verified, linear list of code to execute based on exactly the shape of the value.
-갑자기 값을 지저분하게 확인하는 if-eles 조합이 / 정확한 값의 형태를 기반으로 실행할 수 있는 깔끔하고 선형적인 코드로 변경됐습니다. <- 컴파일러가 검증한....
+
+갑자기 값을 지저분하게 확인하는 if-eles 조합이 정확한 값의 형태를 기반으로 실행할 수 있는 깔끔하고 컴파일러가 검증한 선형적인 코드로 변경됐습니다.
 
 ### 복잡한 예시
 
-Here's a real-world scenario that'd be a headache to code in other languages. Given this data structure:
-다른 언어로 코딩하는데 골치아픈 실제 시나리오 예시를 보여드리겠습니다.
+다른 언어로 코딩할 때 골치아픈 시나리오 예시를 보여드리겠습니다.
 
 ```reason
 type status = Vacations(int) | Sabbatical(int) | Sick | Present
@@ -167,21 +157,15 @@ type person =
   })
 ```
 
-Imagine this requirement:
 다음 요구사항을 상상해보세요.
 
-- Informally greet a person who's a teacher and if his name is Mary or Joe.
-- 이름이 `Mary` 또는 `Joe` 인 교사(`Teacher`)는 인사를 합니다.
-- Greet other teachers formally.
-- 다른 교사들(`Teacher`)은 인사를 합니다.
-- If the person's a student, congratulate him/her score if they passed the semester.
+- 이름이 `Mary` 또는 `Joe` 인 교사(`Teacher`)는 친근한 인사를 합니다.
+- 다른 교사들(`Teacher`)은 격식을 차린 인사를 합니다.
 - 학생(`Student`)은 학기를 통과하면 점수와 함께 축하를 합니다.
-- If the student has a gpa of 0 and is on vacations or sabbatical, display a different message.
-- 학생(`Student`)의 GPA 점수가 0점이고 휴가 중이거나 안식일이면 다른 메세지를 표시합니다.
-- A catch-all message for a student.
-- 학생(`Student`)를 위한 메세지를 표시합니다.
+- 학생(`Student`)의 GPA가 0점이고 휴가 중이거나 안식일이면 다른 메세지를 표시합니다.
+- 그 외 나머지 학생(`Student`)를 위한 메세지를 표시합니다.
 
-ReScript can do this easily!
+리스크립트는 쉽게 할 수 있습니다!
 
 ```reason
 let person1 = Teacher({name: "Jane", age: 35})
@@ -206,19 +190,13 @@ let message = switch person1 {
 }
 ```
 
-**Note** how we've:
 **참고** 어떻게 했냐면...
-- drilled deep down into the value concisely
 - 값을 간결하지만 깊게 분석했습니다.
-- using a **nested pattern check** `"Mary" | "Joe"` and `Vacations | Sabbatical`
 - `"Mary" | "Joe"`, `Vacations | Sabbatical` 에서 **중첩 패턴 검사**를 사용했습니다. 
-- while extracting the `daysLeft` number from the latter case
 - `daysLeft` 숫자를 추출하기도 했습니다.
-- and assigned the greeting to the binding `message`.
 - 마지막으로 인사말을 `message`에 할당했습니다.
 
-Here's another example of pattern matching, this time on an inline tuple.
-다른예로 인라인 튜플을 패턴 매칭 해보겠습니다.
+다른 예시로 인라인 튜플을 패턴 매칭 해보겠습니다.
 
 ```reason
 type animal = Dog | Cat | Bird
@@ -234,7 +212,6 @@ let categoryId = switch (isBig, myAnimal) {
 var categoryId = isBig ? (myAnimal + 1) | 0 : myAnimal >= 2 ? 5 : 4;
 ```
 
-**Note** how pattern matching on a tuple is equivalent to a 2D table:
 **참고** 패턴 매칭시 튜플을 어떻게 평가하는지 다음 표를 참고하세요.
 
 `isBig` \ `myAnimal` | `Dog` | `Cat` | `Bird`
@@ -242,10 +219,8 @@ var categoryId = isBig ? (myAnimal + 1) | 0 : myAnimal >= 2 ? 5 : 4;
 `true`               |   1   |   2   |   3
 `false`              |   4   |   4   |   5
 
-### Fall-Through Patterns
 ### 폴-스루(Fall-Through) 패턴
 
-The nested pattern check, demonstrated in the earlier `person` example, also works at the top level of a `switch`:
 이전 `person` 예제에서 보여준 중첩 패턴 검사는 `switch`의 최상위 수준에서도 작동합니다.
 
 ```reason
@@ -271,13 +246,10 @@ if (typeof myStatus === "number") {
 }
 ```
 
-Having multiple cases fall into the same handling can clean up certain types of logic.
 여러 케이스가 동일한 처리를 해야하면 특정 타입으로 로직을 정리할 수 있습니다.
 
-### Ignore Part of a Value
 ### 일부 값을 무시
 
-If you have a value like `Teacher(payload)` where you just want to pattern match on the `Teacher` part and ignore the `payload` completely, you can use the `_` wildcard like this:
 `Teacher(payload)`와 같은 값에서 `Teacher` 부분만 패턴 매칭하고 `payload`를 완전히 무시하려는 경우, 다음과 같이 `_` 와일드 카드를 사용할 수 있습니다.
 
 ```reason
@@ -294,8 +266,7 @@ if (person1.TAG) {
 }
 ```
 
-`_` also works at the top level of the `switch`, serving as a catch-all condition:
-`_` 는 `switch`의 최상위 수준에서도 작동하며 모든 값 조건으로 사용됩니다.
+`_` 는 `switch`의 최상위 수준에서도 작동하며 포괄 조건으로 사용됩니다.
 
 ```reason
 switch myStatus {
@@ -311,8 +282,7 @@ if (typeof myStatus === "number" || myStatus.TAG) {
 }
 ```
 
-**Do not** abuse a top-level catch-all condition. Instead, prefer writing out all the cases:
-최상위 포괄 조건을 **남용하지 마세요**. 모든 케이스를 작성하는 것이 좋습니다.
+최상위에서 포괄 조건을 **남용하지 마세요**. 가급적 모든 케이스를 작성하는 것이 좋습니다.
 
 ```reason
 switch myStatus {
@@ -331,14 +301,13 @@ if (typeof myStatus === "number" || myStatus.TAG) {
 Slightly more verbose, but a one-time writing effort.
 This helps when you add a new variant case e.g. `Quarantined` to the `status` type and need to update the places that pattern match on it.
 A top-level wildcard here would have accidentally and silently continued working, potentially causing bugs.
-장황해 보이지만 한번만 작성하면 됩니다. 이렇게 함으로 새로운 배리언트 케이스를 추가할 때 도움을 얻을 수 있습니다.
-만약 위와 같이 작성한 뒤, `status` 타입에 `Quarantined` 를 추가한다면 패턴 매칭이 있는 부분을 반드시 수정해야합니다.
-하지만 최상위 와일드 카드를 사용했다면 추가한 케이스가 있음에도 불구하고 아무런 문제없이 작동하기 때문에 잠재적으로 버그가 발생 할 수 있습니다.
 
-### When Clause
+장황해 보이지만 한번만 작성하면 됩니다. 이렇게 함으로 새로운 배리언트 케이스를 추가할 때 도움을 얻을 수 있습니다.
+만약 위와 같이 작성한 뒤, `status` 타입에 `Quarantined` 케이스를 추가한다면 패턴 매칭이 있는 부분을 반드시 수정해야합니다.
+하지만 최상위에서 포괄 조건을 사용했다면 추가한 케이스가 있음에도 불구하고 아무런 문제없이 작동하기 때문에 잠재적으로 버그가 발생 할 수 있습니다.
+
 ### When 절
 
-Sometime, you want to check more than the shape of a value. You want to also run some arbitrary check on it. You might be tempted to write this:
 때때로 값의 형태와 함께 다른 조건을 검사헤야하는 경우가 있습니다. 그럴때 이렇게 작성할 수 있겠죠.
 
 ```reason
@@ -362,7 +331,6 @@ if (person1.TAG) {
 }
 ```
 
-`switch` patterns support a shortcut for the arbitrary `if` check, to keep your pattern linear-looking:
 `switch`는 패턴을 선형으로 유지하기 위해 `if` 조건을 같이 사용할 수 있는 기능을 지원합니다.
 
 ```reason
@@ -385,11 +353,9 @@ if (person1.TAG) {
 }
 ```
 
-### Match on Exceptions
 ### 예외 매칭
 
-If the function throws an exception (covered later), you can also match on _that_, in addition to the function's normally returned values.
-함수에서 예외가 발생하면(나중에 설명) 함수가 반환하는 값 외에 예외 값도 매치할 수 있습니다.
+함수에서 예외가 발생하면(나중에 설명) 함수가 반환하는 값 외 예외 값도 매칭할 수 있습니다.
 
 ```reason
 switch List.find(i => i === theItem, myItems) {
@@ -398,7 +364,6 @@ switch List.find(i => i === theItem, myItems) {
 }
 ```
 
-### Match on Array
 ### 배열 매칭
 
 ```reason
@@ -429,10 +394,8 @@ if (len !== 1) {
 }
 ```
 
-### Match on List
 ### 목록 매칭
 
-Pattern matching on list is similar to array, but with the extra feature of extracting the tail of a list (all elements except the first one):
 목록 패턴 매칭은 배열과 유사하지만 목록의 꼬리(`tail`)를 추출하는 추가 기능이 있습니다. (`tail` 은 첫 번째 요소를 제외한 모든 요소입니다.)
 
 ```reason
@@ -448,10 +411,8 @@ let rec printStudents = (students) => {
 0printStudents(list{"Jane", "Harvey", "Patrick"})
 ```
 
-### Small Pitfall
 ### 작은 함정
 
-**Note**: you can only pass literals (i.e. concrete values) as a pattern, not let-binding names or other things. The following doesn't work as expected:
 **참고**: 리터럴(예: 구체적인 값)은 let-binding 한 이름이나 항목이 아닌, 패턴으로만 전달할 수 있습니다. 다음은 예상대로 작동하지 않습니다.
 _(역주: let-binding 한 변수 등으로 패턴매칭 할 수 없음을 의미합니다. 아래 추가 설명이 있습니다.)_
 
@@ -471,17 +432,15 @@ console.log(10);
 
 A first time ReScript user might accidentally write that code, assuming that it's matching on `coordinates` when the second value is of the same value as `centerY`.
 In reality, this is interpreted as matching on coordinates and assigning the second value of the tuple to the name `centerY`, which isn't what's intended.
+
 리스크립트를 처음 사용하는 개발자는 `coordinates`의 두 번째 값이 `centerY`와 동일한 값일 때 매칭될거라고 생각해 위와 같이 작성할 수 있습니다.
 하지만 이 코드 조각은 "`coordinates` 가 3개 요소를 가지고 있는 튜플 형태에 일치하는 가?"로 해석되고, "두 번째 값을 `centerY` 라는 이름에 할당"하는 것으로 동작합니다.
 의도와 다르게 동작하기 때문에 주의해야합니다.
 
-## Exhaustiveness Check
 ## 완전성 검사
 
-As if the above features aren't enough, ReScript also provides arguably the most important pattern matching feature: **compile-time check of missing patterns**.
-위의 기능만으로는 충분하지 않을 수 있기에 리스크립트는 가장 중요한 패턴 매칭 기능으로 **누락 된 패턴이 있는지 컴파일 타임에 검사**하는 기능을 제공합니다.
+위의 기능만으로는 충분하지 않을 수 있기에 리스크립트는 가장 중요한 패턴 매칭 기능으로 **누락 된 패턴이 있는지 컴파일 시점에 검사**하는 기능을 제공합니다.
 
-Let's revisit one of the above examples:
 위의 예시 중 하나를 다시 살펴 보겠습니다.
 
 ```reason
@@ -502,14 +461,9 @@ let message = switch person1 {
 }
 ```
 
-Did you see what we removed?
-This time, we've omitted the handling of the case where `person1` is `Teacher({name})` when `name` isn't Mary or Joe.
 무엇을 제거했는지 보셨나요?
 `person1`의 `Teacher({name})`이 `Mary` 또는 `Joe` 가 아닐때 나머지 경우를 처리하는 부분을 생략했습니다.
 
-Failing to handle every scenario of a value likely constitutes the majority of program bugs out there.
-This happens very often when you refactor a piece of code someone else wrote.
-Fortunately for ReScript, the compiler will tell you so:
 값이 가질 수 있는 모든 시나리오를 처리하지 못할 때 대부분의 프로그램 버그가 발생합니다.
 다른 사람이 작성한 코드를 리팩토링 할때도 자주 발생하구요.
 다행히 리스크립트는 컴파일러에서 다음과 같이 알려줍니다.
@@ -520,7 +474,6 @@ Here is an example of a value that is not matched:
 Some({name: ""})
 ```
 
-**BAM**! You've just erased an entire category of important bugs before you even ran the code. In fact, this is how most of nullable values is handled:
 **쾅!** 코드를 실행하기 전에 중요한 버그가 발생할 가능성을 없앴습니다. 다음은 대부분의 nullable 값이 처리되는 방식입니다.
 
 ```reason
@@ -541,30 +494,22 @@ if (myNullableValue !== undefined) {
 }
 ```
 
-If you don't handle the `None` case, the compiler warns. No more `undefined` bugs in your code!
 `None` 케이스를 처리하지 않으면 컴파일러가 경고합니다. 더 이상 코드에 `undefined` 버그가 없습니다!
 
-## Conclusion & Tips & Tricks
 ## 결론과 팁
 
-Hopefully you can see how pattern matching is a game changer for writing correct code, through the concise destructuring syntax, the proper conditions handling of `switch`, and the static exhaustiveness check.
 간결한 구조분해 구문, `switch` 의 적절한 조건 처리, 완전성 검사를 통해 패턴 매칭이 올바른 코드 작성을 위한 획기적인 수단임을 알기 바랍니다.
 
-Here are some advices.
 다음은 몇가지 조언입니다.
 
-Do not abuse the wildcard `_` too much.
 와일드카드 `_` 를 너무 남용하지 마세요.
-This prevents the compiler from giving you better exhaustiveness check, which would be especially important after a refactoring where you add a new case to a variant.
 이렇게하면 컴파일러가 더 나은 완전성 검사를 제공하지 못합니다. 배리언트에 새 케이스를 추가하는 리팩토링을 할 때 특히 중요합니다.
-Try only using `_` against infinite possibilities, e.g. string, int, etc.
 무한한 가능성이 있을때만 `_`를 사용하세요. 예를 들면 값이 `string`, `int` 라던가..
 
-Use `when` clause sparingly.
 `when` 절을 아껴서 사용하세요.
 
-**Flatten your pattern-match whenever you can**. This is a real bug remover. Here's a series of examples, from worst to best:
-**가능하면 패턴 매치를 평평하게 만드세요**. 이게 진짜 버그 제거제입니다. 다음은 최악에서 최고까지의 예입니다. <- 다듬기..
+**가능하면 패턴 매칭를 평평하게(flatten) 만드세요**. 이게 진짜 버그를 제거하는 좋은 방법입니다.
+최악인 코드조각에서 최고인 코드까지 예시를 보여드리겠습니다.
 
 ```reason
 let optionBoolToBool = opt => {
@@ -578,8 +523,7 @@ let optionBoolToBool = opt => {
 }
 ```
 
-Now that's just silly =). Let's turn it into pattern-matching:
-이제 위 코드조각은 어리석은 방법입니다. =) 패턴 매칭으로 바꿔봅시다.
+이제 이 코드조각은 어리석은 방법입니다. =) 패턴 매칭으로 바꿔봅시다.
 
 ```reason
 let optionBoolToBool = opt => {
@@ -590,8 +534,7 @@ let optionBoolToBool = opt => {
 }
 ```
 
-Slightly better, but still nested. Pattern-matching allows you to do this:
-약간 더 좋지만 여전히 중첩됩니다. 패턴 매칭은 이렇게 작성할 수도 있습니다.
+약간 더 좋지만 여전히 중첩됩니다. 위 패턴 매칭을 이렇게 작성할 수도 있습니다.
 
 ```reason
 let optionBoolToBool = opt => {
@@ -603,8 +546,7 @@ let optionBoolToBool = opt => {
 }
 ```
 
-Much more linear-looking! Now, you might be tempted to do this:
-훨씬 더 선형 적으로 보입니다! 이제 이렇게 작성 할 수도 있겠죠?
+훨씬 더 선형 적으로 보입니다! 이 코드조각을 이렇게 작성 할 수도 있겠죠?
 
 ```reason
 let optionBoolToBool = opt => {
@@ -615,8 +557,9 @@ let optionBoolToBool = opt => {
 }
 ```
 
-Which is much more concise, but kills the exhaustiveness check mentioned above; refrain from using that. This is the best:
-훨씬 더 간결하지만 언급했던 완전한 검사를 활용할 수 없게 됐습니다. 가급적 사용하지 마시고, 가장 잘 작성한 코드조각은 이렇습니다. <- 다듬기
+훨씬 더 간결하지만 언급했던 완전한 검사를 활용할 수 없게 됐습니다. 가급적 사용하지 마세요. 
+
+가장 잘 작성한 코드조각은 이렇습니다.
 
 ```reason
 let optionBoolToBool = opt => {
