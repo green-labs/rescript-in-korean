@@ -1,112 +1,112 @@
 ---
-title: "Overview"
-metaTitle: "Language Features Overview"
-description: "A quick overview on ReScript's syntax"
+title: "개요"
+metaTitle: "언어 특징 개요"
+description: "리스트립트의 문법 개요 빠르게 훑어보기"
 sourceUrl: "https://rescript-lang.org/docs/manual/latest/overview"
 canonical: "/rescript-in-korean/overview"
 ---
 
-# Overview
+# 개요
 
-## Comparison to JS
+## 자바스트립트와 비교
 
-### Semicolon
+### 세미콜론(Semicolon)
 
-| JavaScript                           | Us                   |
-| ------------------------------------ | -------------------- |
-| Rules enforced by linter/formatter   | No semicolon needed! |
+| 자바스크립트          | 리스트립트           |
+| ------------------ | ----------------- |
+| 린터나 포매터에서 강제됨 | 세미콜론 필요하지 않음! |
 
-### Comments
+### 주석(Comments)
 
-| JavaScript        | Us          |
-| ----------------- | ----------- |
-| `/* Comment */`   | Same        |
-| `// Line comment` | Same        |
+| 자바스크립트         | 리스트립트  |
+| ----------------- | -------- |
+| `/* Comment */`   | 같음      |
+| `// Line comment` | 같음      |
 
-### Variable
+### 변수(Variable)
 
-| JavaScript              | Us                             |
-| ----------------------- | ------------------------------ |
-| `const x = 5;`          | `let x = 5`                    |
-| `var x = y;`            | No equivalent (thankfully)     |
+| 자바스크립트               | 리스트립트                               |
+| ----------------------- | ------------------------------------- |
+| `const x = 5;`          | `let x = 5`                           |
+| `var x = y;`            | 없음 (감사하게도)                         |
 | `let x = 5; x = x + 1;` | `let x = ref(5); x := x.contents + 1` |
 
-### String & Character
+### 문자열 & 캐릭터(String & Character)
 
-| JavaScript                | Us                    |
+| 자바스크립트                 | 리스트립트               |
 | --------------------------| --------------------- |
-| `"Hello world!"`          | Same                  |
-| `'Hello world!'`          | Strings must use `"`  |
+| `"Hello world!"`          | 같음                   |
+| `'Hello world!'`          | 문자열은 이것만 사용 `"`   |
 | `"hello " + "world"`      | `"hello " ++ "world"` |
-| `` `hello ${message}` ``  | Same                  |
+| `` `hello ${message}` ``  | 같음                   |
 
-### Boolean
+### 불리언(Boolean)
 
-| JavaScript                                            | Us                                             |
-| ----------------------------------------------------- | ---------------------------------------------- |
-| `true`, `false`                                       | Same                                           |
-| `!true`                                               | Same                                           |
-| <code>&#124;&#124;</code>, `&&`, `<=`, `>=`, `<`, `>` | Same                                           |
-| `a === b`, `a !== b`                                  | Same                                           |
-| No deep equality (recursive compare)                  | `a == b`, `a != b`                             |
-| `a == b`                                              | No equality with implicit casting (thankfully) |
+| 자바스크립트                                             | 리스트립트                                   |
+| ----------------------------------------------------- | ----------------------------------------- |
+| `true`, `false`                                       | 같음                                       |
+| `!true`                                               | 같음                                       |
+| <code>&#124;&#124;</code>, `&&`, `<=`, `>=`, `<`, `>` | 같음                                       |
+| `a === b`, `a !== b`                                  | 같음                                       |
+| 깊은 동일성 없음 (반복 비교)                                | `a == b`, `a != b`                        |
+| `a == b`                                              | 명시적인 캐스팅을 수반한 동일성 없음 (감사하게도)     |
 
-### Number
+### 숫자(Number)
 
-| JavaScript  | Us           |
+| 자바스크립트  | 리스트립트           |
 | ----------- | ------------ |
-| `3`         | Same \*      |
-| `3.1415`    | Same         |
-| `3 + 4`     | Same         |
+| `3`         | 같음 \*      |
+| `3.1415`    | 같음         |
+| `3 + 4`     | 같음         |
 | `3.0 + 4.5` | `3.0 +. 4.5` |
 | `5 % 3`     | `mod(5, 3)`  |
 
-\* JS has no distinction between integer and float.
+\* 자바스트립트는 integer와 float 간에 차이가 없다.
 
-### Object/Record
+### 객체/레코드(Object/Record)
 
-| JavaScript          | Us                                      |
+| 자바스크립트           | 리스트립트                                 |
 | ------------------- | --------------------------------------- |
-| no types            | `type point = {x: int, mutable y: int}` |
-| `{x: 30, y: 20}`    | Same                                    |
-| `point.x`           | Same                                    |
-| `point.y = 30;`     | Same                                    |
-| `{...point, x: 30}` | Same                                    |
+| 타입 없음             | `type point = {x: int, mutable y: int}` |
+| `{x: 30, y: 20}`    | 같음                                     |
+| `point.x`           | 같음                                     |
+| `point.y = 30;`     | 같음                                     |
+| `{...point, x: 30}` | 같음                                     |
 
-### Array
+### 배열(Array)
 
-| JavaScript            | Us                                 |
-| --------------------- | ---------------------------------- |
-| `[1, 2, 3]`           | Same                               |
-| `myArray[1] = 10`     | Same                               |
-| `[1, "Bob", true]`    | `(1, "Bob", true)` \*              |
+| 자바스크립트              | 리스트립트                     |
+| --------------------- | ---------------------------- |
+| `[1, 2, 3]`           | 같음                          |
+| `myArray[1] = 10`     | 같음                          |
+| `[1, "Bob", true]`    | `(1, "Bob", true)` \*        |
 
-\* Heterogenous arrays in JS are disallowed for us. Use tuple instead.
+\* 자바스크립트의 이종 배열(heterogeneous array)은 리스크립트에서는 허용되지 않는다. 튜플을 사용할 것
 
 ### Null
 
-| JavaScript          | Us        |
+| 자바스크립트          | 리스트립트        |
 | ------------------- | --------- |
 | `null`, `undefined` | `None` \* |
 
-\* Again, only a spiritual equivalent; we don't have nulls, nor null bugs! But we do have an `option` type for when you actually need nullability.
+\* 다시 한번 말하지만, 정신적인 동일성(spiritual equivalent)만 있다; 리스크립트에서는 null도 없을뿐더러 null 버그도 없다! 그러나 리스크립트에서는 null의 개념이 필요한 경우에 사용할 수 있는 `option` 타입이 있다.
 
-### Function
+### 함수(Function)
 
-| JavaScript                      | Us                           |
+| 자바스크립트                       | 리스트립트                      |
 | ------------------------------- | ---------------------------- |
-| `arg => retVal`                 | Same                         |
+| `arg => retVal`                 | 같음                          |
 | `function named(arg) {...}`     | `let named = (arg) => {...}` |
 | `const f = function(arg) {...}` | `let f = (arg) => {...}`     |
-| `add(4, add(5, 6))`             | Same                         |
+| `add(4, add(5, 6))`             | 같음                          |
 
-### Blocks
+### 블록(Blocks)
 
 <table>
   <thead>
     <tr>
-      <th>JavaScript</th>
-      <th>Us    </th>
+      <th>자바스크립트</th>
+      <th>리스트립트    </th>
     </tr>
   </thead>
   <tbody>
@@ -131,27 +131,27 @@ canonical: "/rescript-in-korean/overview"
 
 ### If-else
 
-| JavaScript            | Us                                                                  |
+| 자바스크립트             | 리스트립트                                                             |
 | --------------------- | ------------------------------------------------------------------- |
 | `if (a) {b} else {c}` | `if a {b} else {c}` \*                                              |
-| `a ? b : c`           | Same                                                                |
+| `a ? b : c`           | 같음                                                                 |
 | `switch`              | `switch` but [super-powered pattern matching!](pattern-matching-destructuring.md) |
 
-\* Our conditionals are always expressions! You can write `let result = if a {"hello"} else {"bye"}`
+\* 리스크립트에서 조건은 항상 표현식(expression)이다! 다음과 같이 사용할 수 있다. `let result = if a {"hello"} else {"bye"}`
 
-### Destructuring
+### 구조 분해 할당(Destructuring)
 
-| JavaScript                    | Us                                            |
+| 자바스크립트                     | 리스트립트                                       |
 | ----------------------------- | --------------------------------------------- |
 | `const {a, b} = data`         | `let {a, b} = data`                           |
 | `const [a, b] = data`         | <code>let [a, b] = data</code> \*             |
 | `const {a: aa, b: bb} = data` | `let {a: aa, b: bb} = data`                   |
 
-\* Gives good compiler warning that `data` might not be of length 2.
+\* 컴파일러에서 `data` 의 길이가 2가 아닐 수도 있다는 워닝(warning)을 제공한다.
 
-### Loop
+### 루프(Loop)
 
-| JavaScript                            | Us                             |
+| 자바스크립트                            | 리스트립트                             |
 | ------------------------------------- | ------------------------------ |
 | `for (let i = 0; i <= 10; i++) {...}` | `for i in 0 to 10 {...}`       |
 | `for (let i = 10; i >= 0; i--) {...}` | `for i in 10 downto 0 {...}`   |
@@ -159,33 +159,33 @@ canonical: "/rescript-in-korean/overview"
 
 ### JSX
 
-| JavaScript                                | Us                         |
+| 자바스크립트                                 | 리스트립트                    |
 | ----------------------------------------- | -------------------------- |
-| `<Comp message="hi" onClick={handler} />` | Same                       |
+| `<Comp message="hi" onClick={handler} />` | 같음                        |
 | `<Comp message={message} />`              | `<Comp message />` \*      |
 | `<input checked />`                       | `<input checked=true />`   |
-| No children spread                        | `<Comp>...children</Comp>` |
+| 자식 컴포넌트 스프레드 없음                      | `<Comp>...children</Comp>` |
 
-\* Argument punning!
+\* 인자를 가지고 말장난을!
 
-### Exception
+### 예외 처리(Exception)
 
-| JavaScript                                      | Us                                         |
+| 자바스크립트                                      | 리스트립트                                         |
 | ----------------------------------------------- | ------------------------------------------ |
 | `throw new SomeError(...)`                      | `raise(SomeError(...))`                    |
 | `try {a} catch (Err) {...} finally {...}`       | <code>try a catch { &#124; Err => ...}</code> \* |
 
-\* No finally.
+\* finally는 없음
 
-### Blocks
+### 블록(Blocks)
 
-The last expression of a block delimited by `{}` implicitly returns (including function body). In JavaScript, this can only be simulated via an immediately-invoked function expression (since function bodies have their own local scope).
+마지막으로 `{}`로 경계가 나뉘어진 블록 표현은 명시적으로 리턴을 합니다. 자바스크립트에서는 즉시 실행 함수를 통해서 시뮬레이션해볼 수 있습니다. (함수 바디에 각각의 로컬 스코프를 가지고 있기 때문)
 
 <table>
   <thead>
     <tr>
-      <th>JavaScript</th>
-      <th>Us</th>
+      <th>자바스크립트</th>
+      <th>리스트립트</th>
     </tr>
   </thead>
   <tbody>
@@ -208,27 +208,27 @@ The last expression of a block delimited by `{}` implicitly returns (including f
   </tbody>
 </table>
 
-## Common Features' JS Output
+## 공통 피쳐(Common Feature)들의 자바스크립트 출력
 
-Feature                         | Example                              | JavaScript Output
+피쳐(Feature)                    | 예시                                  | 자바스크립트 출력
 --------------------------------|--------------------------------------|----------------------
-String                          | `"Hello"`                            | `"Hello"`
-String Interpolation            | `` `Hello ${message}` ``             | `"Hello " + message`
-Character (disrecommended)      | `'x'`                                | `120` (char code)
-Integer                         | `23`, `-23`                          | `23`, `-23`
-Float                           | `23.0`, `-23.0`                      | `23.0`, `-23.0`
-Integer Addition                | `23 + 1`                             | `23 + 1`
-Float Addition                  | `23.0 +. 1.0`                        | `23.0 + 1.0`
-Integer Division/Multiplication | `2 / 23 * 1`                         | `2 / 23 * 1`
-Float Division/Multiplication   | `2.0 /. 23.0 *. 1.0`                 | `2.0 / 23.0 * 1.0`
-Float Exponentiation            | `2.0 ** 3.0`                         | `Math.pow(3, 4)`
-String Concatenation            | `"Hello " ++ "World"`                | `"Hello " + "World"`
-Comparison                      | `>`, `<`, `>=`, `<=`                 | `>`, `<`, `>=`, `<=`
-Boolean operation               | `!`, `&&`, <code>&#124;&#124;</code> | `!`, `&&`, <code>&#124;&#124;</code>
-Shallow and deep Equality       | `===`, `==`                          | `===`, `==`
-List (disrecommended)           | `list{1, 2, 3}`                      | `{hd: 1, tl: {hd: 2, tl: {hd: 3, tl: 0}}}`
-List Prepend                    | `list{a1, a2, ...oldList}`           | `{hd: a1, tl: {hd: a2, tl: theRest}}`
-Array                           | `[1, 2, 3]`                          | `[1, 2, 3]`
-Record                          | `type t = {b: int}; let a = {b: 10}` | `var a = {b: 10}`
-Multiline Comment               | `/* Comment here */`                 | Not in output
-Single line Comment             | `// Comment here`                    | Not in output
+문자열(String)                         | `"Hello"`                            | `"Hello"`
+문자열 보간(String Interpolation)  | `` `Hello ${message}` ``             | `"Hello " + message`
+캐릭터(Character) (비추천)                    | `'x'`                                | `120` (char code)
+정수(Integer)                    | `23`, `-23`                          | `23`, `-23`
+실수(Float)                           | `23.0`, `-23.0`                      | `23.0`, `-23.0`
+정수 더하기(Integer Addition)                | `23 + 1`                             | `23 + 1`
+실수 더하기(Float Addition)                  | `23.0 +. 1.0`                        | `23.0 + 1.0`
+정수 나누기/곱하기(Integer Division/Multiplication) | `2 / 23 * 1`                         | `2 / 23 * 1`
+실수 나누기/곱하기(Float Division/Multiplication)   | `2.0 /. 23.0 *. 1.0`                 | `2.0 / 23.0 * 1.0`
+실수 거듭제곱(Float Exponentiation)            | `2.0 ** 3.0`                         | `Math.pow(3, 4)`
+문자열 연결(String Concatenation)            | `"Hello " ++ "World"`                | `"Hello " + "World"`
+비교(Comparison)                      | `>`, `<`, `>=`, `<=`                 | `>`, `<`, `>=`, `<=`
+불리언 연산(Boolean operation)               | `!`, `&&`, <code>&#124;&#124;</code> | `!`, `&&`, <code>&#124;&#124;</code>
+얕은 및 깊은 동일성(Shallow and deep Equality)       | `===`, `==`                          | `===`, `==`
+리스트(List) (비추천)           | `list{1, 2, 3}`                      | `{hd: 1, tl: {hd: 2, tl: {hd: 3, tl: 0}}}`
+리스트 앞에 값 추가(List Prepend)                    | `list{a1, a2, ...oldList}`           | `{hd: a1, tl: {hd: a2, tl: theRest}}`
+배열(Array)                           | `[1, 2, 3]`                          | `[1, 2, 3]`
+레코드(Record)                          | `type t = {b: int}; let a = {b: 10}` | `var a = {b: 10}`
+여러 줄 주석(Multiline Comment)               | `/* Comment here */`                 | 출력에 나오지 않음
+한 줄 주석(Single line Comment)             | `// Comment here`                    | 출력에 나오지 않음
