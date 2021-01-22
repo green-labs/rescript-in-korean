@@ -134,9 +134,9 @@ getName(input)
   ->namePerson(~person=personDetails, ~name=_)
 ```
 
-## 삼각 파이프
-**Deprecated[^1]**
-아마도 여러 코드에서 삼각 파이프(`|>`)를 사용하는 것을 볼 수 있을 것입니다. 삼각 파이프는 더이상 사용하지 않습니다. 파이프(`->`)와는 다르게 삼각 파이프(`|>`)는 가장 마지막 인자의 위치에 값을 전달합니다. 즉, `a |> f(b)`는 `f(b, a)`와 같습니다.
+## 삼각 파이프 (Deprecated)
+아마도 여러 코드에서 삼각 파이프(`|>`)를 사용하는 것을 볼 수 있을 것입니다. 파이프(`->`)와는 다르게 삼각 파이프(`|>`)는 가장 마지막 인자의 위치에 값을 전달합니다. 즉, `a |> f(b)`는 `f(b, a)`와 같습니다.
+삼각 파이프는 더 이상 사용하지 않습니다.[^1] 이유는 [Javier Chávarri의 Data-first and Data-last comparison](https://www.javierchavarri.com/data-first-and-data-last-a-comparison/) 포스트를 참고하세요.
 
 이와 관련한 이유는 [Javier Chávarri의 Data-first and Data-last comparison](https://www.javierchavarri.com/data-first-and-data-last-a-comparison/) 포스트를 참고하세요.
 
