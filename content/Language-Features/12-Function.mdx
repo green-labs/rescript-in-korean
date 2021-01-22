@@ -20,7 +20,7 @@ let greet = (name) => "Hello " ++ name
 greet("world!") // "Hello world!"
 ```
 
-함수가 여러 인수를 받는 경우 콤마(,)를 구분자로 선언합니다.
+함수가 여러 인자를 받는 경우 콤마(,)를 구분자로 선언합니다.
 
 ```reason
 let add = (x, y, z) => x + y + z
@@ -36,11 +36,11 @@ let greetMore = (name) => {
 }
 ```
 
-함수에 인수가 없다면 다음과 같이 작성하세요. `let greetMore = () => {...}`
+함수에 인자가 없다면 다음과 같이 작성하세요. `let greetMore = () => {...}`
 
-## 레이블이 있는 인수
+## 이름이 있는 인자
 
-여러 인수를 받는 함수, 특히 인수가 동일한 타입인 함수는 호출할 때 혼동 될 수 있습니다. 
+여러 인자를 받는 함수, 특히 인자가 동일한 타입인 함수는 호출할 때 혼동 될 수 있습니다. 
 
 ```reason
 let addCoordinates = (x, y) => {
@@ -49,7 +49,7 @@ let addCoordinates = (x, y) => {
 // ...
 addCoordinates(5, 6) // 어떤게 x고 y지?
 ```
-인수 이름 앞에 `~` 기호를 붙여 인수에 레이블을 붙일 수 있습니다.
+이런 경우 인자 이름 앞에 `~` 기호를 붙여 인자에 이름을 붙일 수 있습니다.
 
 ```reason
 let addCoordinates = (~x, ~y) => {
@@ -59,13 +59,13 @@ let addCoordinates = (~x, ~y) => {
 addCoordinates(~x=5, ~y=6)
 ```
 
-**순서에 관계없이** 인수를 전달할 수 있습니다.
+그리고 이름이 있는 인자는 **순서에 관계없이** 전달할 수 있습니다.
 
 ```reason
 addCoordinates(~y=6, ~x=5)
 ```
-선언에서 `~x` 부분은 함수가 `x`로 표시된 인수를 받아들이고 동일한 이름으로 함수에서 참조 할 수 있음을 의미합니다.
-간결하게 작성하기 위해 함수 내부에서 다른 이름으로 인수를 참조 할 수도 있습니다.
+선언에서 `~x` 부분은 함수가 `x`로 표시된 인자를 받아들이고 동일한 이름으로 함수에서 참조 할 수 있음을 의미합니다.
+간결하게 작성하기 위해 함수 내부에서 다른 이름으로 인자를 참조 할 수도 있습니다.
 
 ```reason
 let drawCircle = (~radius as r, ~color as c) => {
@@ -76,9 +76,9 @@ let drawCircle = (~radius as r, ~color as c) => {
 
 drawCircle(~radius=10, ~color="red")
 ```
-사실 `(~radius)`는 `(~radius as radius)`의 축약입니다.
+눈치 채셨겠지만, 사실 `(~radius)`는 `(~radius as radius)`의 축약입니다.
 
-인수에 타입을 기재하는 문법은 다음과 같습니다.
+인자에 타입을 기재하는 문법은 다음과 같습니다.
 
 ```reason
 let drawCircle = (~radius as r: int, ~color as c: string) => {
@@ -86,9 +86,9 @@ let drawCircle = (~radius as r: int, ~color as c: string) => {
 }
 ```
 
-## 레이블이있는 선택적 인수
+## 이름이 있는 선택 인자
 
-레이블이있는 함수 인수는 선언시 선택 사항으로 만들 수 있습니다. 그리고 함수를 호출 할 때 생략 할 수 있습니다.
+이름이 있는 인자는 선언시 선택 사항으로 만들 수 있습니다. 그리고 함수를 호출 할 때 생략 할 수 있습니다.
 
 ```reason
 // radius 는 생략 가능
@@ -106,20 +106,20 @@ let drawCircle = (~color, ~radius=?, ()) => {
 
 `option` 타입에 대해 더 알아보려면 [여기](10-Null-Undefined-and-Option)을 참고하세요.
 
-**참고** 타입 시스템을 위해 선택적 인수가 있을때마다 그 뒤에 위치 인수(라벨이 지정되지 않았고 선택적 인수가 아닌 인수)가 하나 이상 있는지 확인해야합니다.
-없는 경우 더미 `unit` (일명 `()`) 인수를 기재합니다.
+**참고** 타입 시스템을 위해 선택 인자가 있을때마다 그 뒤에 위치 인자(이름이 지정되지 않았고 선택 인자가 아닌 인자)가 하나 이상 있는지 확인해야합니다.
+없는 경우 더미 `unit` (일명 `()`) 인자를 기재합니다.
 _(역주: 위 코드 조각에서 `~radius=?, ()` 부분에 해당하는 설명입니다.)_
 
 ### 시그니쳐 및 타입 어노테이션
 
-선택적 레이블 인수가 있는 함수는 시그니쳐 및 타입 어노테이션과 관련해 혼란스러울 수 있습니다.
-실제로 선택적 레이블이 지정된 인수의 타입은 함수를 호출하는지, 함수 내부에서 작업하는지에 따라 다르게 보입니다.
+이름과 선택 인자가 있는 함수는 시그니쳐 및 타입 어노테이션과 관련해 혼란스러울 수 있습니다.
+실제로 이름과 선택이 지정된 인자의 타입은 함수를 호출하는지, 함수 내부에서 작업하는지에 따라 다르게 보입니다.
 함수 외부에서 원시 값을 전달하거나 (예:`int`) 전달하지 않을 수 있습니다.
-함수 내부에서는 매개 변수가 항상 있지만 그 값은 option 입니다 (`option <int>`).
-즉, 함수 타입을 작성하는지, 매개 변수 타입 어노테이션을 작성하는지에따라 타입 시그니쳐가 다릅니다.
+함수 내부에서는 인자가 항상 있지만 그 값은 option 입니다 (`option <int>`).
+즉, 함수 타입을 작성하는지, 인자 타입 어노테이션을 작성하는지에따라 타입 시그니쳐가 다릅니다.
 첫 번째는 원시 값이고 두 번째는 option 입니다.
 
-이전 예제로 돌아가서 인수에 시그니쳐와 타입 어노테이션을 모두 추가하면 다음과 같은 결과를 얻을 수 있습니다.
+이전 예제로 돌아가서 인자에 시그니쳐와 타입 어노테이션을 모두 추가하면 다음과 같은 결과를 얻을 수 있습니다.
 
 ```reason
 let drawCircle: (~color: color, ~radius: int=?, unit) => unit =
@@ -135,12 +135,12 @@ let drawCircle: (~color: color, ~radius: int=?, unit) => unit =
 첫 번째 줄은 함수의 시그니처이며, 인터페이스 파일에서 정의합니다. ([Signatures](21-Module#signatures) 참조)
 함수의 시그니처는 **외부**와 상호 작용하는 타입을 설명합니다. 실제로 호출 될 때 `int`를 예상하기 때문에 `radius`가 `int` 타입이 됩니다.
 
-두 번째 줄에서는 함수 **내부**에서 인수를 사용할 때 인수 타입을 기억할 수 있도록 인수에 어노테이션을 추가합니다.
+두 번째 줄에서는 함수 **내부**에서 인자를 사용할 때 인자 타입을 기억할 수 있도록 인자에 어노테이션을 추가합니다.
 여기서 실제로 `radius`는 함수 내부에서 `option<int>` 가 됩니다.
 
-레이블이 지정된 선택적 인수를 사용해 함수 시그니처를 작성할 때 어려움을 겪는 경우 위 내용을 기억하세요!
+이름 있는 선택 인자를 사용해 함수 시그니처를 작성할 때 어려움을 겪는 경우 위 내용을 기억하세요!
 
-### 명시적으로 전달되는 선택적 인수
+### 명시적으로 전달되는 선택 인자
 
 값이 `None`인지 `Some(a)`인지 모르는 상태에서 값을 함수에 전달하고 싶을 때가 있습니다. 이렇게 말이죠.
 
@@ -158,14 +158,14 @@ let result =
 let result = drawCircle(~color, ~radius=?payloadRadius, ())
 ```
 
-설명하자면 "`radius`가 선택 인수고
+설명하자면 "`radius`가 선택 인자고
 `int` 값을 전달해야 한다는 것을 알지만,
 전달하려는 값이 `None`인지 `Some(val)` 모른다.
 그래서 `option` 그대로 전달하겠다."
 
-### 기본값이 있는 선택적 인수
+### 기본값이 있는 선택 인자
 
-레이블이있는 선택적 인수도 기본값을 설정할 수 있습니다. 이 경우 `option` 타입으로 래핑되지 않습니다.
+이름이 있는 선택 인자도 기본값을 설정할 수 있습니다. 이 경우 `option` 타입으로 래핑되지 않습니다.
 
 ```reason
 let drawCircle = (~radius=1, ~color, ()) => {
@@ -176,7 +176,7 @@ let drawCircle = (~radius=1, ~color, ()) => {
 
 ## 재귀함수
 
-ReScript는 기본적으로 함수내에서 재귀적으로 호출하는 것을 방지하고 있습니다.
+리스크립트는 기본적으로 함수내에서 재귀적으로 호출하는 것을 방지하고 있습니다.
 재귀함수를 만들려면 `let`뒤에 `rec` 키워드를 추가합니다.
 
 ```reason
@@ -211,7 +211,7 @@ function listHas(_list, item) {
 ```
 
 함수를 재귀적으로 호출하는 것은 성능과 호출 스택에 좋지 않습니다.
-그러나 ReScript는 지능적으로 [꼬리 재귀](https://stackoverflow.com/questions/33923/what-is-tail-recursion)을 사용해 빠른 JavaScript 루프로 컴파일합니다.
+그러나 리스크립트는 지능적으로 [꼬리 재귀](https://stackoverflow.com/questions/33923/what-is-tail-recursion)을 사용해 빠른 JavaScript 루프로 컴파일합니다.
 위 코드의 JS 결과물을 확인해보세요!
 
 ### 상호 재귀 함수
@@ -240,7 +240,7 @@ function callFirst(_param) {
 
 ## 언커리드 함수
 
-ReScript의 함수는 기본적으로 커리드 함수며, 컴파일 된 JS 결과물에서 우리가 지불하는 몇 가지 성능 패널티 중 하나입니다.
+리스크립트의 함수는 기본적으로 커리드 함수며, 컴파일 된 JS 결과물에서 우리가 지불하는 몇 가지 성능 패널티 중 하나입니다.
 컴파일러는 가능한 한 이러한 커링을 제거하기 위해 최선을 다합니다.
 그러나 특정 상황에서는 언커링을 보장 할 수 있습니다.
 이 경우 함수의 매개 변수 목록에 점을 넣으세요.
@@ -258,7 +258,7 @@ function add(x, y) {
 add(1, 2);
 ```
 
-단일 단위 `()` 인수로 커리드 함수를 호출해야하는 경우 `ignore()` 함수를 사용할 수 있습니다.
+단일 단위 `()` 인자로 커리드 함수를 호출해야하는 경우 `ignore()` 함수를 사용할 수 있습니다.
 
 ```reason
 let echo = (. a) => a
@@ -277,7 +277,7 @@ echo(undefined);
 
 **참고**: 선언과 호출 모두 언커리 어노테이션이 있어야합니다. 이는 보증/요구 사항의 일부입니다.
 
-**이 기능은 사소 해 보이지만** 실제로는 주로 기능적인 언어로서 가장 중요한 기능 중 하나입니다.
+**이 기능은 사소 해 보이지만** 실제로는 함수형 언어에서 가장 중요한 기능 중 하나입니다.
 JS 출력에서 `커리`런타임에 대한 언급을 제거하려면 사용하는 것이 좋습니다.
 
 ## 팁
@@ -291,17 +291,17 @@ JS 출력에서 `커리`런타임에 대한 언급을 제거하려면 사용하�
 // 함수에 이름을 붙이다
 let add = (x, y) => 1
 
-// 이름 있는 인수와 약어 정의
+// 이름이 있는 인자와 약어 정의
 let add = (~first as x, ~second as y) => x + y
 // 약어 정의 빼기
 let add = (~first, ~second) => first + second
 
-// 기본값과 이름 있는 인수와 약어 정의
+// 기본값과 이름이 있는 인자와 약어 정의
 let add = (~first as x=1, ~second as y=2) => x + y
 // 약어 정의 빼기
 let add = (~first=1, ~second=2) => first + second
 
-// 선택적 인수와 약어 정의
+// 선택 인자와 약어 정의
 let add = (~first as x=?, ~second as y=?) => switch x {...}
 // 약어 정의 빼기
 let add = (~first=?, ~second=?) => switch first {...}
@@ -315,17 +315,17 @@ let add = (~first=?, ~second=?) => switch first {...}
 // 함수에 이름을 붙이다
 let add = (x: int, y: int): int => 1
 
-// 이름 있는 인수와 약어 정의
+// 이름이 있는 인자와 약어 정의
 let add = (~first as x: int, ~second as y: int) : int => x + y
 // 약어 정의 빼기
 let add = (~first: int, ~second: int) : int => first + second
 
-// 기본값과 이름 있는 인수와 약어 정의
+// 기본값과 이름이 있는 인자와 약어 정의
 let add = (~first as x: int=1, ~second as y: int=2) : int => x + y
 // 약어 정의 빼기
 let add = (~first: int=1, ~second: int=2) : int => first + second
 
-// 선택적 인수와 약어 정의
+// 선택 인자와 약어 정의
 let add = (~first as x: option<int>=?, ~second as y: option<int>=?) : int => switch x {...}
 // 약어 정의 빼기
 // 참고로 호출하는 곳에서는 `option<int>`가 아닌 `int`로 호출 합니다.
@@ -338,7 +338,7 @@ let add = (~first: option<int>=?, ~second: option<int>=?) : int => switch first 
 ```reason
 add(x, y)
 
-// 이름 있는 인수에 명시적으로 전달
+// 이름이 있는 인자에 명시적으로 전달
 add(~first=1, ~second=2)
 // 동일한 이름을 가진 값을 암묵적으로 전달
 add(~first, ~second)
@@ -355,7 +355,7 @@ add(~first?, ~second?)
 #### + 타입 어노테이션
 
 ```reason
-// 이름 있는 인수에 명시적으로 전달
+// 이름이 있는 인자에 명시적으로 전달
 add(~first=1: int, ~second=2: int)
 // 동일한 이름을 가진 값을 암묵적으로 전달
 add(~first: int, ~second: int)
@@ -371,13 +371,13 @@ add(~first=?Some(1): option<int>, ~second=?Some(2): option<int>)
 ### 독립적인 함수 시그니쳐
 
 ```reason
-// 첫번째, 두번째 인수 타입, 반환 타입
+// 첫번째, 두번째 인자 타입, 반환 타입
 type add = (int, int) => int
 
-// 이름있는 인수
+// 이름이 있는 인자
 type add = (~first: int, ~second: int) => int
 
-// 이름 있는 인수
+// 이름이 있는 인자
 type add = (~first: int=?, ~second: int=?, unit) => int
 ```
 
