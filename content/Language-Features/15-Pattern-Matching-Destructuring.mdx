@@ -86,7 +86,7 @@ While the destructuring aspect of pattern matching is nice, it doesn't really ch
 One paradigm-changing way of thinking about your code is to execute some code based on the shape of the data.
 
 패턴 매칭의 구조분해 측면은 좋습니다만, 실제로 코드 구조를 생각하는 방식이 변경되지는 않습니다.
-생각하는 패러다임을 바꾸는 한 가지 방법은 데이터 형태를 보고 코드를 실행하는 것입니다.
+생각하는 패러다임을 바꾸는 방법은 데이터 형태를 보고 코드를 실행하는 것입니다.
 
 배리언트를 고려하세요.
 
@@ -104,7 +104,7 @@ In other languages, you'd end up with a series of if-elses that are hard to read
 In ReScript, you can instead use the supercharged `switch` pattern matching facility to destructure the value while calling the right code based on what you destructured:
 
 다른 언어에서는 읽기 어렵고 오류가 발생하기 쉬운 if-eles 조합으로 작성합니다.
-리스크립트는 대신 강화 된 `switch` 패턴 매칭 기능을 사용해 구조분해를 기반으로한 올바른 코드를 호출하면서 값을 구조분해 할 수 있습니다. <-----
+대신 리스크립트는 강화 된 `switch` 패턴 매칭 기능을 사용해 구조분해 기반으로 올바른 코드를 호출하면서 값을 구조분해 할 수 있습니다.
 
 ```reason
 let data = GoodResult("Product shipped!")
@@ -140,6 +140,8 @@ Suddenly, your if-elses that messily checks some structure of the value got turn
 
 ### 복잡한 예시
 
+Here's a real-world scenario that'd be a headache to code in other languages. Given this data structure:
+
 다른 언어로 코딩할 때 골치아픈 시나리오 예시를 보여드리겠습니다.
 
 ```reason
@@ -160,7 +162,7 @@ type person =
 다음 요구사항을 상상해보세요.
 
 - 이름이 `Mary` 또는 `Joe` 인 교사(`Teacher`)는 친근한 인사를 합니다.
-- 다른 교사들(`Teacher`)은 격식을 차린 인사를 합니다.
+- 다른 교사들(`Teacher`)은 격식 차린 인사를 합니다.
 - 학생(`Student`)은 학기를 통과하면 점수와 함께 축하를 합니다.
 - 학생(`Student`)의 GPA가 0점이고 휴가 중이거나 안식일이면 다른 메세지를 표시합니다.
 - 그 외 나머지 학생(`Student`)를 위한 메세지를 표시합니다.
@@ -189,6 +191,8 @@ let message = switch person1 {
   `Good luck next semester ${name}!`
 }
 ```
+
+**Note** how we've:
 
 **참고** 어떻게 했냐면...
 - 값을 간결하지만 깊게 분석했습니다.
@@ -546,7 +550,9 @@ let optionBoolToBool = opt => {
 }
 ```
 
-훨씬 더 선형 적으로 보입니다! 이 코드조각을 이렇게 작성 할 수도 있겠죠?
+Much more linear-looking! Now, you might be tempted to do this:
+
+훨씬 더 선형적이네요! 이제 코드조각을 이렇게 작성 할 수도 있겠죠?
 
 ```reason
 let optionBoolToBool = opt => {
@@ -557,7 +563,9 @@ let optionBoolToBool = opt => {
 }
 ```
 
-훨씬 더 간결하지만 언급했던 완전한 검사를 활용할 수 없게 됐습니다. 가급적 사용하지 마세요. 
+Which is much more concise, but kills the exhaustiveness check mentioned above; refrain from using that. This is the best:
+
+훨씬 더 간결하지만 언급했던 완전한 검사를 활용할 수 없게 됐습니다. 가급적 사용하지 마세요.
 
 가장 잘 작성한 코드조각은 이렇습니다.
 
