@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Highlight, { defaultProps } from 'prism-react-renderer';
-import prismTheme from 'prism-react-renderer/themes/vsDark';
+import prismTheme from 'prism-react-renderer/themes/oceanicNext';
 import Loadable from 'react-loadable';
 import LoadingProvider from './loading';
 
@@ -26,11 +26,21 @@ const LoadableComponent = Loadable({
 
 /* eslint-disable react/jsx-key */
 const CodeBlock = ({ children: exampleCode, ...props }) => {
+  let code;
+  if(exampleCode.length > 0 && exampleCode.join)  {
+    code = exampleCode.join("")
+  } else {
+    code = exampleCode;
+  }
+  // Fixme Overview 땜빵
+  if (code === "||" || code.includes("let [a, b] = data") || code.includes("try a catch { | Err => ...}")) {
+    return <span dangerouslySetInnerHTML={{__html:`<code>${code}<\/code>`}} />;
+  }
   if (props['react-live']) {
     return <LoadableComponent code={exampleCode} />;
   } else {
     return (
-      <Highlight {...defaultProps} code={exampleCode} language="javascript" theme={prismTheme}>
+      <Highlight {...defaultProps} code={code} language={props?.className?.split("-")[1] || "javascript"} theme={prismTheme}>
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
           <pre className={className + ' pre'} style={style} p={3}>
             {cleanTokens(tokens).map((line, i) => {
