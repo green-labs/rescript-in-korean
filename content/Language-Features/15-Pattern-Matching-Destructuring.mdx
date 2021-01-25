@@ -72,21 +72,14 @@ let list{head, ...tail} = myList
 // 1은 `head`, `list{2, 3}` 은 tail에 할당
 ```
 
-But the array example is **highly disrecommended** (use tuple instead) and the list example will error on you.
-They're only there for completeness' sake.
-As you'll see below, the proper way of using destructuring array and list is using `switch`.
-
-하지만 위 배열 예제는 **매우 권장하지 않습니다.** (튜플을 사용하세요) 또한 목록 예제는 오류가 발생합니다.
-각 예제는 형식만 완전합니다.
+하지만 위 배열 예제는 **강하게 비추합니다.** (가급적 튜플을 사용하세요) 또한 목록 예제는 오류가 발생합니다.
+단지 이런것도 가능하다는 것을 보여주기 위한 예시입니다.
 다음 섹션에서 볼 수 있듯이 배열과 목록을 올바르게 구조분해하는 방법은 `switch`를 사용하는 것입니다.
 
 ## 데이터 형태에 따른 switch 구문
 
-While the destructuring aspect of pattern matching is nice, it doesn't really change the way you think about structuring your code.
-One paradigm-changing way of thinking about your code is to execute some code based on the shape of the data.
-
-패턴 매칭의 구조분해 측면은 좋습니다만, 실제로 코드 구조를 생각하는 방식이 변경되지는 않습니다.
-생각하는 패러다임을 바꾸는 방법은 데이터 형태를 보고 코드를 실행하는 것입니다.
+패턴 매칭은 구조분해가 되는 장점을 지니는 동시에, 작성자가 의도하는 코드의 구조에는 영향을 주지 않습니다.
+여러분들의 코드에 대한 발상을 전환하는 방식이 있습니다. 바로 데이터의 형태에 따라 다른 코드가 실행되도록 만드는 것입니다.
 
 배리언트를 고려하세요.
 
@@ -100,11 +93,8 @@ type payload =
 위 세 가지 케이스를 각각 다르게 처리하고 싶습니다.
 예를 들어 값이 `GoodResult(...)`면 성공 메시지를 출력하고, `NoResult`면 다른 작업을 수행합니다.
 
-In other languages, you'd end up with a series of if-elses that are hard to read and error-prone.
-In ReScript, you can instead use the supercharged `switch` pattern matching facility to destructure the value while calling the right code based on what you destructured:
-
-다른 언어에서는 읽기 어렵고 오류가 발생하기 쉬운 if-eles 조합으로 작성합니다.
-대신 리스크립트는 강화 된 `switch` 패턴 매칭 기능을 사용해 구조분해 기반으로 올바른 코드를 호출하면서 값을 구조분해 할 수 있습니다.
+다른 언어에서는 if-else를 연달아 작성하곤 할텐데, 이는 읽기가 어렵고 오류가 생기기 쉬운 방식입니다.
+리스크립트에서는 if-else 대신 초강력한 `switch` 패턴 매칭으로 구조 분해를 하고, 각각 분해된 결과의 오른편에 작성된 코드가 실행되도록 합니다.
 
 ```reason
 let data = GoodResult("Product shipped!")
@@ -134,15 +124,11 @@ if (typeof data === "number") {
 
 이 경우 `message` 값은 `"Success! Product shipped!"` 입니다.
 
-Suddenly, your if-elses that messily checks some structure of the value got turned into a clean, compiler-verified, linear list of code to execute based on exactly the shape of the value.
-
-갑자기 값을 지저분하게 확인하는 if-eles 조합이 정확한 값의 형태를 기반으로 실행할 수 있는 깔끔하고 컴파일러가 검증한 선형적인 코드로 변경됐습니다.
+갑자기 값을 지저분하게 확인하는 if-else 조합이 정확한 값의 형태를 기반으로 실행할 수 있는 깔끔하고 컴파일러가 검증한 선형적인 코드로 변경됐습니다.
 
 ### 복잡한 예시
 
-Here's a real-world scenario that'd be a headache to code in other languages. Given this data structure:
-
-다른 언어로 코딩할 때 골치아픈 시나리오 예시를 보여드리겠습니다.
+다른 언어로 코딩할 때 골치아픈 시나리오 예시를 보여드리겠습니다. 아래와 같은 자료구조가 주어졌다고 합시다.
 
 ```reason
 type status = Vacations(int) | Sabbatical(int) | Sick | Present
