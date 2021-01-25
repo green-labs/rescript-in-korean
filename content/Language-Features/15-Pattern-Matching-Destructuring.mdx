@@ -178,8 +178,6 @@ let message = switch person1 {
 }
 ```
 
-**Note** how we've:
-
 **참고** 어떻게 했냐면...
 - 값을 간결하지만 깊게 분석했습니다.
 - `"Mary" | "Joe"`, `Vacations | Sabbatical` 에서 **중첩 패턴 검사**를 사용했습니다. 
@@ -288,17 +286,13 @@ if (typeof myStatus === "number" || myStatus.TAG) {
 }
 ```
 
-Slightly more verbose, but a one-time writing effort.
-This helps when you add a new variant case e.g. `Quarantined` to the `status` type and need to update the places that pattern match on it.
-A top-level wildcard here would have accidentally and silently continued working, potentially causing bugs.
-
 장황해 보이지만 한번만 작성하면 됩니다. 이렇게 함으로 새로운 배리언트 케이스를 추가할 때 도움을 얻을 수 있습니다.
 만약 위와 같이 작성한 뒤, `status` 타입에 `Quarantined` 케이스를 추가한다면 패턴 매칭이 있는 부분을 반드시 수정해야합니다.
 하지만 최상위에서 포괄 조건을 사용했다면 추가한 케이스가 있음에도 불구하고 아무런 문제없이 작동하기 때문에 잠재적으로 버그가 발생 할 수 있습니다.
 
 ### When 절
 
-때때로 값의 형태와 함께 다른 조건을 검사헤야하는 경우가 있습니다. 그럴때 이렇게 작성할 수 있겠죠.
+때때로 값의 형태와 함께 다른 조건을 검사해야하는 경우가 있습니다. 그럴때 이렇게 작성할 수 있겠죠.
 
 ```reason
 switch person1 {
@@ -420,9 +414,6 @@ var centerY = 20;
 console.log(10);
 ```
 
-A first time ReScript user might accidentally write that code, assuming that it's matching on `coordinates` when the second value is of the same value as `centerY`.
-In reality, this is interpreted as matching on coordinates and assigning the second value of the tuple to the name `centerY`, which isn't what's intended.
-
 리스크립트를 처음 사용하는 위와 같은 코드를 작성하는 실수를 할 수 있습니다. `coordinates`의 두 번째 값이 `centerY`와 동일한 값일 때 매칭될거라고 생각했기 때문입니다.
 하지만 이 코드 조각은 "`coordinates` 가 3개 요소를 가지고 있는 튜플 형태에 일치하는 가?"로 해석되고, "두 번째 값을 `centerY` 라는 이름에 할당"하는 것으로 동작합니다.
 의도와 다르게 동작하기 때문에 주의해야합니다.
@@ -536,8 +527,6 @@ let optionBoolToBool = opt => {
 }
 ```
 
-Much more linear-looking! Now, you might be tempted to do this:
-
 훨씬 더 선형적이네요! 여기서 더 나아가 아래처럼 바꾸고 싶은 유혹이 드실겁니다.
 
 ```reason
@@ -548,8 +537,6 @@ let optionBoolToBool = opt => {
   }
 }
 ```
-
-Which is much more concise, but kills the exhaustiveness check mentioned above; refrain from using that. This is the best:
 
 훨씬 더 간결하지만 언급했던 완전한 검사를 활용할 수 없게 됐습니다. 가급적 사용하지 마세요.
 
@@ -563,10 +550,6 @@ let optionBoolToBool = opt => {
   }
 }
 ```
-
-Pretty darn hard to make a mistake in this code at this point!
-Whenever you'd like to use an if-else with many branches, prefer pattern matching instead.
-It's more concise and [performant](variant#design-decisions) too.
 
 이쯤되면 이 코드조각에서 실수하기 꽤 어렵습니다!
 분기가 많은 if-else를 사용할 때마다 패턴 매칭을 고려해보세요.
