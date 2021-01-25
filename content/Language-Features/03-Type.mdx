@@ -15,7 +15,7 @@ canonical: "/docs/manual/latest/type"
 
 밑의 섹션들이 우리의 타입 시스템에 대해 더 자세히 알려줄 것 입니다.
 
-## 추론(Inference)
+## 추론 (Inference)
 
 이러한 let 바인딩은 어떠한 타입도 쓰여지지 않습니다.
 
@@ -34,7 +34,7 @@ function add(a, b) {
 
 리스크립트는 `score` 가 `int`라는 것을 그것의 값인 `10`으로부터 알고 있습니다. 이것을 **추론**이라고 합니다. 이것과 같이, 리스크립트는 `add` 함수가 두개의 `int`를 가져오고 `int`를 반환하는 것을 정수들을 사용하는 `+` 연산자로부터 확인하여 알고 있습니다.
 
-## 타입 주석(type annotation)
+## 타입 주석 (Type Annotation)
 
 위와 같이 타입들이 추론되지만서도, 여러분은 직접 타입에 대해 유동적으로 쓸 수도 있습니다. 이걸 우리는 값에 주석을 쓴다고 하죠.
 
@@ -72,7 +72,7 @@ function drawCircle(r) {
 
 참고: 마지막 줄의 `(~radius as r: int)`은 레이블이 지정된 인수입니다. 자세한 내용은 [function](function.md) 페이지 에서 확인하세요.
 
-## 타입의 별칭
+## 타입의 별칭 (Type alias)
 
 여러분은 타입에 다른 이름을 부여할수 있습니다. 이 예시들은 같은 뜻입니다.
 
@@ -193,7 +193,7 @@ var payloadResults = [
 ];
 ```
 
-## 재귀 타입
+## 재귀 타입 (Recursive Types)
 
 함수와 같이, 타입은 자기 자신을 `rec`을 사용하여 참조할 수 있습니다.
 
@@ -211,8 +211,7 @@ type rec person = {
 
 ## 상호적 재귀 타입 (Mutually Recursive Types)
 
-타입은 `and` 를 통해 _상호적_ 재귀가 될 수 있습니다. (Types can also be _mutually_ recursive through `and`:)
-
+타입은 `and` 를 통해 _상호적_ 재귀가 될 수 있습니다.
 
 ```res example
 // rescript
@@ -229,7 +228,6 @@ and teacher = {students: array<student>}
 
 리스트립트의 타입 시스템은 견고하고 암시적인 타입 변환과 같은 안전하지 않거나 값의 타입을 마구잡이로 예측하는 등의 위험을 허락하지 않습니다. 하지만, 실용적인 측면에서 우리는 타입 시스템을 "속일 수"있는 단일 탈출 해치를 보여드리겠습니다.
 
-
 ```res
 // rescript
 external myShadyConversion: myType1 => myType2 = "%identity"
@@ -238,8 +236,7 @@ external myShadyConversion: myType1 => myType2 = "%identity"
 // Empty output
 ```
 
-이 선언은 `myType1`으로의 선택을 `myType2`로 바꾸어 줍니다. 이것은 이런식으로도 사용할 수 있습니다.
-(This declaration converts a `myType1` of your choice to `myType2` of your choice. You can use it like so:)
+이 선언은 `myType1`으로의 선택을 `myType2`로 바꾸어 줍니다. 이러한 탈출해치는 아래와 같이 사용할 수 있습니다.
 ```res example
 // rescript
 external convertToFloat : int => float = "%identity"
