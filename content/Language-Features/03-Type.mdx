@@ -1,5 +1,259 @@
 ---
-title: 'Type'
-metaTitle: 'Type'
-metaDescription: 'This is the meta description'
+title: "Type"
+description: "타입, 리스크립트에서의 타입의 뜻"
+canonical: "/docs/manual/latest/type"
 ---
+
+# Type
+
+타입(Type)은 리스크립트의 꽃이라 할수 있습니다! 타입은
+- **강력합니다**. 리스크립트의 타입은 다른 타입으로 바뀌지 않습니다. 보통의 JavaScript에서는 코드가 진행(런타임)될 때 변수의 타입이 바뀌기도 합니다. 예를 들어, `숫자(Number)`타입의 변수가 가끔 `문자열(String)`타입의 변수로 바뀌기도 합니다. 이것은 코드를 읽거나 디버깅을 할때 코드를 더욱 이해하기 어렵기 하기 때문에 하나의 반기능(anti-feature)이라고 할 수 있습니다. 
+- **정적입니다**. 리스크립트의 타입들은 컴파일 후에 사라지고 타입이 필요없는 런타임 단계에서는 그 정보들이 남아있지 않습니다. 사용된 타입들이 퍼포먼스에 악영향을 끼치지 않는다는 것이죠. 또한, 리스크립트는 모든 정보들(특히 모든 타입 오류들)을 컴파일 중에 알려줍니다. 버그를 빨리 잡아보세요!
+- **명확합니다**. 이것은 JavaScript로 컴파일되는 다른 타입 언어와 비교할 때 가장 큰 차별화 요소로, 리스크립트의 타입 시스템은 ** 절대 ** 틀리지 않습니다. 대부분의 타입 시스템은 값의 타입을 추측하고, 때로는 잘못된 유형을 표시합니다. 그러나 리스크립트는 위험이 부정확한 타입 시스템으로부터 오는 기대 불일치에서 오는것이라 믿기때문에 절대 틀리지 않습니다.
+- **빠릅니다**. 많은 개발자들이 자신들의 프로젝트의 타입 검수에 투자되는 시간들을 과소평가합니다. 우리의 타입 검수기는 가장 빠른 검수기 중 하나입니다.
+- **유추됩니다**. 타입을 하나하나 쓸 필요가 없습니다! 리스크립트는 변수의 값에서 부터 타입을 유추할 수 있습니다. 네, 리스크립트가 당신의 파일의 타입을 모두 유추할 수 있다는게 믿기지 않겠지만, 틀리거나 직접 쓰지않고도 빠르게 유추할 수 있습니다. 리스크립트의 세계에 오신걸 환영합니다 =).
+
+밑의 섹션들이 우리의 타입 시스템에 대해 더 자세히 알려줄 것 입니다.
+
+## 추론(Inference)
+
+이러한 let 바인딩은 어떠한 타입도 쓰여지지 않습니다.
+
+```resason
+// rescript
+let score = 10
+let add = (a, b) => a + b
+```
+```js
+// javascript
+var score = 10;
+function add(a, b) {
+  return a + b | 0;
+}
+```
+
+리스크립트는 `score` 가 `int`라는 것을 그것의 값인 `10`으로부터 알고 있습니다. 이것을 **추론**이라고 합니다. 이것과 같이, 리스크립트는 `add` 함수가 두개의 `int`를 가져오고 `int`를 반환하는 것을 정수들을 사용하는 `+` 연산자로부터 확인하여 알고 있습니다.
+
+## 타입 주석(type annotation)
+
+위와 같이 타입들이 추론되지만서도, 당신은 직접 타입에 대해 유동적으로 쓸 수도 있습니다. 이걸 우리는 값에 주석을 쓴다고 하죠.
+
+```res example
+// rescript
+let score: int = 10
+```
+```js
+// js
+var score = 10;
+```
+
+만약 `score`의 타입 주석이 리스크립트가 유추한 타입과 일치하지 않는 경우, 리스크립트는 컴파일 중 에러를 보여줄 것입니다. 리스크립트는 다른 많은 언어들과는 달리, 당신의 타입 주석이 맞을 것이라고 **가볍게 넘기지 않을 것** 입니다. 
+
+당신은 아래와 같이 어떤 표현이든 괄호에 넣고 주석을 넣을 수 있습니다.
+
+```res
+// rescript
+let myInt = 5
+let myInt: int = 5
+let myInt = (5: int) + (4: int)
+let add = (x: int, y: int) : int => x + y
+let drawCircle = (~radius as r: int): circleType => /* code here */
+```
+```js
+// js
+var myInt = 9;
+function add(x, y) {
+  return x + y | 0;
+}
+function drawCircle(r) {
+  /* code here */
+}
+```
+
+참고: 마지막 줄의 `(~radius as r: int)`은 레이블이 지정된 인수입니다. 자세한 내용은 [function](function.md) 페이지 에서 확인하세요.
+
+## 타입의 별칭
+
+당신은 타입에 다른 이름을 부여할수 있습니다. 이 예시들은 같은 뜻입니다.
+
+```res example
+// rescript
+type scoreType = int
+let x: scoreType = 10
+```
+```js
+// js
+var x = 10;
+```
+
+## 타입 매개변수 (A.k.a Generic)
+
+타입들은 매개변수를 받을 수 있습니다. 다른 언어에서는 Generics라고 하죠. 매개변수들의 이름은 **꼭** `'`으로 시작해야 합니다.
+
+중복을 제거하기 위한 매개변수화 된 타입의 사용 예제입니다. 
+
+전:
+
+```res example
+// rescript
+// this is a tuple of 3 items, explained next
+type intCoordinates = (int, int, int)
+type floatCoordinates = (float, float, float)
+
+let a: intCoordinates = (10, 20, 20)
+let b: floatCoordinates = (10.5, 20.5, 20.5)
+```
+```js
+// js
+var a = [10, 20, 20];
+var b = [10.5, 20.5, 20.5];
+```
+
+
+후: 
+
+
+```res example
+// rescript
+type coordinates<'a> = ('a, 'a, 'a)
+
+let a: coordinates<int> = (10, 20, 20)
+let b: coordinates<float> = (10.5, 20.5, 20.5)
+```
+```js
+// js
+var a = [10, 20, 20];
+var b = [10.5, 20.5, 20.5];
+```
+
+위의 코드는 설명을 위해 고안된 예일뿐입니다. 타입이 유추되었으므로 다음과 같이 작성할 수 있습니다.
+
+```res example
+// rescript
+let buddy = (10, 20, 20)
+```
+```js
+// js
+var buddy = [10, 20, 20];
+```
+
+
+타입 시스템은 이것이 `(int, int, int)`라고 추론합니다. 다른 어떤 것도 쓰여질 필요가 없습니다.
+
+타입 인수는 여러 위치에 나타납니다. 리스크립트의 `array < 'a>`타입은 타입 매개변수가 필요한 유형입니다.
+
+```res example
+// rescript
+// inferred as `array<string>`
+let greetings = ["hello", "world", "how are you"]
+```
+```js
+// js
+// inferred as `array<string>`
+var greetings = ["hello", "world", "how are you"];
+```
+
+만약 타입이 매개변수를 허용하지 않는다면 표준 라이브러리는`arrayOfString`,`arrayOfInt`,`arrayOfTuplesOfInt` 등의 타입을 정의해야합니다. 아주 지루한 일이죠.
+
+타입은 많은 인수를 받을 수 있으며 또 구성할 수 있습니다.
+
+<!-- TODO: too early for this example -->
+
+```res example
+// rescript
+type result<'a, 'b> =
+  | Ok('a)
+  | Error('b)
+
+type myPayload = {data: string}
+
+type myPayloadResults<'errorType> = array<result<myPayload, 'errorType>>
+
+let payloadResults: myPayloadResults<string> = [
+  Ok({data: "hi"}),
+  Ok({data: "bye"}),
+  Error("Something wrong happened!")
+]
+```
+```js
+// js
+var payloadResults = [
+  {
+    TAG: /* Ok */0,
+    _0: {data: "hi"}
+  },
+  {
+    TAG: /* Ok */0,
+    _0: {data: "bye"}
+  },
+  {
+    TAG: /* Error */1,
+    _0: "Something wrong happened!"
+  }
+];
+```
+
+## 재귀 타입
+
+함수와 같이, 타입은 자기 자신을 `rec`을 사용하여 참조할 수 있습니다.
+
+```res example
+// rescript
+type rec person = {
+  name: string,
+  friends: array<person>
+}
+```
+```js
+// js
+// Empty output
+```
+
+## 상호적 재귀 타입 (Mutually Recursive Types)
+
+타입은 `and` 를 통해 _상호적_ 재귀가 될 수 있습니다. (Types can also be _mutually_ recursive through `and`:)
+
+
+```res example
+// rescript
+type rec student = {taughtBy: teacher}
+and teacher = {students: array<student>}
+```
+```js
+// js
+// Empty output
+```
+
+
+## 타입 탈출 해치(Type Escape Hatch)
+
+리스트립트의 타입 시스템은 견고하고 암시적인 타입 변환과 같은 안전하지 않거나 값의 타입을 마구잡이로 예측하는 등의 위험을 허락하지 않습니다. 하지만, 실용적인 측면에서 우리는 타입 시스템을 "속일 수"있는 단일 탈출 해치를 보여드리겠습니다.
+
+
+```res
+// rescript
+external myShadyConversion: myType1 => myType2 = "%identity"
+```
+```js
+// Empty output
+```
+
+이 선언은 `myType1`으로의 선택을 `myType2`로 바꾸어 줍니다. 이것은 이런식으로도 사용할 수 있습니다.
+(This declaration converts a `myType1` of your choice to `myType2` of your choice. You can use it like so:)
+```res example
+// rescript
+external convertToFloat : int => float = "%identity"
+let age = 10
+let gpa = 2.1 +. convertToFloat(age)
+```
+```js
+// js
+var age = 10;
+var gpa = 2.1 + 10;
+```
+
+절대 이 기능을 `남용`하지 마십시오. 기존의 지나치게 동적인 JS 코드의 작업이 필요할 때 세련되게 사용하기 바랍니다.
+
+더 자세한 내용은 [여기서](external.md) 확인하세요.
+
+**참고**: `@bs` 주석이 선행되지 않는 것으론 `external`이 유일합니다.
