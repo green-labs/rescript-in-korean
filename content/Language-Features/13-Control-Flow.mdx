@@ -1,7 +1,7 @@
 ---
 title: "제어 흐름(Control Flow)"
 metaTitle: "제어 흐름(Control Flow)"
-metaDescription: "If, else, 삼항 연산자(ternary), for while 등 유사한 구조"
+metaDescription: "If, else, 삼항 표현(ternary), for, while 과 같은 구조"
 sourceUrl: "https://rescript-lang.org/docs/manual/latest/control-flow"
 canonical: "/rescript-in-korean/control-flow"
 ---
@@ -9,16 +9,19 @@ canonical: "/rescript-in-korean/control-flow"
 # 제어 흐름(Control Flow)
 
 ReScript supports `if`, `else`, ternary expression, `for` and `while`.
+리스크립트에서는 `if`, `else`, 삼항 연산 표현(ternary expression), `for` 및 `while`을 지원합니다.
 
 ReScript also supports our famous pattern matching, which will be covered in [its own section](pattern-matching-destructuring.md)
+리스크립트는 그 유명한 패턴 매칭 역시 지원합니다. 이와 관련한 자세한 내용은 [여기](pattern-matching-destructuring.md)에서 확인할 수 있습니다.
 
-## If-Else & Ternary
+## If-Else & 삼항 표현(Ternary)
 
 Unlike its JavaScript counterpart, ReScript's `if` is an expression; they evaluate to their body's content:
+자바스크립트에서와 달리, 리스크립트의 `if`는 표현(expression)입니다. 즉, 그 바디(body)의 내용을 평가합니다.
 
 <CodeTab labels={["ReScript", "JS Output"]}>
 
-```res
+```reason
 let message = if isMorning {
   "Good morning!"
 } else {
@@ -32,10 +35,10 @@ var message = isMorning ? "Good morning!" : "Hello!";
 </CodeTab>
 
 **Note:** an `if-else` expression without the final `else` branch implicitly gives `()` (aka the `unit` type). So this:
-
+**Note:** `if-else` 표현에서 `else` 브랜치가 없는 경우, 암시적으로 `()`를 제공합니다. (`unit` 타입이라고 부릅니다). 다음을 확인하세요:
 <CodeTab labels={["ReScript", "JS Output"]}>
 
-```res
+```reason
 if showMenu {
   displayMenu()
 }
@@ -49,10 +52,11 @@ if (showMenu) {
 </CodeTab>
 
 is basically the same as:
+이는 다음과 기본적으로 같습니다:
 
 <CodeTab labels={["ReScript", "JS Output"]}>
 
-```res
+```reason
 if showMenu {
   displayMenu()
 } else {
@@ -68,20 +72,23 @@ if (showMenu) {
 </CodeTab>
 
 Here's another way to look at it. This is clearly wrong:
+다른 방법으로 이를 확인할 수 있습니다. 이는 완전히 틀렸습니다:
 
-```res
+```reason
 let result = if showMenu {
   1 + 2
 }
 ```
 
 It'll give a type error, saying basically that the implicit `else` branch has the type `unit` while the `if` branch has type `int`. Intuitively, this makes sense: what would `result`'s value be, if `showMenu` was `false`?
+위 코드는 기본적으로 암시적인 `else` 브랜치는 `unit` 타입을 가지는데 `if` 브랜치는 `int` 타입을 가진다는 내용의 타입 에러가 납니다. 직관적으로 이는 이치에 맞습니다: if `showMenu`가 `false`라면 `result`의 값은 뭐가 돼야 할까요?
 
 We also have ternary sugar, but **we encourage you to prefer if-else when possible**.
+우리는 삼항 표현(ternary sugar)도 제공합니다. **그러나 가능하다면, if-else를 사용 할 것을 장려합니다**
 
 <CodeTab labels={["ReScript", "JS Output"]}>
 
-```res
+```reason
 let message = isMorning ? "Good morning!" : "Hello!"
 ```
 ```js
@@ -91,14 +98,16 @@ var message = isMorning ? "Good morning!" : "Hello!";
 </CodeTab>
 
 **`if-else` and ternary are much less used** in ReScript than in other languages; [Pattern-matching](pattern-matching-destructuring.md) kills a whole category of code that previously required conditionals.
+**리스크립트에서는 다른 언어에서보다 `if-else`와 삼항 표현이 극히 드물게 사용됩니다**; 강력한 [패턴매칭](pattern-matching-destructuring.md)이 이전에 필수적이었던 이러한 유형의 코드들을 없애버렸습니다.
 
-## For Loops
+## For 루프(loop)
 
 For loops iterate from a starting value up to (and including) the ending value.
+For 루프(loop)는 시작값부터 끝 값(끝 값도 포함하여)까지 반복한다.
 
 <CodeTab labels={["ReScript", "JS Output"]}>
 
-```res
+```reason
 for i in startValueInclusive to endValueInclusive {
   Js.log(i)
 }
@@ -113,7 +122,7 @@ for(var i = startValueInclusive; i <= endValueInclusive; ++i){
 
 <CodeTab labels={["ReScript", "JS Output"]}>
 
-```res example
+```reason example
 // prints: 1 2 3
 for x in 1 to 3 {
   Js.log(x)
@@ -130,10 +139,11 @@ for(var x = 1; x <= 3; ++x){
 </CodeTab>
 
 You can make the `for` loop count in the opposite direction by using `downto`.
+`for` 루프(loop)의 카운트를 `downto`를 이용해서 반대 방향으로 만들 수 있습니다.
 
 <CodeTab labels={["ReScript", "JS Output"]}>
 
-```res
+```reason
 for i in startValueInclusive downto endValueInclusive {
   Js.log(i)
 }
@@ -148,7 +158,7 @@ for(var i = startValueInclusive; i >= endValueInclusive; --i){
 
 <CodeTab labels={["ReScript", "JS Output"]}>
 
-```res example
+```reason example
 // prints: 3 2 1
 for x in 3 downto 1 {
   Js.log(x)
@@ -164,13 +174,13 @@ for(var x = 3; x >= 1; --x){
 
 </CodeTab>
 
-## While Loops
+## While 루프(loop)
 
-While loops execute its body code block while its condition is true.
+While 루프(loop)는 조건이 참(true)일 때까지 그 바디(body)의 코드 블록을 실행합니다.
 
 <CodeTab labels={["ReScript", "JS Output"]}>
 
-```res
+```reason
 while testCondition {
   // body here
 }
@@ -183,13 +193,14 @@ while (testCondition) {
 
 </CodeTab>
 
-### Tips & Tricks
+### 팁 & 트릭(Tips & Tricks)
 
 There's no loop-breaking `break` keyword (nor early `return` from functions, for that matter) in ReScript. However, we can break out of a while loop easily through using a [mutable binding](mutation.md).
+리스크립트에는 루프(loop)를 탈출하는 `break` 키워드가 없습니다. (함수(function)에서 빠른 탈출을 위한 `return`도 없습니다.). 그러나 [뮤터블 바인딩](mutation.md)을 이용하여 while 루프(loop)를 쉽게 탈출할 수 있습니다.
 
 <CodeTab labels={["ReScript", "JS Output"]}>
 
-```res example
+```reason example
 let break = ref(false)
 
 while !break.contents {
