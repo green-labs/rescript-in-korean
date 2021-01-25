@@ -34,7 +34,8 @@ export default {
       <pre {...props} />
     </StyledPre>
   ),
-  code: CodeBlock,
+  code: props => {
+    return <CodeBlock {...props} />},
   a: AnchorTag,
   // TODO add `img`
   // TODO add `blockquote`
