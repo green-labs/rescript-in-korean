@@ -1,5 +1,159 @@
 ---
-title: 'Unboxed'
-metaTitle: 'Unboxed'
-metaDescription: 'This is the meta description'
+title: '언박싱'
+metaTitle: '언박싱'
+metaDescription: '래퍼를 언박싱합니다.'
 ---
+
+# 언박싱
+
+<!--Consider a ReScript variant with a single payload, and a record with a single field: -->
+
+리스크립트에서 단일 페이로드로 이루어진 배리언트와, 단일 필드로 이루어진 레코드를 살펴봅시다.
+
+```resonml
+type name = Name(string)
+let studentName = Name("Joe")
+
+type greeting = {message: string}
+let hi = {message: "hello!"}
+```
+```js
+var studentName = /* Name */{
+  _0: "Joe"
+};
+
+var hi = {
+  message: "hello!"
+};
+```
+
+<!--
+If you check the JavaScript output, you'll see the `studentName` and `hi` JS object, as expected (see the [variant JS output](variant#javascript-output) and [record JS output](record#javascript-output) sections for details).
+-->
+
+자바스크립트 출력을 보면, 학생 이름 또는 인사가 자바스크립트 객체에 포함된 것을 볼 수 있습니다 (자세한 내용은 [variant JS output](variant#javascript-output)과 [record JS output](record#javascript-output)를 참조하시기 바랍니다.). 
+
+For performance and certain JavaScript interop situations, ReScript offers a way to unwrap (aka unbox) the JS object wrappers from the output for records with a single field and variants with a single constructor and single payload. Annotate their type declaration with the attribute `@unboxed`:
+
+성능이나 자바스크립트와의 특정한 연동상황에 대응하기 위하여, 리스크립트는 단일 필드로 이루어진 레코드 혹은 단일 생성자로 이루어진 배리언트를 언랩할 수 있는 방법을 제공합니다. 타입 선언 위에 `@unboxed`라고 달면 됩니다.
+
+
+```resonml
+@unboxed
+type name = Name(string)
+let studentName = Name("Joe")
+
+@unboxed
+type greeting = {message: string}
+let hi = {message: "hello!"}
+```
+```js
+var studentName = "Joe";
+
+var hi = "hello!";
+```
+
+<!-- Check the new output! Clean.-->
+
+변환 결과는 깔끔합니다.
+
+## 사용하기
+
+<!-- Why would you ever want a variant or a record with a single payload? Why not just... pass the payload? Here's one use-case for variant.
+
+Suppose you have a game with a local/global coordinate system: -->
+
+왜 싱글 페이로드를 가진 배리언트 또는 레코드가 필요할까요? 왜 그냥 페이로드를 넘기지 않을까요? 여기에 배리언트의 사용 예가 있습니다.
+
+지역 및 전역 좌표 시스템을 가진 게임이 있다고 가정해봅시다. 코드는 다음과 같습니다.
+
+```reasonml example
+type coordinates = {x: float, y: float}
+
+let renderDot = (coordinates) => {
+  Js.log3("Pretend to draw at:", coordinates.x, coordinates.y)
+}
+
+let toWorldCoordinates = (localCoordinates) => {
+  {
+    x: localCoordinates.x +. 10.,
+    y: localCoordinates.x +. 20.,
+  }
+}
+
+let playerLocalCoordinates = {x: 20.5, y: 30.5}
+
+renderDot(playerLocalCoordinates)
+```
+```js
+function renderDot(coordinates) {
+  console.log("Pretend to draw at:", coordinates.x, coordinates.y);
+}
+
+function toWorldCoordinates(localCoordinates) {
+  return {
+    x: localCoordinates.x + 10,
+    y: localCoordinates.x + 20
+  };
+}
+
+var playerLocalCoordinates = {
+  x: 20.5,
+  y: 30.5
+};
+
+renderDot(playerLocalCoordinates);
+```
+
+<!-- Oops, that's wrong! `renderDot` should have taken global coordinates, not local ones... Let's prevent passing the wrong kind of coordinates: -->
+
+이런, 뭔가 잘못되었습니다. `renderDot` 은 지역좌표가 아니라 전역 좌표를 가져야 합니다. 좌표의 종류를 넘겨서 해결해봅시다.
+
+
+```reasonml example
+type coordinates = {x: float, y: float}
+@unboxed type localCoordinates = Local(coordinates)
+@unboxed type worldCoordinates = World(coordinates)
+
+let renderDot = (World(coordinates)) => {
+  Js.log3("Pretend to draw at:", coordinates.x, coordinates.y)
+}
+
+let toWorldCoordinates = (Local(coordinates)) => {
+  World({
+    x: coordinates.x +. 10.,
+    y: coordinates.x +. 20.,
+  })
+}
+
+let playerLocalCoordinates = Local({x: 20.5, y: 30.5})
+
+// 이제 이것은 에러입니다.
+// renderDot(playerLocalCoordinates)
+// 대신 아래처럼 합니다.:
+renderDot(playerLocalCoordinates->toWorldCoordinates)
+```
+```js
+function renderDot(coordinates) {
+  console.log("Pretend to draw at:", coordinates.x, coordinates.y);
+}
+
+function toWorldCoordinates(coordinates) {
+  return {
+    x: coordinates.x + 10,
+    y: coordinates.x + 20
+  };
+}
+
+var playerLocalCoordinates = {
+  x: 20.5,
+  y: 30.5
+};
+
+renderDot(toWorldCoordinates(playerLocalCoordinates));
+```
+
+<!-- Now `renderDot` only takes `worldCoordinates`. Through a nice combination of using distinct variant types + argument destructuring, we've achieved better safety **without compromising on performance**: the `unboxed` attribute compiled to clean, variant-wrapper-less JS code! Check the output.
+
+As for a record with a single field, the use-cases are a bit more edgy. We won't mention them here. -->
+이제 `renderDot`은 `worldCoordinates`만을 입력으로 받습니다. `unboxed`속성과 분리된 배리언트 타입과 인자값의 분해를 조합하여 성능의 손해가 없고 안전하게 깔끔하며 배리언트 래퍼가 적은 자바스크립트 코드로 변환되었습니다. 출력을 점검해보세요.
