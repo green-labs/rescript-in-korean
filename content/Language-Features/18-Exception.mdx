@@ -1,5 +1,303 @@
 ---
-title: 'Exception'
+title: '예외(Exception)'
 metaTitle: 'Exception'
-metaDescription: 'This is the meta description'
+metaDescription: "Exceptions and exception handling in ReScript"
+sourceUrl: "https://rescript-lang.org/docs/manual/latest/exception"
+canonical: "/docs/manual/latest/exception"
 ---
+
+예외는 **예외 케이스**일 때 던지는 특별한 종류의 배리언트입니다. (남용하지 마세요!)
+
+## 사용법
+
+<CodeTab labels={["ReScript", "JS Output"]}>
+
+```reason
+let getItem = (items) =>
+  if callSomeFunctionThatThrows() {
+    // 찾은 값을 반환
+    1
+  } else {
+    raise(Not_found)
+  }
+
+let result =
+  try {
+    getItem([1, 2, 3])
+  } catch {
+  | Not_found => 0 // getItem 에서 예외가 던져졌다면 기본값 설정
+  }
+```
+```javascript
+function getItem(items) {
+  if (callSomeFunctionThatThrows()) {
+    return 1;
+  }
+  throw {
+    RE_EXN_ID: "Not_found",
+    Error: new Error()
+  };
+}
+
+var result;
+
+try {
+  result = getItem([1, 2, 3]);
+} catch (raw_exn) {
+  var exn = Caml_js_exceptions.internalToOCamlException(raw_exn);
+  if (exn.RE_EXN_ID === "Not_found") {
+    result = 0;
+  } else {
+    throw exn;
+  }
+}
+```
+
+</CodeTab>
+
+참고로 위 코드조각은 데모일 뿐입니다. 실제로는 `getItem`에서 `option<int>`를 반환하게 해서 `try`를 피하도록 해야합니다.
+
+You can directly match on exceptions _while_ getting another return value from a function:
+함수가 던지는 예외를 정상일 때 반환하는 값처럼 매칭에서 사용할 수 있습니다.
+
+<CodeTab labels={["ReScript", "JS Output"]}>
+
+```reason
+switch List.find(i => i === theItem, myItems) {
+| item => Js.log(item)
+| exception Not_found => Js.log("No such item found!")
+}
+```
+```javascript
+var exit = 0;
+
+var item;
+
+try {
+  item = List.find(function(i) {
+    return i === theItem;
+  }, myItems);
+  exit = 1;
+}
+catch (raw_exn){
+  var exn = Caml_js_exceptions.internalToOCamlException(raw_exn);
+  if (exn.RE_EXN_ID === "Not_found") {
+    console.log("No such item found!");
+  } else {
+    throw exn;
+  }
+}
+
+if (exit === 1) {
+  console.log(item);
+}
+```
+
+</CodeTab>
+
+배리언트를 만들 때처럼 예외를 직접 만들 수 있습니다. (예외도 대문자로 시작해야 함)
+
+<CodeTab labels={["ReScript", "JS Output"]}>
+
+```reason
+exception InputClosed(string)
+// ... 예외를 발생할 때
+raise(InputClosed("The stream has closed!"))
+```
+```javascript
+var Caml_exceptions = require("./stdlib/caml_exceptions.js");
+
+var InputClosed = Caml_exceptions.create("MyFile.InputClosed");
+
+throw {
+  RE_EXN_ID: InputClosed,
+  _1: "The stream has closed!",
+  Error: new Error()
+};
+```
+
+</CodeTab>
+
+## JS 예외 받기
+
+To distinguish between JavaScript exceptions and ReScript exceptions, ReScript namespaces JS exceptions under the `Js.Exn.Error(payload)` variant.
+To catch an exception thrown from the JS side:
+자바스크립트 예외와 리스크립트 예외를 구별하기 위해 리스크립트는 `Js.Exn.Error(payload)` 배리언트를 JS 예외용 네임 스페이스로 지정해 사용합니다.
+JS에서 던져진 예외를 받는 코드조각입니다.
+
+<CodeTab labels={["ReScript", "JS Output"]}>
+
+```reason
+try {
+  someJSFunctionThatThrows()
+} catch {
+| Js.Exn.Error(obj) =>
+  switch Js.Exn.message(obj) {
+  | Some(m) => Js.log("Caught a JS exception! Message: " ++ m)
+  | None => ()
+  }
+}
+```
+```javascript
+var Js_exn = require("./stdlib/js_exn.js");
+var Caml_js_exceptions = require("./stdlib/caml_js_exceptions.js");
+
+try {
+  someJSFunctionThatThrows();
+} catch (raw_obj) {
+  var obj = Caml_js_exceptions.internalToOCamlException(raw_obj);
+  if (obj.RE_EXN_ID === Js_exn.$$Error) {
+    var m = obj._1.message;
+    if (m !== undefined) {
+      console.log("Caught a JS exception! Message: " + m);
+    }
+  } else {
+    throw obj;
+  }
+}
+```
+
+</CodeTab>
+
+The `obj` here is of type `Js.Exn.t`, intentionally opaque to disallow illegal operations.
+To operate on `obj`, do like the code above by using the standard library's [`Js.Exn`](api/js/exn) module's helpers.
+
+여기서 `obj`는 `Js.Exn.t` 타입으로, 의도적으로 `obj`를 불투명하게 만들어 다른 작업을 허용하지 않게 했습니다.
+`obj`로 작업하려면 표준 라이브러리의 [`Js.Exn`](https://rescript-lang.org/docs/manual/latest/api/js/exn) 모듈 헬퍼를 사용해 위 코드조각처럼 작성합니다.
+
+## JS 예외를 발생하기
+
+`raise(MyException)` raises a ReScript exception. To raise a JavaScript exception (whatever your purpose is), use `Js.Exn.raiseError`:
+
+`raise(MyException)`는 리스크립트 예외를 발생합니다. (목적이 무엇이든) 자바스크립트 예외를 발생하려면 `Js.Exn.raiseError`를 사용합니다.
+
+<CodeTab labels={["ReScript", "JS Output"]}>
+
+```reason
+let myTest = () => {
+  Js.Exn.raiseError("Hello!")
+}
+```
+```javascript
+var Js_exn = require("./stdlib/js_exn.js");
+
+function myTest() {
+  return Js_exn.raiseError("Hello!");
+}
+```
+
+</CodeTab>
+
+Then you can catch it from the JS side:
+그 다음, JS에서 아래 코드 조각처럼 예외를 받을 수 있습니다.
+
+```js
+// `myTest`를 불러온 뒤..
+try {
+  myTest()
+} catch (e) {
+  console.log(e.message) // "Hello!"
+}
+```
+
+## JS에서 리스크립트 예외 받기
+
+The previous section is less useful than you think;
+to let your JS code work with your exception-throwing ReScript code, the latter doesn't actually need to throw a JS exception.
+ReScript exceptions can be used by JS code!
+
+이전 섹션에서 보여드린 "리스크립트에서 JS 예외를 발생하는 코드"는 별로 유용하지 않습니다.
+왜냐면 JS 예외를 받기 위해 아무런 조치를 할 필요가 없기 때문입니다.
+리스크립트 예외는 JS에서 그대로 받을 수 있습니다!
+
+<CodeTab labels={["ReScript", "JS Output"]}>
+
+```reason
+exception BadArgument({myMessage: string})
+
+let myTest = () => {
+  raise(BadArgument({myMessage: "Oops!"}))
+}
+```
+```javascript
+var Caml_exceptions = require("./stdlib/caml_exceptions.js");
+
+var BadArgument = Caml_exceptions.create("Playground.BadArgument");
+
+function myTest() {
+  throw {
+    RE_EXN_ID: BadArgument,
+    myMessage: "Oops!",
+    Error: new Error()
+  };
+}
+```
+
+</CodeTab>
+
+그 다음, JS에서...
+
+```js
+// `myTest`를 불러온 뒤..
+try {
+  myTest()
+} catch (e) {
+  console.log(e.myMessage) // "Oops!"
+  console.log(e.Error.stack) // 스택 기록
+}
+```
+
+> Note: `RE_EXN_ID` is an internal field for bookkeeping purposes. Don't use it on the JS side. Use the other fields.
+> 참고: `RE_EXN_ID` 는 내부 기록용 필드입니다. 이 필드는 JS에서 절대 사용하지 마세요. 다른 필드를 사용하세요.
+
+The above `BadArgument` exception takes an inline record type.
+We special-case compile the exception as `{RE_EXN_ID, myMessage, Error}` for good ergonomics.
+If the exception instead took ordinary positional arguments, l like the standard library's `Invalid_argument("Oops!")`, which takes a single argument, the argument is compiled to JS as the field `_1` instead.
+A second positional argument would compile to `_2`, etc.
+
+하나의 인자를 가지는 표준 라이브러리 `Invalid_argument("Oops!")` 예외처럼 일반적인 인자를 사용하는 경우, 필드 이름을 첫 번째 인자는 `_1`, 두 번째 인자는 `_2` ... 으로 이름을 생성해 컴파일합니다.
+하지만 `BadArgument` 예외처럼 인라인 레코드 타입을 사용하면 리스크립트는 예외를 `{RE_EXN_ID, myMessage, Error}`와 같이 특수한 케이스로 컴파일합니다.
+
+## 팁
+
+When you have ordinary variants, you often don't **need** exceptions.
+For example, instead of throwing when `item` can't be found in a collection, try to return an `option<item>` (`None` in this case) instead.
+
+배리언트를 사용하면 예외가 **필요하지 않는 경우**가 많습니다.
+예를 들어 `item` 을 콜렉션에서 못찾았다면 예외를 던지는 대신 `option<item>`(이 경우 `None`)을 반환해보세요.
+
+### 동일한 catch 절에서 리스크립트와 자바스크립트 예외를 같이 받기
+
+<CodeTab labels={["ReScript", "JS Output"]}>
+
+```reason
+try {
+  someOtherJSFunctionThatThrows()
+} catch {
+| Not_found => ... // 리스크립트 예외 받기
+| Invalid_argument(_) => ... // 두번째 리스크립트 예외 받기
+| Js.Exn.Error(obj) => ... // 자바스크립트 예외 받기
+}
+```
+```javascript
+var Js_exn = require("./stdlib/js_exn.js");
+var Caml_js_exceptions = require("./stdlib/caml_js_exceptions.js");
+
+try {
+  someOtherJSFunctionThatThrows();
+} catch (raw_obj) {
+  var obj = Caml_js_exceptions.internalToOCamlException(raw_obj);
+  if (
+    obj.RE_EXN_ID !== "Not_found" &&
+    obj.RE_EXN_ID !== "Invalid_argument" &&
+    obj.RE_EXN_ID !== Js_exn.$$Error
+  ) {
+    throw obj;
+  }
+}
+```
+
+</CodeTab>
+
+This technically works, but hopefully you don't ever have to work with such code...
+문제 없이 실행되는 코드조각이지만, 이런 코드조각을 작성 할 필요가 없기를 바랍니다.
