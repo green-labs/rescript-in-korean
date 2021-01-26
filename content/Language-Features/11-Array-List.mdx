@@ -45,7 +45,7 @@ myArray[0] = "hey";
 
 이 리스트들은,
 - 불변합니다.
-- 머리(앞의) 항목을 가져오는 것이 빠릅니다.
+- 선두의 항목을 가져오는 것이 빠릅니다.
 - 꼬리(마지막) 항목을 가져오는 것이 빠릅니다.
 - 다른 나머지 것들에서 느립니다.
 
@@ -73,9 +73,9 @@ var myList = {
 
 만약 어느 항목에 무작위로 접근하거나 머리가 아닌 위치의 항목 삽입이 필요하다면 리스트를 **쓰지마세요**. 여러분의 코드가 답답하고 느려질거니까요.
 
-표준 라이브러리는 [List module](api/belt/list)를 제공합니다..
+표준 라이브러리는 [List 모듈](api/belt/list)를 제공합니다.
 
-#### 불변하는 머리 항목? (Immutable Prepend)
+#### 불변하는 선두 추가
 
 아래의 전개 구문을 사용하세요.
 
@@ -109,7 +109,7 @@ var anotherList = {
 
 #### 접근 (Access)
 
-`switch` ([pattern matching section](pattern-matching-destructuring.md)) 참고)는 보통 리스트의 항목에 접근하기 위해 사용됩니다.
+`switch`([패턴 매칭 / 구조분해](15-Pattern-Matching-Destructuring) 참고)는 보통 리스트의 항목에 접근하기 위해 사용됩니다.
 
 ```reason
 let message =
