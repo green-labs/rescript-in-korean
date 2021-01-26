@@ -1,5 +1,125 @@
 ---
-title: 'Array & List'
-metaTitle: 'Array & List'
-metaDescription: 'This is the meta description'
+title: '배열과 리스트 (Array & List)'
+description: '배열과 리스트 데이터 구조'
+canonical: '/docs/manual/latest/array-and-list'
+sourceUrl: 'https://rescript-lang.org/docs/manual/latest/array-and-list'
 ---
+
+## 배열
+
+배열은 리스크립트의 최우선되는 데이터 구조로, 자바스크립트의 배열과 같은 방식의 동작을 합니다.
+
+```reason
+let myArray = ["hello", "world", "how are you"]
+```
+```js
+var myArray = ["hello", "world", "how are you"];
+```
+
+리스크립트의 배열에 있는 항목들은 꼭 같은(동종의) 타입이어야 합니다.
+
+### 사용법
+
+[Js.Array](api/js/array) API 에 대해 보시면 더욱 자세한 사용법을 알 수 있습니다.
+
+배열의 항목에 접근 혹은 수정은 이런 방식으로 할 수 있습니다.
+
+```reason
+let myArray = ["hello", "world", "how are you"]
+
+let firstItem = myArray[0] // "hello"
+
+myArray[0] = "hey" // now ["hey", "world", "how are you"]
+```
+```js
+var myArray = ["hello", "world", "how are you"];
+
+var firstItem = myArray[0];
+
+myArray[0] = "hey";
+```
+
+## 리스트
+
+리스크립트는 싱글 링크드리스트 또한 제공합니다.
+
+이 리스트들은,
+- 불변합니다.
+- 머리(앞의) 항목을 가져오는 것이 빠릅니다.
+- 꼬리(마지막) 항목을 가져오는 것이 빠릅니다.
+- 다른 나머지 것들에서 느립니다.
+
+```reason
+let myList = list{1, 2, 3}
+```
+```js
+var myList = {
+  hd: 1,
+  tl: {
+    hd: 2,
+    tl: {
+      hd: 3,
+      tl: 0
+    }
+  }
+};
+```
+
+배열과 같이, 리스트의 항목들은 꼭 같은 타입이어야 합니다.
+
+### 사용법
+
+여러분은 불변하고, 상대적으로 효율적인 기능(크기의 가변성, 빠른 속도의 머리 항목 추가나 항목들의 분열)을 위해 리스트를 사용해야 합니다.
+
+만약 어느 항목에 무작위로 접근하거나 머리가 아닌 위치의 항목 삽입이 필요하다면 리스트를 **쓰지마세요**. 여러분의 코드가 답답하고 느려질거니까요.
+
+표준 라이브러리는 [List module](api/belt/list)를 제공합니다..
+
+#### 불변하는 머리 항목? (Immutable Prepend)
+
+아래의 전개 구문을 사용하세요.
+
+```resason
+let myList = list{1, 2, 3}
+let anotherList = list{0, ...myList}
+```
+```js
+var myList = {
+  hd: 1,
+  tl: {
+    hd: 2,
+    tl: {
+      hd: 3,
+      tl: 0
+    }
+  }
+};
+
+var anotherList = {
+  hd: 0,
+  tl: myList
+};
+```
+
+`myList`는 변형되지 않은채로, `anotherList`는 이제 `list{0, 1, 2, 3}` 이죠. 보시다시피, 효율적으로(상수의 시간복잡도), `anotherList`의 마지막 3 항목이 `myList`로 만들어지게 되었습니다!
+
+**`list{a, ...b, ...c}`는 구문에러가 발생한다는 것을 강조드립니다.** 리스크립트는 하나의 리스트에서 다수의 전개를 지원하지 않습니다. 각 항목 b가 `c`의 머리부분에 하나씩 추가되는데, 이건 원하지 않는 선형 연산이기 때문입니다. 물론 이를 위해 `List.concat`을 사용 할 수 있으나 권장하지는 않습니다.
+
+목록 중간에 있는 임의의 항목을 업데이트하는 것도 권장되지 않습니다. 성능 및 할당 오버헤드의 시간복잡도가 선형(`O(n)`)이기 때문입니다.
+
+#### 접근 (Access)
+
+`switch` ([pattern matching section](pattern-matching-destructuring.md)) 참고)는 보통 리스트의 항목에 접근하기 위해 사용됩니다.
+
+```reason
+let message =
+  switch myList {
+  | list{} => "This list is empty"
+  | list{a, ...rest} => "The head of the list is the string " ++ Js.Int.toString(a)
+  }
+```
+```js
+var message = myList
+  ? "The head of the list is the string " + (1).toString()
+  : "This list is empty";
+```
