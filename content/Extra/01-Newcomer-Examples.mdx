@@ -1,39 +1,133 @@
 ---
-title: 'Newcomer Examples'
+title: '초보자를 위한 예제'
 metaTitle: 'Newcomer Examples'
-metaDescription: 'ReScript in Korean'
+metaDescription: "Quick examples for users new to ReScript"
+sourceUrl: "https://rescript-lang.org/docs/manual/latest/newcomer-examples"
+canonical: "/docs/manual/latest/newcomer-examples"
 ---
 
-Some introduction text. Lists out all the headings from h1 to h6. Easy to customise.
+이 섹션은 새로 리스크립트를 배우려는 분들을 위해 만들어졌습니다.
+백문이 불여일견이라는 말이 있듯이, 예제를 보면 파악하시는데 도움이 될거라 믿고있습니다.
+초보자를 위한 좋은 아이디어가 있다면 언제든지 제안해주세요!
 
-# Heading H1
+## `option` 타입 사용법 (10-Null-Undefined-and-Option)
 
-Heading 1 text
+<CodeTab labels={["ReScript", "JS Output"]}>
 
-## Heading H2
+```reason
+let possiblyNullValue1 = None
+let possiblyNullValue2 = Some("Hello")
 
-Heading 2 text
+switch possiblyNullValue2 {
+| None => Js.log("Nothing to see here.")
+| Some(message) => Js.log(message)
+}
+```
+```javascript
+var possiblyNullValue1;
+var possiblyNullValue2 = "Hello";
 
-### Heading H3
+if (possiblyNullValue2 !== undefined) {
+  console.log(possiblyNullValue2);
+} else {
+  console.log("Nothing to see here.");
+}
 
-Heading 3 text
+```
 
-#### Heading H4
+</CodeTab>
 
-Heading 4 text
+## 타입 매개변수 생성하기 ([Generic](03-Type))
 
-##### Heading H5
+<CodeTab labels={["ReScript", "JS Output"]}>
 
-Heading 5 text
+```reason
+type universityStudent = {gpa: float}
 
-###### Heading H6
+type response<'studentType> = {
+  status: int,
+  student: 'studentType,
+}
+```
+```javascript
+// Empty output
+```
 
-Heading 6 text
+</CodeTab>
 
-## Lists
+## 자바스크립트 객체 생성하기
 
-- Item 1
-- Item 2
-- Item 3
-- Item 4
-- Item 5
+<CodeTab labels={["ReScript", "JS Output"]}>
+
+```reason
+let student1 = {
+  "name": "John",
+  "age": 30,
+}
+```
+```javascript
+var student1 = {
+  name: "John",
+  age: 30,
+};
+```
+
+</CodeTab>
+
+아니면 [레코드](06-Record)를 사용하세요.
+
+<CodeTab labels={["ReScript", "JS Output"]}>
+
+```reason
+type payload = {
+  name: string,
+  age: int,
+}
+
+let student1 = {
+  name: "John",
+  age: 30,
+}
+```
+```javascript
+var student1 = {
+  name: "John",
+  age: 30,
+};
+```
+
+</CodeTab>
+
+## default export인 자바스크립트 모듈 모델링
+
+[자바스크립트 내보내기/가져오기](import-from-export-to-js.md#import-a-javascript-module-itself-es6-module-format)를 보세요.
+
+## `option` 타입을 사용해 자바스크립트 nullable 타입 확인하기
+
+일반적으로 인자에 `null` 또는 `undefined`가 전달 될 확률이 있다면 `option`으로 변환합니다.
+리스크립트의 [`Js.Nullable`](api/js/nullable#t) 모듈의 헬퍼함수를 사용해 변환합니다. 이 케이스는 `toOption`을 사용합니다.
+
+<CodeTab labels={["ReScript", "JS Output"]}>
+
+```reason
+let greetByName = (possiblyNullName) => {
+  let optionName = Js.Nullable.toOption(possiblyNullName)
+  switch optionName {
+  | None => "Hi"
+  | Some(name) => "Hello " ++ name
+  }
+}
+```
+```javascript
+function greetByName(possiblyNullName) {
+  if (possiblyNullName == null) {
+    return "Hi";
+  } else {
+    return "Hello " + possiblyNullName;
+  }
+}
+```
+
+</CodeTab>
+
+위 코드조각은 자바스크립트 `possiblyNullName == null`로 컴파일 되므로 `null`/`undefined`을 검사할 수 있습니다.
