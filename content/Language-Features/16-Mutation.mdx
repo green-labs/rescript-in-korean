@@ -1,5 +1,76 @@
 ---
-title: 'Mutation'
+title: '가변(Mutation)'
 metaTitle: 'Mutation'
-metaDescription: 'This is the meta description'
+metaDescription: "Imperative and mutative programming capabilities in ReScript"
+sourceUrl: "https://rescript-lang.org/docs/manual/latest/mutation"
+canonical: "/docs/manual/latest/mutation"
 ---
+
+리스크립트는 전통적인 명령형 및 가변 프로그래밍 기능을 갖추고 있습니다.
+간혹 이 기능을 사용하면 코드 성능을 높이고 더 친숙한 패턴으로 작성할 수 있습니다.
+
+## 가변 Let 바인딩
+
+기본적으로 Let 바인딩은 불변입니다만, `ref` 로 값을 감싸면 표준 라이브러리가 하나의 필드로 구성된 레코드를 반환합니다. 이 값은 변경할 수 있습니다.
+
+<CodeTab labels={["ReScript", "JS Output"]}>
+
+```reason
+let myValue = ref(5)
+```
+```javascript
+var myValue = {
+  contents: 5
+};
+```
+
+</CodeTab>
+
+## 사용법
+
+`contents` 필드에 접근하면 `ref`로 감싼 실제값을 얻을 수 있습니다.
+
+<CodeTab labels={["ReScript", "JS Output"]}>
+
+```reason
+let five = myValue.contents // 5
+```
+```javascript
+var five = myValue.contents;
+```
+
+</CodeTab>
+
+새로운 값은 다음과 같이 할당합니다.
+
+<CodeTab labels={["ReScript", "JS Output"]}>
+
+```reason
+myValue.contents = 6
+```
+```javascript
+myValue.contents = 6;
+```
+
+</CodeTab>
+
+또한 쉽게 사용할 수 있는 문법도 제공합니다.
+
+<CodeTab labels={["ReScript", "JS Output"]}>
+
+```reason
+myValue := 6
+```
+```javascript
+myValue.contents = 6;
+```
+
+</CodeTab>
+
+참고로 `five` 에 바인딩된 값은 여전히 `5`입니다. `ref` 값을 변경한게 아니라 `ref` 로 감싼 값을 변경했기 때문입니다.
+
+**참고**: JS 결과물을 보면 `ref` 에 객체를 할당하고 있습니다. 걱정하지 마세요. 내보내지 않고(non-exported) 지역범위에서 사용하는 `ref`는 값으로 최적화됩니다.
+
+## 팁
+
+`ref` 를 사용하기 전에 같은 이름으로 여러번 let 바인딩을 해 마치 가변적으로 사용 할 수 있는 [let 바인딩 재정의](02-Let-Binding#shadowing)를 고려해보세요.

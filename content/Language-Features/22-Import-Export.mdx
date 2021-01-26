@@ -1,5 +1,40 @@
 ---
 title: 'Import & Export'
 metaTitle: 'Import & Export'
-metaDescription: 'This is the meta description'
+metaDescription: "Importing / exporting in ReScript modules"
+sourceUrl: "https://rescript-lang.org/docs/manual/latest/import-export"
+canonical: "/docs/manual/latest/import-export"
 ---
+
+## 모듈/파일 가져오기 (Import)
+
+자바스크립트와 달리 리스크립트는 가져오기(import) 구문을 작성하지 않아도 됩니다.
+
+<CodeTab labels={["ReScript", "JS Output"]}>
+
+```reason
+// Inside School.res
+let studentMessage = Student.message
+```
+```javascript
+var Student = require("./Student.bs");
+var studentMessage = Student.message
+```
+
+</CodeTab>
+
+위 코드는 `Student.res` 파일의 `message`를 참조합니다.
+모든 리스크립트 파일은 모듈입니다. 그래서 다른 파일의 내용을 접근하는 것과 다른 모듈의 내용에 접근하는 것은 같습니다!
+
+이런 이유로 리스크립트 프로젝트의 파일 이름이 중복되면 안됩니다.
+
+## 내보내기
+
+기본적으로 모든 파일의 타입 정의, 바인딩, 모듈은 내보내기(exported) 됩니다. 즉, 다른 파일에서 공개적으로 사용할 수 있습니다.
+**또한 JS로 컴파일 된 값은 즉시 JS 코드에서 사용할 수 있습니다.**
+
+선택한 몇가지 항목만 내보내려면 [인터페이스 파일](21-Module#Siugnatures)를 사용하세요.
+
+## 자바스크립트 가져오기/내보내기와 작업하기
+
+JS 모듈을 가져오기/내보내기하는 방법은 자바스크립트 인터롭 섹션의 [JS에서 가져오기/내보내기](JavaScript-Interop/06-Import-from-Export-to-JS)를 참고하세요.
