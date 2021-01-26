@@ -1,39 +1,54 @@
 ---
 title: 'JSON'
 metaTitle: 'JSON'
-metaDescription: 'ReScript in Korean'
+metaDescription: 'Interacting with JSON in ReScript'
+sourceUrl: 'https://rescript-lang.org/docs/manual/latest/json'
 ---
 
-Some introduction text. Lists out all the headings from h1 to h6. Easy to customise.
+## Parse
 
-# Heading H1
+Bind to JavaScript's `JSON.parse` and type the return value as the type you're expecting:
 
-Heading 1 text
+<CodeTab labels={["ReScript", "JS Output"]}>
 
-## Heading H2
+```res example
+// declare the shape of the json you're binding to
+type data = {names: array<string>}
 
-Heading 2 text
+// bind to JS' JSON.parse
+@bs.scope("JSON") @bs.val
+external parseIntoMyData: string => data = "parse"
 
-### Heading H3
+let result = parseIntoMyData(`{"names": ["Luke", "Christine"]}`)
+let name1 = result.names[0]
+```
+```js
+var result = JSON.parse("{\"names\": [\"Luke\", \"Christine\"]}");
+var name1 = result.names[0];
+```
 
-Heading 3 text
+</CodeTab>
 
-#### Heading H4
+Where `data` can be any type you assume the JSON is. As you can see, this compiles to a straightforward `JSON.parse` call. As with regular JS, this is convenient, but has no guarantee that e.g. the data is correctly shaped, or even syntactically valid. Slightly dangerous.
 
-Heading 4 text
+## Stringify
 
-##### Heading H5
+Use `Js.Json.stringify`:
 
-Heading 5 text
+<CodeTab labels={["ReScript", "JS Output"]}>
 
-###### Heading H6
+```res example
+Js.log(Js.Json.stringifyAny(["Amy", "Joe"]))
+```
+```js
+console.log(JSON.stringify([
+  "Amy",
+  "Joe"
+]));
+```
 
-Heading 6 text
+</CodeTab>
 
-## Lists
+## Advanced
 
-- Item 1
-- Item 2
-- Item 3
-- Item 4
-- Item 5
+The [Js.Json](api/js/json) module provides slightly safer, low-level building blocks for power users who want to parse JSON on a per-field basis. See the examples in the API docs.

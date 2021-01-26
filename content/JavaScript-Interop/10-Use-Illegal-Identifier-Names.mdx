@@ -1,39 +1,50 @@
 ---
 title: 'Use Illegal Identifier Names'
 metaTitle: 'Use Illegal Identifier Names'
-metaDescription: 'ReScript in Korean'
+metaDescription: 'Handling (JS) naming collisions in ReScript'
+sourceUrl: 'https://rescript-lang.org/docs/manual/latest/use-illegal-identifier-names'
 ---
 
-Some introduction text. Lists out all the headings from h1 to h6. Easy to customise.
+Sometime, for e.g. a let binding or a record field, you might want to use:
+- A capitalized name.
+- A name that contains illegal characters (e.g. emojis, hyphen, space).
+- A name that's one of ReScript's reserved keywords.
 
-# Heading H1
+We provide an escape hatch syntax for these cases:
 
-Heading 1 text
+<CodeTab labels={["ReScript", "JS Output"]}>
 
-## Heading H2
+```res example
+let \"my-🍎" = 10
 
-Heading 2 text
+type element = {
+  \"aria-label": string
+}
 
-### Heading H3
+let myElement = {
+  \"aria-label": "close"
+}
 
-Heading 3 text
+let label = myElement.\"aria-label"
 
-#### Heading H4
+let calculate = (~\"Props") => {
+  \"Props" + 1
+}
+```
+```js
+var my$$unknown$unknown$unknown$unknown = 10;
 
-Heading 4 text
+var myElement = {
+  "aria-label": "close"
+};
 
-##### Heading H5
+var label = myElement["aria-label"];
 
-Heading 5 text
+function calculate(Props) {
+  return Props + 1 | 0;
+}
+```
 
-###### Heading H6
+</CodeTab>
 
-Heading 6 text
-
-## Lists
-
-- Item 1
-- Item 2
-- Item 3
-- Item 4
-- Item 5
+See the output. **Use them only when necessary**, for interop with JavaScript. This is a last-resort feature. If you abuse this, many of the compiler guarantees will go away.

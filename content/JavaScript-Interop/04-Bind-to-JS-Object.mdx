@@ -1,39 +1,152 @@
 ---
 title: 'Bind to JS Object'
 metaTitle: 'Bind to JS Object'
-metaDescription: 'ReScript in Korean'
+metaDescription: 'Interop with JS objects in ReScript'
+sourceUrl: 'https://rescript-lang.org/docs/manual/latest/bind-to-js-object'
 ---
 
-Some introduction text. Lists out all the headings from h1 to h6. Easy to customise.
+JavaScript objects are a combination of several use-cases:
 
-# Heading H1
+- As a "record" or "struct" in other languages (like ReScript and C).
+- As a hash map.
+- As a class.
+- As a module to import/export.
 
-Heading 1 text
+ReScript cleanly separates the binding methods for JS object based on these 4 use-cases. This page documents the first three. Binding to JS module objects is described in the [Import from/Export to JS](import-from-export-to-js.md) section.
 
-## Heading H2
+<!-- TODO: mention bs.scope here too? -->
 
-Heading 2 text
+## Bind to Record-like JS Objects
 
-### Heading H3
+### Bind Using ReScript Record
 
-Heading 3 text
+If your JavaScript object has fixed fields, then it's conceptually like a ReScript record. Since a ReScript record compiles to a clean JavaScript object, you can definitely type a JS object as a ReScript record!
 
-#### Heading H4
+<CodeTab labels={["ReScript", "JS Output"]}>
 
-Heading 4 text
+```res example
+type person = {
+  name: string,
+  friends: array<string>,
+  age: int,
+}
 
-##### Heading H5
+@bs.module("MySchool") external john: person = "john"
 
-Heading 5 text
+let johnName = john.name
+```
+```js
+var MySchool = require("MySchool");
 
-###### Heading H6
+var johnName = MySchool.john.name;
+```
 
-Heading 6 text
+</CodeTab>
 
-## Lists
+External is documented [here](external.md). `@bs.module` is documented [here](import-from-export-to-js.md).
 
-- Item 1
-- Item 2
-- Item 3
-- Item 4
-- Item 5
+### Bind Using ReScript Object
+
+Alternatively, you can use [ReScript object](object.md) to model a JS object too:
+
+<CodeTab labels={["ReScript", "JS Output"]}>
+
+```res example
+type person = {
+  "name": string,
+  "friends": array<string>,
+  "age": int,
+}
+
+@bs.module("MySchool") external john: person = "john"
+
+let johnName = john["name"]
+```
+```js
+var MySchool = require("MySchool");
+
+var johnName = MySchool.john.name;
+```
+
+</CodeTab>
+
+### Bind Using Special @bs Getters & Setters
+
+Alternatively, you can use `bs.get` and `bs.set` to bind to individual fields of a JS object:
+
+<CodeTab labels={["ReScript", "JS Output"]}>
+
+```res example
+type textarea
+@bs.set external setName: (textarea, string) => unit = "name"
+@bs.get external getName: textarea => string = "name"
+```
+```js
+```
+
+</CodeTab>
+
+You can also use `bs.get_index` and `bs.set_index` to access a dynamic property or an index:
+
+<CodeTab labels={["ReScript", "JS Output"]}>
+
+```res example
+type t
+@bs.new external create: int => t = "Int32Array"
+@bs.get_index external get: (t, int) => int = ""
+@bs.set_index external set: (t, int, int) => unit = ""
+
+let i32arr = create(3)
+i32arr->set(0, 42)
+Js.log(i32arr->get(0))
+```
+```js
+var i32arr = new Int32Array(3);
+i32arr[0] = 42;
+console.log(i32arr[0]);
+```
+
+</CodeTab>
+
+## Bind to Hash Map-like JS Object
+
+If your JavaScript object:
+
+- might or might not add/remove keys
+- contains only values that are of the same type
+
+Then it's not really an object, it's a hash map. Use [Js.Dict](api/js/dict), which contains operations like `get`, `set`, etc. and cleanly compiles to a JavaScript object still.
+
+## Bind to a JS Object That's a Class
+
+Use `bs.new` to emulate e.g. `new Date()`:
+
+<CodeTab labels={["ReScript", "JS Output"]}>
+
+```res example
+type t
+@bs.new external createDate: unit => t = "Date"
+
+let date = createDate()
+```
+```js
+var date = new Date();
+```
+
+</CodeTab>
+
+You can chain `bs.new` and `bs.module` if the JS module you're importing is itself a class:
+
+<CodeTab labels={["ReScript", "JS Output"]}>
+
+```res example
+type t
+@bs.new @bs.module external book: unit => t = "Book"
+let myBook = book()
+```
+```js
+var Book = require("Book");
+var myBook = new Book();
+```
+
+</CodeTab>
