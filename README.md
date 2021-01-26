@@ -1,5 +1,5 @@
 # 리스크립트 한국어 판
-
+![Deploy](https://github.com/green-labs/rescript-in-korean/workflows/Deploy/badge.svg?branch=main)
 **https://green-labs.github.io/rescript-in-korean**
 
 현재 목표는 https://rescript-lang.org/docs/latest 의 `Language Manual` 쪽을 번역하는 것입니다.
