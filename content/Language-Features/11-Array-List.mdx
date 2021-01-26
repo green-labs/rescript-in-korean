@@ -12,8 +12,9 @@ sourceUrl: 'https://rescript-lang.org/docs/manual/latest/array-and-list'
 ```reason
 let myArray = ["hello", "world", "how are you"]
 ```
+
 ```js
-var myArray = ["hello", "world", "how are you"];
+var myArray = ['hello', 'world', 'how are you'];
 ```
 
 리스크립트의 배열에 있는 항목들은 꼭 같은(동종의) 타입이어야 합니다.
@@ -31,12 +32,13 @@ let firstItem = myArray[0] // "hello"
 
 myArray[0] = "hey" // now ["hey", "world", "how are you"]
 ```
+
 ```js
-var myArray = ["hello", "world", "how are you"];
+var myArray = ['hello', 'world', 'how are you'];
 
 var firstItem = myArray[0];
 
-myArray[0] = "hey";
+myArray[0] = 'hey';
 ```
 
 ## 리스트
@@ -44,14 +46,16 @@ myArray[0] = "hey";
 리스크립트는 싱글 링크드리스트 또한 제공합니다.
 
 이 리스트들은,
+
 - 불변합니다.
-- 선두의 항목을 가져오는 것이 빠릅니다.
+- 머리(앞의) 항목을 가져오는 것이 빠릅니다.
 - 꼬리(마지막) 항목을 가져오는 것이 빠릅니다.
 - 다른 나머지 것들에서 느립니다.
 
 ```reason
 let myList = list{1, 2, 3}
 ```
+
 ```js
 var myList = {
   hd: 1,
@@ -59,9 +63,9 @@ var myList = {
     hd: 2,
     tl: {
       hd: 3,
-      tl: 0
-    }
-  }
+      tl: 0,
+    },
+  },
 };
 ```
 
@@ -83,6 +87,7 @@ var myList = {
 let myList = list{1, 2, 3}
 let anotherList = list{0, ...myList}
 ```
+
 ```js
 var myList = {
   hd: 1,
@@ -90,14 +95,14 @@ var myList = {
     hd: 2,
     tl: {
       hd: 3,
-      tl: 0
-    }
-  }
+      tl: 0,
+    },
+  },
 };
 
 var anotherList = {
   hd: 0,
-  tl: myList
+  tl: myList,
 };
 ```
 
@@ -118,8 +123,9 @@ let message =
   | list{a, ...rest} => "The head of the list is the string " ++ Js.Int.toString(a)
   }
 ```
+
 ```js
 var message = myList
-  ? "The head of the list is the string " + (1).toString()
-  : "This list is empty";
+  ? 'The head of the list is the string ' + (1).toString()
+  : 'This list is empty';
 ```
