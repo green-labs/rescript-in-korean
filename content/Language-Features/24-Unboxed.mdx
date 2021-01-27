@@ -107,7 +107,8 @@ renderDot(playerLocalCoordinates);
 
 <!-- Oops, that's wrong! `renderDot` should have taken global coordinates, not local ones... Let's prevent passing the wrong kind of coordinates: -->
 
-이런, 뭔가 잘못되었습니다. `renderDot` 은 지역좌표가 아니라 전역 좌표를 가져야 합니다. 좌표의 종류를 넘겨서 해결해봅시다.
+이런, 뭔가 잘못되었습니다. `renderDot`은 전역 좌표를 기준으로 렌더링하는데 인자로 로컬 좌표가 전달됐습니다.
+이제 코드를 수정해서 잘못된 좌표 타입이 전달되지 못하게 막아봅시다.
 
 
 ```reasonml example
