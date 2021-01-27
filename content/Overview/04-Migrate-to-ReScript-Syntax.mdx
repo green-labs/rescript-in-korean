@@ -1,39 +1,60 @@
 ---
-title: 'Migrate to ReScript Syntax'
-metaTitle: 'Migrate to ReScript Syntax'
-metaDescription: 'ReScript in Korean'
+title: '리스크립트 문법으로 변경하기'
+metaTitle: '리스크립트 문법으로 변경하기(Migrate to ReScript Syntax)'
+metaDescription: '리즌에서 리스크립트로 업그레이드 하는 방법을 설명합니다.'
+sourceUrl: 'https://rescript-lang.org/docs/manual/latest/migrate-from-bucklescript-reason'
 ---
 
-Some introduction text. Lists out all the headings from h1 to h6. Easy to customise.
+리스크립트는 버클스크립트 `v8.2.0`, 리즌 `v3.6` 이후 정리 및 리브랜딩 됐습니다. 만약 이전 버전을 사용했었다면 다음 내용을 참고하세요.
 
-# Heading H1
+- 리스크립트는 단지 새로운 문법으로 버클스크립트를 리브랜딩했을 뿐입니다. 이때 사용된 새 문법은 리즌과 비슷하지만 좀 더 자바스크립트 사용자층을 고려합니다.
+- 업그레이드 하지 않아도 아무런 문제가 없습니다.
 
-Heading 1 text
+## 코드 베이스 업그레이드
 
-## Heading H2
+리브랜딩 된 리스크립트는 새로운 기능과, 속도, 에러메시지 등 흥미로운 개선 사항이 있습니다. 업그레이드는 아주 간단하고, 각각의 파일별로 수행할 수 있습니다. 
 
-Heading 2 text
+- `bs-platform 8.2.0` 또는 이후 버전으로 업그레이드 하세요.
+- 변환할 파일을 선택하세요. 예를 들어 `MyFile.re` 파일을 변환해보겠습니다.
+- 프로젝트를 컴파일하고 생성된 자바스크립트 파일은 놔두세요(`bsconfig.json` 설정에 따라 다르겠지만 아마 `MyFile.bs.js` 파일일겁니다.).
+- 다음을 실행합니다. `node_modules/.bin/bsc -format MyFile.re > MyFile.res`.
+- 만약 `MyFile.res` 파일이 괜찮아 보이면 프로젝트를 재컴파일 하기 전에 `MyFile.re` 파일은 지워야 됩니다. (또는 이동하거나 이름을 바꾸거나) 그렇지 않으면 `Invalid bsconfig.json implementation and interface have different path names or different cases MyFile vs MyFile` 오류가 발생합니다. 이유는 동일한 모듈 이름을 가진 파일이 프로젝트에 공존할 수 없기 때문입니다.
+- 마지막으로 변환이 올바르게 됐는지 확인하기 위해 새로 생성된 자바스크립트 파일과 이전 자바스크립트 파일을 비교해봅니다. 아마 거의 동일한 자바스크립트 코드를 얻을 수 있습니다.
 
-### Heading H3
+**이게 다에요**! `MyFile.re` 파일은 `.re`, `.rei`, `.ml` 그리고 `.mli` 파일이 될 수 있습니다.
 
-Heading 3 text
+리스크립트와 함께 향상된 개발 경험을 즐기세요!
 
-#### Heading H4
+### 폴더 전체를 업그레이드하기
 
-Heading 4 text
+전체 코드를 한번에 마이그레이션 하는 것은 주의해서 진행해야합니다.
+정확한 마이그레이션을 하기 위해 코드의 작은 부분부터 시작하는 것이 더 좋습니다.
+작은 코드베이스나 버전관리가 되고있는 안전한 작은 폴더는 다음처럼 시작해볼 수 있습니다.
 
-##### Heading H5
+```console
+for f in your-folder/**/*.re; do; node_modules/.bin/bsc -format $f > ${f%.re}.res && rm $f; done;
+```
 
-Heading 5 text
+이 명령은 `your-folder`에서 `.re` 파일을 순회하며 `.res` 확장자로 변환하고 이전 파일을 제거할 것인지 묻습니다.  
+만일 마이그레이션이 이상없이 잘 될 거라 생각하신다면 `rm` 명령에 `-f` 옵션을 추가하여 파일 제거에 대한 확인없이 `.re` 파일을 지우고 전체 폴더안의 파일이 `.res`로 변환될 것입니다.
 
-###### Heading H6
+## 이전 Reason과의 차이점
 
-Heading 6 text
-
-## Lists
-
-- Item 1
-- Item 2
-- Item 3
-- Item 4
-- Item 5
+- 세미콜론을 제거해도 됩니다. (그래도 사용할 수 있어요).
+- `if`, `switch` 그리고 `try` 구문 주위에 괄호가 필요하지 않습니다.
+- `option(int)` 에서 `option<int>`로 타입 인자 구문이 변경됩니다.
+- `{j|hello ${name}|j}` 로 작성했던 문자열 보간을 이렇게 작성합니다 `` j`hello ${name}` `` 유니 코드 지원도 됩니다.
+- `` `hello world` `` 백틱을 사용하는 새로운 문자열 보간법을 지원합니다 또한 멀티라인과 유니코드를 지원합니다. `"hello world"` 이 문자열은 싱글라인입니다.
+- 폴리모픽 배리언트는 `` `red ``에서 `#red`처럼 앞에 샾을 붙여 사용하도록 변경됐습니다.
+- 배열은 `[|1,2,3|]`에서 `[1,2,3]`로 자바스크립트의 기본 배열처럼 사용합니다.
+- 리스트는 `[1,2,3]`에서 `list{1,2,3}`로 사용해야합니다. 이는 `set[...]` 그리고 `map[...]`처럼 통일된 방식으로 자료구조에 접근하려는 계획과 관련이 있습니다. 아마 일시적으로 이렇게 사용할 수도 있습니다. (역주: 변경될 여지가 있다는 이야기입니다.)
+- 예외처리는 `try (compute()) { | Not_found => Js.log("oops")}` 에서 `try compute() catch { | Not_found => Js.log("oops")}` 으로 바뀌었습니다.
+- 일급 클래스 모듈을 사용하는 방법은 `(module S: Student)`에서 `module(S: Student)`로 바뀌었습니다.
+- 더이상 커스텀 인픽스 오퍼레이터를 사용할 수 없습니다. (`mod` 역시 제외됩니다). 
+- 객체 접근은 `settings##visible #= true` 에서 `settings["visible"] = true`처럼 바뀌었습니다. 좀 더 자바스크립트같죠?
+- 객체는 이렇게 `Js.t({"age": int})`로 선언하지 않고 간단히 `{"age": int}`으로 선언합니다. `Js.t`는 이제 묵시적입니다.
+- 어트리뷰트는 `[@bs.deriving accessors]`에서 `@bs.deriving(accessors)`로 바뀌었습니다. 정규표현식도 `[%re blah]`에서 `%re(blah)`로 바뀌었습니다.
+- `result^`같은 역참조 구문은 삭제되었습니다. 대신 이렇게 사용합니다. `result.contents`.
+- `fun` 구문을 사용한 패턴 매칭 문법은 삭제되었습니다.
+- 타입 선언은 기본적으로 비-재귀적이며 let 바인딩과 일치합니다. 재귀 타입을 만들기 위해서는 `type rec myList<'a> = Nil | Cons('a, myList<'a>)` 처럼 사용합니다.
+- 예약어도 식별자 이름으로 쓸 수 있습니다. `let \"try" = true`.
