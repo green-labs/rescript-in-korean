@@ -13,20 +13,7 @@ const config = {
     githubUrl: 'https://github.com/green-labs',
     helpUrl: '',
     tweetText: '',
-    social: `<li>
-		    <a href="https://twitter.com/hasurahq" target="_blank" rel="noopener">
-		      <div className="twitterBtn">
-		        <img src='https://graphql-engine-cdn.hasura.io/learn-hasura/assets/homepage/twitter-brands-block.svg' alt={'Twitter'}/>
-		      </div>
-		    </a>
-		  </li>
-			<li>
-		    <a href="https://discordapp.com/invite/hasura" target="_blank" rel="noopener">
-		      <div className="discordBtn">
-		        <img src='https://graphql-engine-cdn.hasura.io/learn-hasura/assets/homepage/discord-brands-block.svg' alt={'Discord'}/>
-		      </div>
-		    </a>
-		  </li>`,
+    social: ``,
     links: [{ text: '', link: '' }],
     search: {
       enabled: true,
@@ -56,14 +43,14 @@ const config = {
     frontline: false,
     ignoreIndex: true,
     title:
-      "<a href='https://hasura.io/learn/'>graphql </a><div className='greenCircle'></div><a href='https://hasura.io/learn/graphql/react/introduction/'>react</a>",
+      "ReScript in Korean",
   },
   siteMetadata: {
     title: 'ReScript in Korean',
     description: 'Documentation built with mdx. ',
     ogImage: null,
     docsLocation: 'https://github.com/green-labs/rescript-in-korean/tree/main/content',
-    favicon: 'https://github.com/green-labs/rescript-in-korean/blob/main/src/pwa-512.png',
+    favicon: 'https://green-labs.github.io/favicon.ico',
   },
   pwa: {
     enabled: false, // disabling this will also remove the existing service worker.

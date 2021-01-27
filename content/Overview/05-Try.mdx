@@ -1,17 +1,15 @@
 ---
-title: 'Try'
-metaTitle: 'Try'
-metaDescription: 'Try ReScript via CLI'
+title: 'CLI로 직접 해보기'
+metaTitle: 'CLI로 직접 해보기'
+metaDescription: 'CLI를 통해 ReScript를 사용해봅니다'
 sourceUrl: 'https://rescript-lang.org/docs/manual/latest/try'
 ---
 
 <!-- TODO: rename to Command Line, document options like -format -->
 
-# Try via CLI
+다음 명령을 이용해 파일을 직접 컴파일 할 수 있습니다. `bsc MyFile.res`
 
-You can compile a file directly via `bsc MyFile.res`:
-
-```res example
+```reason
 // MyFile.res
 let rec fib = n => {
   switch n {
@@ -38,9 +36,9 @@ exports.fib = fib;
 /*  Not a pure module */
 ```
 
-You can also get the inferred signature directly via `bsc -i MyFile.res`
+여러분은 또한 다음 CLI 명령으로 추론된 시그니쳐 파일을 얻을 수 있습니다. `bsc -i MyFile.res`
 
-```res sig
+```reason
 let fib: int => int
 ```
 
