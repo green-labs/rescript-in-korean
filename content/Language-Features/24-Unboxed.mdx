@@ -156,4 +156,6 @@ renderDot(toWorldCoordinates(playerLocalCoordinates));
 <!-- Now `renderDot` only takes `worldCoordinates`. Through a nice combination of using distinct variant types + argument destructuring, we've achieved better safety **without compromising on performance**: the `unboxed` attribute compiled to clean, variant-wrapper-less JS code! Check the output.
 
 As for a record with a single field, the use-cases are a bit more edgy. We won't mention them here. -->
-이제 `renderDot`은 `worldCoordinates`만을 입력으로 받습니다. `unboxed`속성과 분리된 배리언트 타입과 인자값의 분해를 조합하여 성능의 손해가 없고 안전하게 깔끔하며 배리언트 래퍼가 적은 자바스크립트 코드로 변환되었습니다. 출력을 점검해보세요.
+이제 `renderDot`은 `worldCoordinates`만을 입력으로 받습니다.
+배리언트 타입으로 구분 + 인자 구조분해를 써서 더 안전한 코드를 만들었습니다. **성능 저하 없이요.**
+`unboxed` 속성 덕분에 배리언트 래퍼 없이 깔끔하게 JS 코드로 컴파일됐습니다. 결과를 살펴보세요.
