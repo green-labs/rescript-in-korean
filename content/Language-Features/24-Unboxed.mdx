@@ -63,9 +63,9 @@ var hi = "hello!";
 
 Suppose you have a game with a local/global coordinate system: -->
 
-왜 싱글 페이로드를 가진 배리언트 또는 레코드가 필요할까요? 왜 그냥 페이로드를 넘기지 않을까요? 여기에 배리언트의 사용 예가 있습니다.
+왜 싱글 페이로드를 가진 배리언트 또는 레코드가 필요할까요? 왜 그냥 페이로드를 넘기지 않을까요? 아래에서 배리언트의 사용 예를 알아보겠습니다.
 
-지역 및 전역 좌표 시스템을 가진 게임이 있다고 가정해봅시다. 코드는 다음과 같습니다.
+아래와 같이 로컬 좌표계와 월드 좌표계를 쓰는 게임이 있습니다.
 
 ```reasonml example
 type coordinates = {x: float, y: float}
