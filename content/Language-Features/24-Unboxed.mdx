@@ -33,9 +33,13 @@ If you check the JavaScript output, you'll see the `studentName` and `hi` JS obj
 
 자바스크립트 출력을 보면, 학생 이름 또는 인사가 자바스크립트 객체에 포함된 것을 볼 수 있습니다 (자세한 내용은 [variant JS output](variant#javascript-output)과 [record JS output](record#javascript-output)를 참조하시기 바랍니다.). 
 
+<!--
 For performance and certain JavaScript interop situations, ReScript offers a way to unwrap (aka unbox) the JS object wrappers from the output for records with a single field and variants with a single constructor and single payload. Annotate their type declaration with the attribute `@unboxed`:
+-->
 
-성능이나 자바스크립트와의 특정한 연동상황에 대응하기 위하여, 리스크립트는 단일 필드로 이루어진 레코드 혹은 단일 생성자로 이루어진 배리언트를 언랩할 수 있는 방법을 제공합니다. 타입 선언 위에 `@unboxed`라고 달면 됩니다.
+성능이 중요하거나 간혹 특수한 자바스크립트 인터롭이 필요한 상황에서는 리스크립트가 제공하는 언랩(혹은 언박스) 기능을 사용할 수 있습니다.
+언랩은 단일 필드 레코드 혹은 단일 페이로드-단일 생성자 배리언트가 JS로 변환될 때, 해당 객체의 래퍼를 벗겨냅니다.
+타입 선언 위에 `@unboxed`라고 달면 됩니다.
 
 
 ```resonml
