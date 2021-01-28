@@ -5,22 +5,18 @@ metaDescription: 'JS interop with functions in ReScript'
 sourceUrl: 'https://rescript-lang.org/docs/manual/latest/bind-to-js-function'
 ---
 
-
 Binding a JS function is like binding any other value:
 
-<CodeTab labels={["ReScript", "JS Output"]}>
-
-```res example
-// Import nodejs' path.dirname
+```reason
+/* Import nodejs' path.dirname */
 @bs.module("path") external dirname: string => string = "dirname"
 let root = dirname("/User/github") // returns "User"
 ```
-```js
-var Path = require("path");
-var root = Path.dirname("/User/github");
-```
 
-</CodeTab>
+```js
+var Path = require('path');
+var root = Path.dirname('/User/github');
+```
 
 We also expose a few special features, described below.
 
@@ -32,31 +28,28 @@ ReScript has [labeled arguments](function.md#labeled-arguments) (that can also b
 // MyGame.js
 
 function draw(x, y, border) {
-   // suppose `border` is optional and defaults to false
+  // suppose `border` is optional and defaults to false
 }
-draw(10, 20)
-draw(20, 20, true)
+draw(10, 20);
+draw(20, 20, true);
 ```
 
 It'd be nice if on ReScript's side, we can bind & call `draw` while labeling things a bit:
 
-<CodeTab labels={["ReScript", "JS Output"]}>
-
-```res example
+```reason
 @bs.module("MyGame")
 external draw: (~x: int, ~y: int, ~border: bool=?, unit) => unit = "draw"
 
 draw(~x=10, ~y=20, ~border=true, ())
 draw(~x=10, ~y=20, ())
 ```
+
 ```js
-var MyGame = require("MyGame");
+var MyGame = require('MyGame');
 
 MyGame.draw(10, 20, true);
 MyGame.draw(10, 20, undefined);
 ```
-
-</CodeTab>
 
 We've compiled to the same function, but now the usage is much clearer on the ReScript side thanks to labels!
 
@@ -64,42 +57,36 @@ We've compiled to the same function, but now the usage is much clearer on the Re
 
 Note that you can change the order of labeled arguments on the ReScript side and BuckleScript will ensure that they appear the right way in the JavaScript output:
 
-<CodeTab labels={["ReScript", "JS Output"]}>
-
-```res example
+```reason
 @bs.module("MyGame")
 external draw: (~x: int, ~y: int, ~border: bool=?, unit) => unit = "draw"
 
 draw(~x=10, ~y=20, ())
 draw(~y=20, ~x=10, ())
 ```
+
 ```js
-var MyGame = require("MyGame");
+var MyGame = require('MyGame');
 
 MyGame.draw(10, 20, undefined);
 MyGame.draw(10, 20, undefined);
 ```
 
-</CodeTab>
-
 ## Object Method
 
 Functions attached to a JS objects (other than JS modules) require a special way of binding to them, using `bs.send`:
 
-<CodeTab labels={["ReScript", "JS Output"]}>
-
-```res example
+```reason
 type document // abstract type for a document object
 @bs.send external getElementById: (document, string) => Dom.element = "getElementById"
 @bs.val external doc: document = "document"
 
 let el = getElementById(doc, "myId")
 ```
-```js
-var el = document.getElementById("myId");
-```
 
-</CodeTab>
+```js
+var el = document.getElementById('myId');
+```
 
 In a `bs.send`, the object is always the first argument. Actual arguments of the method follow (this is a bit what modern OOP objects are really).
 
@@ -111,20 +98,17 @@ Ever used `foo().bar().baz()` chaining ("fluent api") in JS OOP? We can model th
 
 You might have JS functions that take an arbitrary amount of arguments. BuckleScript supports modeling those, under the condition that the arbitrary arguments part is homogenous (aka of the same type). If so, add `bs.variadic` to your `external`.
 
-<CodeTab labels={["ReScript", "JS Output"]}>
-
-```res example
+```reason
 @bs.module("path") @bs.variadic
 external join: array<string> => string = "join"
 
 let v = join(["a", "b"])
 ```
-```js
-var Path = require("path");
-var v = Path.join("a", "b");
-```
 
-</CodeTab>
+```js
+var Path = require('path');
+var v = Path.join('a', 'b');
+```
 
 `bs.module` will be explained in [Import from/Export to JS](import-from-export-to-js.md).
 
@@ -136,18 +120,15 @@ Apart from the above special-case, JS function in general are often arbitrary ov
 
 If you can exhaustively enumerate the many forms an overloaded JS function can take, simply bind to each differently:
 
-<CodeTab labels={["ReScript", "JS Output"]}>
-
-```res example
+```reason
 @bs.module("MyGame") external drawCat: unit => unit = "draw"
 @bs.module("MyGame") external drawDog: (~giveName: string) => unit = "draw"
 @bs.module("MyGame") external draw: (string, ~useRandomAnimal: bool) => unit = "draw"
 ```
+
 ```js
 // Empty output
 ```
-
-</CodeTab>
 
 Note how all three externals bind to the same JS function, `draw`.
 
@@ -157,10 +138,10 @@ If you have the irresistible urge of saying "if only this JS function argument w
 
 ```js
 function padLeft(value, padding) {
-  if (typeof padding === "number") {
-    return Array(padding + 1).join(" ") + value;
+  if (typeof padding === 'number') {
+    return Array(padding + 1).join(' ') + value;
   }
-  if (typeof padding === "string") {
+  if (typeof padding === 'string') {
     return padding + value;
   }
   throw new Error(`Expected string or number, got '${padding}'.`);
@@ -169,9 +150,7 @@ function padLeft(value, padding) {
 
 Here, `padding` is really conceptually a variant. Let's model it as such.
 
-<CodeTab labels={["ReScript", "JS Output"]}>
-
-```res example
+```reason
 @bs.val
 external padLeft: (
   string,
@@ -183,12 +162,11 @@ external padLeft: (
 padLeft("Hello World", #Int(4))
 padLeft("Hello World", #Str("Message from ReScript: "))
 ```
-```js
-padLeft("Hello World", 4);
-padLeft("Hello World", "Message from ReScript: ");
-```
 
-</CodeTab>
+```js
+padLeft('Hello World', 4);
+padLeft('Hello World', 'Message from ReScript: ');
+```
 
 Obviously, the JS side couldn't have an argument that's a polymorphic variant! But here, we're just piggy backing on poly variants' type checking and syntax. The secret is the `@bs.unwrap` annotation on the type. It strips the variant constructors and compile to just the payload's value. See the output.
 
@@ -196,9 +174,7 @@ Obviously, the JS side couldn't have an argument that's a polymorphic variant! B
 
 Consider the Node `fs.readFileSync`'s second argument. It can take a string, but really only a defined set: `"ascii"`, `"utf8"`, etc. You can still bind it as a string, but we can use poly variants + `bs.string` to ensure that our usage's more correct:
 
-<CodeTab labels={["ReScript", "JS Output"]}>
-
-```res example
+```reason
 @bs.module("fs")
 external readFileSync: (
   ~name: string,
@@ -210,12 +186,11 @@ external readFileSync: (
 
 readFileSync(~name="xx.txt", #useAscii)
 ```
-```js
-var Fs = require("fs");
-Fs.readFileSync("xx.txt", "ascii");
-```
 
-</CodeTab>
+```js
+var Fs = require('fs');
+Fs.readFileSync('xx.txt', 'ascii');
+```
 
 - Attaching `@bs.string` to the whole poly variant type makes its constructor compile to a string of the same name.
 - Attaching a `@bs.as("bla")` to a constructor lets you customize the final string.
@@ -224,9 +199,7 @@ And now, passing something like `"myOwnUnicode"` or other variant constructor na
 
 Aside from string, you can also compile an argument to an int, using `bs.int` instead of `bs.string` in a similar way:
 
-<CodeTab labels={["ReScript", "JS Output"]}>
-
-```res example
+```reason
 @bs.val
 external testIntType: (
   @bs.int [
@@ -237,11 +210,10 @@ external testIntType: (
   => int = "testIntType"
 testIntType(#inBinary)
 ```
+
 ```js
 testIntType(21);
 ```
-
-</CodeTab>
 
 `onClosed` compiles to `0`, `onOpen` to `20` and `inBinary` to **`21`**.
 
@@ -249,9 +221,7 @@ testIntType(21);
 
 One last trick with polymorphic variants:
 
-<CodeTab labels={["ReScript", "JS Output"]}>
-
-```res example
+```reason
 type readline
 
 @bs.send
@@ -269,17 +239,16 @@ let register = rl =>
   ->on(#close(event => ()))
   ->on(#line(line => Js.log(line)));
 ```
+
 ```js
 function register(rl) {
   return rl
-    .on("close", function($$event) {})
-    .on("line", function(line) {
+    .on('close', function($$event) {})
+    .on('line', function(line) {
       console.log(line);
     });
 }
 ```
-
-</CodeTab>
 
 <!-- TODO: GADT phantom type -->
 
@@ -287,9 +256,7 @@ function register(rl) {
 
 Sometimes it's convenient to bind to a function using an `external`, while passing predetermined argument values to the JS function:
 
-<CodeTab labels={["ReScript", "JS Output"]}>
-
-```res example
+```reason
 @bs.val
 external processOnExit: (
   @bs.as("exit") _,
@@ -300,13 +267,12 @@ processOnExit(exitCode =>
   Js.log("error code: " ++ Js.Int.toString(exitCode))
 );
 ```
+
 ```js
-process.on("exit", function (exitCode) {
-  console.log("error code: " + exitCode.toString());
+process.on('exit', function(exitCode) {
+  console.log('error code: ' + exitCode.toString());
 });
 ```
-
-</CodeTab>
 
 The `@bs.as("exit")` and the placeholder `_` argument together indicates that you want the first argument to compile to the string `"exit"`. You can also use any JSON literal with `bs.as`: `` @bs.as(json`true`) ``, `` @bs.as(json`{"name": "John"}`) ``, etc.
 
@@ -344,21 +310,18 @@ ReScript tries to do #1 as much as it can. Even when it bails and uses #2's curr
 
 [Uncurried function](function.md#uncurried-function) annotation also works on `external`:
 
-<CodeTab labels={["ReScript", "JS Output"]}>
-
-```res example
+```reason
 type timerId
 @bs.val external setTimeout: ((. unit) => unit, int) => timerId = "setTimeout"
 
 let id = setTimeout((.) => Js.log("hello"), 1000)
 ```
+
 ```js
-var id = setTimeout(function () {
-  console.log("hello");
+var id = setTimeout(function() {
+  console.log('hello');
 }, 1000);
 ```
-
-</CodeTab>
 
 #### Extra Solution
 
@@ -372,17 +335,14 @@ The above solution is safe, guaranteed, and performant, but sometimes visually a
 
 Then try `@bs.uncurry`:
 
-<CodeTab labels={["ReScript", "JS Output"]}>
-
-```res example
+```reason
 @bs.send external map: (array<'a>, @bs.uncurry ('a => 'b)) => array<'b> = "map"
 map([1, 2, 3], x => x + 1)
 ```
+
 ```js
 // Empty output
 ```
-
-</CodeTab>
 
 In general, `bs.uncurry` is recommended; the compiler will do lots of optimizations to resolve the currying to uncurrying at compile time. However, there are some cases the compiler can't optimize it. In these cases, it will be converted to a runtime check.
 
@@ -392,29 +352,26 @@ Many JS libraries have callbacks which rely on this (the source), for example:
 
 ```js
 x.onload = function(v) {
-  console.log(this.response + v)
-}
+  console.log(this.response + v);
+};
 ```
 
 Here, `this` would point to `x` (actually, it depends on how `onload` is called, but we digress). It's not correct to declare `x.onload` of type `(. unit) -> unit`. Instead, we introduced a special attribute, `bs.this`, which allows us to type `x` as so:
 
-<CodeTab labels={["ReScript", "JS Output"]}>
-
-```res example
+```reason
 type x
 @bs.val external x: x = "x"
 @bs.set external setOnload: (x, @bs.this ((x, int) => unit)) => unit = "onload"
 @bs.get external resp: x => int = "response"
 setOnload(x, @bs.this ((o, v) => Js.log(resp(o) + v)))
 ```
+
 ```js
-x.onload = function (v) {
+x.onload = function(v) {
   var o = this;
   console.log((o.response + v) | 0);
 };
 ```
-
-</CodeTab>
 
 `bs.this` has its first parameter is reserved for `this` and for arity of 0, there is no need for a redundant `unit` type.
 
@@ -422,9 +379,7 @@ x.onload = function (v) {
 
 For JS functions that return a value that can also be `undefined` or `null`, we provide `@bs.return(...)`. To automatically convert that value to an `option` type (recall that ReScript `option` type's `None` value only compiles to `undefined` and not `null`).
 
-<CodeTab labels={["ReScript", "JS Output"]}>
-
-```res example
+```reason
 type element
 type dom
 
@@ -439,9 +394,10 @@ let test = dom => {
   }
 }
 ```
+
 ```js
 function test(dom) {
-  var elem = dom.getElementById("haha");
+  var elem = dom.getElementById('haha');
   if (elem == null) {
     return 1;
   } else {
@@ -449,10 +405,7 @@ function test(dom) {
     return 2;
   }
 }
-
 ```
-
-</CodeTab>
 
 `bs.return(nullable)` attribute will automatically convert `null` and `undefined` to `option` type.
 
