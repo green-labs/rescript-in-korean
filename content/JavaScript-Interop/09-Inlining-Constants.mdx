@@ -9,7 +9,7 @@ Sometime, in the JavaScript output, you might want a certain value to be forcefu
 
 ```js
 if (process.env.mode === 'development') {
-  console.log("Dev-only code here!")
+  console.log('Dev-only code here!');
 }
 ```
 
@@ -17,7 +17,7 @@ The reason is that your JavaScript bundler (e.g. Webpack) might turn that into:
 
 ```js
 if ('production' === 'development') {
-  console.log("Dev-only code here!")
+  console.log('Dev-only code here!');
 }
 ```
 
@@ -25,9 +25,7 @@ Then your subsequent Uglifyjs optimization would remove that entire `if` block. 
 
 So, in ReScript, producing that example `if (process.env.mode === 'development')` output is important. This first try doesn't work:
 
-<CodeTab labels={["ReScript", "JS Output"]}>
-
-```res example
+```reason
 @bs.val external process: 'a = "process"
 
 let mode = "development"
@@ -36,21 +34,18 @@ if (process["env"]["mode"] === mode) {
   Js.log("Dev-only code here!")
 }
 ```
+
 ```js
-var mode = "development";
+var mode = 'development';
 
 if (process.env.mode === mode) {
-  console.log("Dev-only code here!");
+  console.log('Dev-only code here!');
 }
 ```
 
-</CodeTab>
-
 The JS output shows `if (process.env.mode === mode)`, which isn't what we wanted. To inline `mode`'s value, use `@bs.inline`:
 
-<CodeTab labels={["ReScript", "JS Output"]}>
-
-```res example
+```reason
 @bs.val external process: 'a = "process"
 
 @bs.inline
@@ -60,18 +55,17 @@ if (process["env"]["mode"] === mode) {
   Js.log("Dev-only code here!")
 }
 ```
+
 ```js
-if (process.env.mode === "development") {
-  console.log("Dev-only code here!");
+if (process.env.mode === 'development') {
+  console.log('Dev-only code here!');
 }
 ```
 
-</CodeTab>
-
 Now your resulting JS code can pass through Webpack and Uglifyjs like the rest of your JavaScript code, and that whole `console.log` can be removed.
 
-The inlining currently only works for **string, float and boolean**.
+The inlining currently only works for **문자열, 실수 그리고 boolean**.
 
-## Tips & Tricks
+## 팁과 트릭
 
-This is **not** an optimization. This is an edge-case feature for folks who absolutely need particular values inlined for a JavaScript post-processing step, like conditional compilation. Beside the difference in code that the conditional compilation might end up outputting, there's no performance difference between inlining and not inlining simple values in the eyes of a JavaScript engine.
+이건 최적화는 **아닙니다**. This is an edge-case feature for folks who absolutely need particular values inlined for a JavaScript post-processing step, like conditional compilation. Beside the difference in code that the conditional compilation might end up outputting, there's no performance difference between inlining and not inlining simple values in the eyes of a JavaScript engine.

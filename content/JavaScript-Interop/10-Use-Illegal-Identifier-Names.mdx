@@ -6,15 +6,14 @@ sourceUrl: 'https://rescript-lang.org/docs/manual/latest/use-illegal-identifier-
 ---
 
 Sometime, for e.g. a let binding or a record field, you might want to use:
+
 - A capitalized name.
 - A name that contains illegal characters (e.g. emojis, hyphen, space).
 - A name that's one of ReScript's reserved keywords.
 
 We provide an escape hatch syntax for these cases:
 
-<CodeTab labels={["ReScript", "JS Output"]}>
-
-```res example
+```reason
 let \"my-🍎" = 10
 
 type element = {
@@ -31,20 +30,19 @@ let calculate = (~\"Props") => {
   \"Props" + 1
 }
 ```
+
 ```js
 var my$$unknown$unknown$unknown$unknown = 10;
 
 var myElement = {
-  "aria-label": "close"
+  'aria-label': 'close',
 };
 
-var label = myElement["aria-label"];
+var label = myElement['aria-label'];
 
 function calculate(Props) {
-  return Props + 1 | 0;
+  return (Props + 1) | 0;
 }
 ```
 
-</CodeTab>
-
-See the output. **Use them only when necessary**, for interop with JavaScript. This is a last-resort feature. If you abuse this, many of the compiler guarantees will go away.
+결과물을 보세요. 자바스크립트 인터롭을 할 경우 **꼭 필요할 경우만 사용하세요**. This is a last-resort feature. If you abuse this, many of the compiler guarantees will go away.

@@ -5,22 +5,18 @@ metaDescription: 'JS interop with global JS values in ReScript'
 sourceUrl: 'https://rescript-lang.org/docs/manual/latest/bind-to-global-js-values'
 ---
 
-
 **First**, make sure the value you'd like to model doesn't already exist in our [provided API](api/js).
 
 Some JS values, like `setTimeout`, live in the global scope. You can bind to them like so:
 
-<CodeTab labels={["ReScript", "JS Output"]}>
-
-```res example
+```reason
 @bs.val external setTimeout: (unit => unit, int) => float = "setTimeout"
 @bs.val external clearTimeout: float => unit = "clearTimeout"
 ```
+
 ```js
 // Empty output
 ```
-
-</CodeTab>
 
 (We already provide `setTimeout`, `clearTimeout` and others in the [Js.Global](api/js/global) module).
 
@@ -30,15 +26,13 @@ This binds to the JavaScript [`setTimeout`](https://developer.mozilla.org/en-US/
 - and an integer that specifies the duration before calling said function,
 - returns a number that is the timeout's ID. This number might be big, so we're modeling it as a float rather than the 32-bit int.
 
-### Tips & Tricks
+### 팁과 트릭
 
 **The above isn't ideal**. See how `setTimeout` returns a `float` and `clearTimeout` accepts one. There's no guarantee that you're passing the float created by `setTimeout` into `clearTimeout`! For all we know, someone might pass it `Math.random()` into the latter.
 
 We're in a language with a great type system now! Let's leverage a popular feature to solve this problem: abstract types.
 
-<CodeTab labels={["ReScript", "JS Output"]}>
-
-```res example
+```reason
 type timerId
 @bs.val external setTimeout: (unit => unit, int) => timerId = "setTimeout"
 @bs.val external clearTimeout: timerId => unit = "clearTimeout"
@@ -46,15 +40,14 @@ type timerId
 let id = setTimeout(() => Js.log("hello"), 100)
 clearTimeout(id)
 ```
+
 ```js
-var id = setTimeout(function (param) {
-  console.log("hello");
+var id = setTimeout(function(param) {
+  console.log('hello');
 }, 100);
 
 clearTimeout(id);
 ```
-
-</CodeTab>
 
 Clearly, `timerId` is a type that can only be created by `setTimeout`! Now we've guaranteed that `clearTimeout` _will_ be passed a valid ID. Whether it's a number under the hood is now a mere implementation detail.
 
@@ -64,31 +57,25 @@ Since `external`s are inlined, we end up with JS output as readable as hand-writ
 
 If you want to bind to a value inside a global module, e.g. `Math.random`, attach a `bs.scope` to your `bs.val` external:
 
-<CodeTab labels={["ReScript", "JS Output"]}>
-
-```res example
+```reason
 @bs.scope("Math") @bs.val external random: unit => float = "random"
 let someNumber = random()
 ```
+
 ```js
 var someNumber = Math.random();
 ```
 
-</CodeTab>
-
 you can bind to an arbitrarily deep object by passing a tuple to `bs.scope`:
 
-<CodeTab labels={["ReScript", "JS Output"]}>
-
-```res example
+```reason
 @bs.val @bs.scope(("window", "location", "ancestorOrigins"))
 external length: int = "length"
 ```
+
 ```js
 // Empty output
 ```
-
-</CodeTab>
 
 This binds to `window.location.ancestorOrigins.length`.
 
@@ -98,48 +85,42 @@ Global values like `__filename` and `__DEV__` don't always exist; you can't even
 
 For these troublesome global values, ReScript provides a special approach: `%external(a_single_identifier)`.
 
-<CodeTab labels={["ReScript", "JS Output"]}>
-
-```res example
+```reason
 switch %external(__DEV__) {
 | Some(_) => Js.log("dev mode")
 | None => Js.log("production mode")
 }
 ```
+
 ```js
-var match = typeof __DEV__ === "undefined" ? undefined : __DEV__;
+var match = typeof __DEV__ === 'undefined' ? undefined : __DEV__;
 
 if (match !== undefined) {
-  console.log("dev mode");
+  console.log('dev mode');
 } else {
-  console.log("production mode");
+  console.log('production mode');
 }
 ```
 
-</CodeTab>
-
 That first line's `typeof` check won't trigger a JS ReferenceError.
 
-Another example:
+다른 예제
 
-<CodeTab labels={["ReScript", "JS Output"]}>
-
-```res example
+```reason
 switch %external(__filename) {
 | Some(f) => Js.log(f)
 | None => Js.log("non-node environment")
 };
 ```
+
 ```js
-var match = typeof (__filename) === "undefined" ? undefined : (__filename);
+var match = typeof __filename === 'undefined' ? undefined : __filename;
 
 if (match !== undefined) {
   console.log(match);
 } else {
-  console.log("non-node environment");
+  console.log('non-node environment');
 }
 ```
-
-</CodeTab>
 
 <!-- TODO: revamp this page. Not good. Tell to use globalThis["foo"], and look in our stdlib -->
