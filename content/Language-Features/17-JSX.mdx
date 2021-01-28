@@ -1,195 +1,164 @@
 ---
 title: 'JSX'
 metaTitle: 'JSX'
-metaDescription: 'JSX syntax in ReScript and ReasonReact'
+metaDescription: '리즌리액트와 리스크립트의 JSX 문법'
 sourceUrl: 'https://rescript-lang.org/docs/manual/latest/jsx'
 ---
 
-Would you like some HTML syntax in your ReScript? If not, quickly skip over this section and pretend you didn't see anything!
+리스크립트로 HTML 구문을 작성할 것 같으신가요? 아니라면 이 섹션은 그냥 넘어가셔도 됩니다.
 
-ReScript supports the JSX syntax, with some slight differences compared to the one in [ReactJS](https://facebook.github.io/react/docs/introducing-jsx.html). ReScript JSX isn't tied to ReactJS; they translate to normal function calls:
+리스크립트는 JSX 문법을 지원하지만 [ReactJS](https://facebook.github.io/react/docs/introducing-jsx.html)에 있는 것과 조금 다릅니다. 리스크립트 JSX는 ReactJS와 관련이 없습니다. 일반 함수 호출로 변환되기 때문입니다.
 
-**Note** for [ReasonReact](https://reasonml.github.io/reason-react/en/) readers: this isn't what ReasonReact turns JSX into, in the end. See Usage section for more info.
+**참고** [ReasonReact](https://reasonml.github.io/reason-react/en/ 를 사용하시는 분들에게: ReasonReact가 JSX를 변화시키는 것은 아닙니다. 자세한 내용은 사용 섹션을 참고하세요.
 
-## Capitalized Tag
+## 대문자 태그
 
-<CodeTab labels={["ReScript", "JS Output"]}>
-
-```res
+```reason
 <MyComponent name={"ReScript"} />
 ```
+
 ```js
-React.createElement(
-  MyComponent.make,
-  MyComponent.makeProps("ReScript", undefined)
-);
+React.createElement(MyComponent.make, MyComponent.makeProps('ReScript', undefined));
 ```
 
-</CodeTab>
+이렇게 변경됩니다.
 
-becomes
-
-<CodeTab labels={["ReScript", "JS Output"]}>
-
-```res
+```reason
 @JSX MyComponent.createElement(~name="ReScript", ~children=list{}, ())
 ```
+
+```js
+React.createElement(MyComponent.make, MyComponent.makeProps('ReScript', undefined));
+```
+
+## 소문자 태그
+
+```reason
+<div onClick={handler}> child1 child2 </div>
+```
+
 ```js
 React.createElement(
-  MyComponent.make,
-  MyComponent.makeProps("ReScript", undefined)
+  'div',
+  {
+    onClick: handler,
+  },
+  child1,
+  child2
 );
 ```
 
-</CodeTab>
+이렇게 되고요
 
-## Uncapitalized Tag
-
-<CodeTab labels={["ReScript", "JS Output"]}>
-
-```res
-<div onClick={handler}> child1 child2 </div>
-```
-```js
-React.createElement("div", {
-  onClick: handler
-}, child1, child2);
-```
-
-</CodeTab>
-
-becomes
-
-<CodeTab labels={["ReScript", "JS Output"]}>
-
-```res
+```reason
 @JSX div(~onClick=handler, ~children=list{child1, child2}, ())
 ```
-```js
-React.createElement("div", {
-  onClick: handler
-}, child1, child2);
-```
 
-</CodeTab>
+```javascript
+React.createElement(
+  'div',
+  {
+    onClick: handler,
+  },
+  child1,
+  child2
+);
+```
 
 ## Fragment
 
-<CodeTab labels={["ReScript", "JS Output"]}>
-
-```res
+```reason
 <> child1 child2 </>
 ```
+
 ```js
 React.createElement(React.Fragment, undefined, child1, child2);
 ```
 
-</CodeTab>
+리액트 Fragment는 이렇게 변경됩니다.
 
-becomes
-
-<CodeTab labels={["ReScript", "JS Output"]}>
-
-```res
+```reason
 @JSX list{child1, child2}
 ```
-```js
+
+```javascript
 React.createElement(React.Fragment, undefined, child1, child2);
 ```
-
-</CodeTab>
 
 ### Children
 
-<CodeTab labels={["ReScript", "JS Output"]}>
-
-```res
+```reason
 <MyComponent> child1 child2 </MyComponent>
 ```
+
 ```js
 React.createElement(MyComponent.make, MyComponent.makeProps(null, undefined), child1, child2);
 ```
 
-</CodeTab>
+이것은 `child1` 과 `child2` 두 아이템을 children 위치로 전달하는 문법입니다. 문법적 설탕이 제거 된 `child1` 과 `child2`을 포함한 리스트 문법입니다.
 
-This is the syntax for passing a list of two items, `child1` and `child2`, to the children position. It desugars to a list containing `child1` and `child2`:
-
-<CodeTab labels={["ReScript", "JS Output"]}>
-
-```res
+```reason
 @JSX MyComponent.createElement(~children=list{child1, child2}, ())
 ```
+
 ```js
 React.createElement(MyComponent.make, MyComponent.makeProps(null, undefined), child1, child2);
 ```
 
-</CodeTab>
+**참고** 이것은 ReasonReact의 변환은 아닙니다. ReasonReact는 최종에는 리스트를 배열로 바꿉니다. 이 아이디어는 여전히 유효합니다.
 
-**Note** again that this isn't the transform for ReasonReact; ReasonReact turns the final list into an array. But the idea still applies.
-
-So naturally, `<MyComponent> myChild </MyComponent>` desugars to `@JSX MyComponent.createElement(~children=list{myChild}, ())`. I.e. whatever you do, the arguments passed to the children position will be wrapped in a list. What if you don't want that? **What if you want to directly pass `myChild` without an extra wrapping**?
+따라서 자연스럽게, `<MyComponent> myChild </MyComponent>` 는 `@JSX MyComponent.createElement(~children=list{myChild}, ())` 이 문법으로 변경됩니다. 무엇을 하든 childre에 전달된 인수는 리스트로 감싸집니다. 만일 그렇게 전달되기 원하지 않는다면? **추가적인 래핑 없이 `myChild`를 직접 전달하려면 어떻게 해야할까요**?
 
 #### Children Spread
 
-To solve the above problem, we've introduced
+위 문제를 해결하기 위해 우리는 이런 방식을 제안합니다.
 
-<CodeTab labels={["ReScript", "JS Output"]}>
-
-```res
+```reason
 <MyComponent> ...myChild </MyComponent>
 ```
+
 ```js
 React.createElement(MyComponent.make, MyComponent.makeProps(myChild, undefined));
 ```
 
-</CodeTab>
+이 방법은 `myChild`를 리스트로 감싸지 _않고_ 인자로 넘길 수 있습니다. (ReasonReact의 경우에는 배열). 위에서 말했듯 이렇게 변경됩니다.
 
-This passes the value `myChild` _without_ wrapping it in a list (or array, in the case of ReasonReact). Aka, this desugars to:
-
-<CodeTab labels={["ReScript", "JS Output"]}>
-
-```res
+```reason
 @JSX MyComponent.createElement(~children=myChild, ())
 ```
+
 ```js
 React.createElement(MyComponent.make, MyComponent.makeProps(myChild, undefined));
 ```
 
-</CodeTab>
+This is extra useful in the cases where you are handled `myChild` that is already a list of things, and want to forward that without wrapping it an extra time (타입 오류가 될 수 있습니다.) \*. 또한 `children` 위치에서 임이의 자료구조를 전달할 수 있습니다. (기억하세요 JSX `children` 은 완전히 일반적인 prop 입니다.):
 
-This is extra useful in the cases where you are handled `myChild` that is already a list of things, and want to forward that without wrapping it an extra time (which would be a type error) \*. It also allows you to pass arbitrary data structures at `children` position (remember, JSX `children` is really just a totally normal prop):
-
-<CodeTab labels={["ReScript", "JS Output"]}>
-
-```res
+```reason
 <MyComponent> ...((theClassName) => <div className=theClassName />) </MyComponent>
 
 <MyForm> ...("Hello", "Submit") </MyForm>
 ```
+
 ```js
 React.createElement(
   make,
-  makeProps(function (theClassName) {
-    return React.createElement("div", {
+  makeProps(function(theClassName) {
+    return React.createElement('div', {
       className: theClassName,
     });
   }, undefined)
 );
 
-React.createElement(MyForm.make, MyForm.makeProps(["Hello", "Submit"], undefined));
+React.createElement(MyForm.make, MyForm.makeProps(['Hello', 'Submit'], undefined));
 ```
 
-</CodeTab>
+## 사용법
 
-## Usage
+[ReasonReact JSX](https://reasonml.github.io/reason-react/docs/en/jsx) 문서를 보시면 위의 호출을 특별한 ReasonReact 호출로 변경하는 JSX 어플리케이션 예제가 있습니다.
 
-See [ReasonReact JSX](https://reasonml.github.io/reason-react/docs/en/jsx) for an example application of JSX, which transforms the above calls into a ReasonReact-specific call.
+여기 JSX 태그의 대부분의 기능을 보여주는 예제가 있습니다.
 
-Here's a JSX tag that shows most of the features.
-
-<CodeTab labels={["ReScript", "JS Output"]}>
-
-```res
+```reason
 <MyComponent
   booleanAttribute={true}
   stringAttribute="string"
@@ -199,61 +168,55 @@ Here's a JSX tag that shows most of the features.
   <div> {React.string("hello")} </div>
 </MyComponent>
 ```
+
 ```js
 React.createElement(
   MyComponent.make,
   MyComponent.makeProps(
     true,
-    "string",
+    'string',
     1,
-    "hello",
+    'hello',
     handleClick,
-    React.createElement("div", undefined, "hello"),
+    React.createElement('div', undefined, 'hello'),
     undefined
   )
 );
 ```
 
-</CodeTab>
+## JS, JSX 에서의 다른점
 
-## Departures From JS JSX
+- 속성과 children은 늘 `{}`를 필요로 하는 것은 아닙니다만 학습의 용이성을 위해 보여주고 있습니다. 아마 포매팅을 하시면, 어떤 괄호는 사라지고, 어떤 부분은 괄호로 변경될 것입니다.
+- JSX Props spread 구문은 지원하지 않습니다. `<Comp {...props} />`. 우리가 위에 설명한 children spread 기능이 있는것과 조금 관련이 있습니다. `<Comp> ...children </Comp>`.
+- 약어!
 
-- Attributes and children don't mandate `{}`, but we show them anyway for ease of learning. Once you format your file, some of them go away and some turn into parentheses.
-- There is no support for JSX prop spread: `<Comp {...props} />`. Though somewhat related,  we do have children spread, described above: `<Comp> ...children </Comp>`.
-- Punning!
+### 약어 (Punning)
 
-### Punning
+약어는 Props 명칭과 값이 같을 때 사용할 수 있는 줄임말입니다. 예를 들어, 자바스크립트에서는, `return {name: name}` 이렇게도 할 수 있지만 이런 식으로 사용합니다. `return {name}`.
 
-"Punning" refers to the syntax shorthand for when a label and a value are the same. For example, in JavaScript, instead of doing `return {name: name}`, you can do `return {name}`.
+리즌 JSX는 약어를 지원합니다. `<input checked />` 는 단순히 이런 표현의 줄임입니다. `<input checked=checked />`. 포매터가 작동할 때마다 약어처리가 가능한 곳이 자동으로 변경될 것입니다. 약어 처리는 전달해야하는 Props 가 많을 경우 편리합니다.
 
-Reason JSX supports punning. `<input checked />` is just a shorthand for `<input checked=checked />`. The formatter will help you format to the punned syntax whenever possible. This is convenient in the cases where there are lots of props to pass down:
-
-<CodeTab labels={["ReScript", "JS Output"]}>
-
-```res
+```reason
 <MyComponent isLoading text onClick />
 ```
+
 ```js
-React.createElement(
-  MyComponent.make,
-  MyComponent.makeProps(isLoading, text, onClick, undefined)
-);
+React.createElement(MyComponent.make, MyComponent.makeProps(isLoading, text, onClick, undefined));
 ```
 
-</CodeTab>
+결과적으로 리즌 JSX 컴포넌트는 Props 주입을 막는 추가적인 라이브러리에 도달하기 전에 임의적으로 몇가지 Props 를 더 주입할 수 있습니다.
 
-Consequently, a Reason JSX component can cram in a few more props before reaching for extra libraries solutions that avoids props passing.
+**참고** 그것은 ReactJS JSX로부터 출발한 것이며, 여기에는 약어가 **없습니다**. ReactJS의 `<input checked />`는 이전 버전과의 호환성을 위해 DOM 관용구를 따르기 때문에 `<input checked=true />`로 변경 됩니다.
 
-**Note** that this is a departure from ReactJS JSX, which does **not** have punning. ReactJS' `<input checked />` desugars to `<input checked=true />`, in order to conform to DOM's idioms and for backward compatibility.
+## 팁과 트릭
 
-## Tip & Tricks
+JSX 의 장점을 활용하는 라이브러리 작성자들에게 `@JSX`는 JSX 포매팅하려는 함수를 찾는 잠재적인 ppx 매크로입니다. 이 기능을 찾아서 여러분은 이것을 다른 표현으로 바꿀 수 있습니다.
 
-For library authors wanting to take advantage of the JSX: the `@JSX` attribute above is a hook for potential ppx macros to spot a function wanting to format as JSX. Once you spot the function, you can turn it into any other expression.
+이 방법은, 모든사람이 특정 라이브러리(ReasonReact)를 사용할 필요없이 JSX 문법의 이득을 얻을 수 있습니다.
 
-This way, everyone gets to benefit the JSX syntax without needing to opt into a specific library using it, e.g. ReasonReact.
+JSX calls supports the features of labeled functions: optional, explicitly passed optional and optional with default.
+JSX 호출은 [이름있는 인자](12-function.mdx#labeled-arguments) 기능을 지원합니다. 명시적으로 옵셔널 값을 전달할 수 있고 기본은 옵셔널입니다.
 
-JSX calls supports the features of [labeled functions](function.md#labeled-arguments): optional, explicitly passed optional and optional with default.
+## 디자인 결정
 
-## Design Decisions
-
-\* You might wonder why you never needed such children spread in ReactJS; ReactJS uses some special runtime logic + special syntax transforms + variadic argument detection & marking to avoid most of these cases ([see here](https://github.com/facebook/react/blob/9b36df86c6ccecb73ca44899386e6a72a83ad445/packages/react/src/ReactElement.js#L207)). Such dynamic usage complexifies the type system detection _quite a bit_. Since we control the whole syntax and ReasonReact, we decided to introduce children spread to disambiguate between the case of wrapping vs not wrapping, without compile-time & runtime cost!
+\* 여러분은 아마 왜 children spread 같은 방법이 ReactJS에서 필요하지 않은지 궁금할 것입니다. ReactJS는 일부 특수한 런타임 로직과 특수 구문 변환 그리고 가변 인수 감지 마킹을 사용해 이런 경우를 대부분 방지합니다.([이곳을 참조해주세요](https://github.com/facebook/react/blob/9b36df86c6ccecb73ca44899386e6a72a83ad445/packages/react/src/ReactElement.js#L207)). 이런 동적 사용은 타입 시스템 감지를 _조금_ 복잡하게 만듭니다. 우리가 ReasonReact의 모든 구문을 컨트롤하기 때문에 컴파일 시간 및 런타임 피용없이 래핑하거나 래핑하지 않는 경우를 명확히 구분하기위해 children spread를 사용하기로 때문에 결정했습니다!

@@ -11,6 +11,9 @@ export const baseStyles = css`
     padding: 0;
     box-sizing: border-box;
     font-display: swap;
+    .paragraph {
+      word-break: keep-all;
+    }
   }
   ::-webkit-input-placeholder {
     /* Edge */

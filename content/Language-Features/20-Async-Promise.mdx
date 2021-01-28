@@ -1,5 +1,86 @@
 ---
 title: 'Async & Promise'
 metaTitle: 'Async & Promise'
-metaDescription: 'This is the meta description'
+metaDescription: 'JS Promise handling in ReScript'
+sourceUrl: 'https://rescript-lang.org/docs/manual/latest/promise'
 ---
+
+비동기 프로그래밍에서 리스크립트의 주요 메커니즘은 자바스크립트와 같습니다(callbacks and promises). 그 이유는 자바스크립트로 깔끔하게 컴파일 하고 싶기도 하고 실행시간에 무거워지고 느려지는 것을 피하고 싶기 때문입니다.
+그러나 앞으로 코루틴 같은 기능을 도입할 예정입니다. 이러한 이유로 우리는 async와 await을 언어에 넣는 것을 연기했습니다. 우리가 구현하려는 프로미스 API 바인딩 및 revamp + pipe는 여러분의 비동기 코드를 다른 것들보다 더 좋게 만들어줄 것입니다.
+
+## 프로미스
+
+리스크립트는 [자바스크립트 프로미스](https://rescript-lang.org/docs/manual/latest/api/js/promise) 지원을 위해  준비된 바인딩이 있습니다. 프로미스를 사용하기 위해서는 일반적으로 밑의 3개의 함수를 사용합니다.
+
+- Js.Promise.resolve: 'a => Js.Promise.t('a)
+
+- Js.Promise.then\_: ('a => Js.Promise.t('b), Js.Promise.t('a)) => Js.Promise.t('b)
+
+- Js.Promise.catch: (Js.Promise.error => Js.Promise.t('a), Js.Promise.t('a)) => Js.Promise.t('a)
+
+리스크립트에서 프로미스를 만드는 시그니쳐는 다음과 같습니다.
+
+```reason
+Js.Promise.make: (
+  (
+    ~resolve: (. 'a) => unit,
+    ~reject: (. exn) => unit
+  ) => unit
+) => Js.Promise.t<'a>
+```
+
+이 타입 시그니쳐가 의미하는 것은 make는 콜백 함수를 입력받는데, 이 콜백 함수는 resolve와 reject로 2개의 이름이 지정된 인자값이라는 것입니다. 두개의 인자값은 언커리드 콜백이며 .을 써야 합니다. make는 만들어진 프로미스를 반환합니다.
+
+## 사용방법
+
+파이프 연산자를 사용합니다.
+
+```reason
+let myPromise = Js.Promise.make((~resolve, ~reject) =>
+  switch Some(2) {
+  | Some(n) => resolve(. n)
+  | _ => reject(. Js.Exn.raiseError("error"))
+  }
+)
+
+myPromise->Js.Promise.then_(value => {
+  Js.log(value)
+  Js.Promise.resolve(value + 2)
+}, _)->Js.Promise.then_(value => {
+  Js.log(value)
+  Js.Promise.resolve(value + 3)
+}, _)->Js.Promise.catch(err => {
+  Js.log2("Failure!!", err)
+  Js.Promise.resolve(-2)
+}, _)->ignore
+```
+
+```js
+var Js_exn = require('bs-platform/lib/js/js_exn.js');
+
+var myPromise = new Promise(function (resolve, reject) {
+  var n = 2;
+  if (n !== undefined) {
+    return resolve(n);
+  } else {
+    return reject(Js_exn.raiseError('error'));
+  }
+});
+
+var __x = myPromise.then(function (value) {
+  console.log(value);
+  return Promise.resolve((value + 2) | 0);
+});
+
+var __x$1 = __x.then(function (value) {
+  console.log(value);
+  return Promise.resolve((value + 3) | 0);
+});
+
+__x$1.catch(function (err) {
+  console.log('Failure!!', err);
+  return Promise.resolve(-2);
+});
+
+exports.myPromise = myPromise;
+```
