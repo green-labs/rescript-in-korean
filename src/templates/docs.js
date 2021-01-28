@@ -69,10 +69,10 @@ export default class MDXRuntimeTest extends Component {
     const metaTitle = mdx.frontmatter.metaTitle;
 
     const metaDescription = mdx.frontmatter.metaDescription;
-    
+
     // rescript source path
     const sourceUrl = mdx.frontmatter?.sourceUrl;
-    
+
     let canonicalUrl = config.gatsby.siteUrl;
 
     canonicalUrl =
@@ -95,7 +95,11 @@ export default class MDXRuntimeTest extends Component {
         </Helmet>
         <div className={'titleWrapper'}>
           <StyledHeading>{mdx.fields.title}</StyledHeading>
-          {sourceUrl && <a href={sourceUrl} target="_blank" ><span style={{fontSize:"14px", opacity: 0.5}}>원문</span></a>}
+          {sourceUrl && (
+            <a href={sourceUrl} target="_blank">
+              <span style={{ color: '#29c389', fontSize: '14px', opacity: 0.85 }}>원문</span>
+            </a>
+          )}
           <Edit className={'mobileView'}>
             {docsLocation && (
               <Link className={'gitBtn'} to={`${docsLocation}/${mdx.parent.relativePath}`}>
@@ -103,9 +107,8 @@ export default class MDXRuntimeTest extends Component {
               </Link>
             )}
           </Edit>
-          
         </div>
-        
+
         <StyledMainWrapper>
           <MDXRenderer>{mdx.body}</MDXRenderer>
         </StyledMainWrapper>
