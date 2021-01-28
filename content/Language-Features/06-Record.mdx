@@ -32,7 +32,7 @@ let me = {
 }
 ```
 
-새 레코드 값을 생성할 때 ReScript는 값의 형태가 맞는 레코드 타입 선언을 찾으려합니다. 그래서 `me` 는 `person` 타입으로 추론됩니다.
+새 레코드 값을 생성할 때 리스크립트는 값의 형태가 맞는 레코드 타입 선언을 찾으려합니다. 그래서 `me` 는 `person` 타입으로 추론됩니다.
 
 **참고**: 타입 선언이 다른 파일이나 모듈에 있는 경우 어떤 파일이나 모듈인지 명시적으로 기재해야합니다.
 
@@ -64,7 +64,7 @@ let name = me.name
 let meNextYear = {...me, age: me.age + 1}
 ```
 
-**참고**: spread 는 레코드 형태가 타입에따라 고정되므로 레코드 값에 새 필드를 추가 할 수 없습니다.
+**참고**: spread는 레코드 형태가 타입에 따라 고정되므로 레코드값에 새 필드를 추가할 수 없습니다.
 
 ### 가변 수정
 
@@ -97,7 +97,7 @@ type monster = {age: int, hasTentacles: bool}
 let getAge = (entity) => entity.age
 ```
 
-`getAge`는 파라미터 `entity`가 `age` 필드와 가장 가까운 레코드 타입인 `monster` 타입이어야한다고 추론할 것입니다. 그래서 다음 코드의 마지막 줄이 실패합니다.
+`getAge`는 인자 `entity`가 `age` 필드와 가장 가까운 레코드 타입인 `monster` 타입이어야한다고 추론할 것입니다. 그래서 다음 코드의 마지막 줄이 실패합니다.
 
 ```reason
 let kraken = {age: 9999, hasTentacles: true}
@@ -107,7 +107,7 @@ getAge(kraken)
 getAge(me) /* 타입 오류! */
 ```
 
-타입 시스템은 `me` 가 `person` 이고, `getAge` 는 `monster` 타입으로만 작동한다고 할 것입니다. 이러한 기능이 필요하다면 ReScript [객체(object)](07-Object) 를 사용해보세요.
+타입 시스템은 `me` 가 `person` 이고, `getAge` 는 `monster` 타입으로만 작동한다고 할 것입니다. 이러한 기능이 필요하다면 리스크립트 [객체(object)](07-Object) 를 사용해보세요.
 
 ### 디자인 결정
 

@@ -11,7 +11,7 @@ sourceUrl: 'https://rescript-lang.org/docs/manual/latest/overview'
 
 | 자바스크립트             | 리스트립트              |
 | ------------------------ | ----------------------- |
-| 린터나 포매터에서 강제됨 | 세미콜론 필요하지 않음! |
+| 린터나 포매터에서 강제함 | 세미콜론 필요하지 않음! |
 
 ### 주석(Comments)
 
@@ -33,7 +33,7 @@ sourceUrl: 'https://rescript-lang.org/docs/manual/latest/overview'
 | 자바스크립트             | 리스트립트               |
 | ------------------------ | ------------------------ |
 | `"Hello world!"`         | 같음                     |
-| `'Hello world!'`         | 문자열은 이것만 사용 `"` |
+| `'Hello world!'`         | 문자열은 `"`만 사용  |
 | `"hello " + "world"`     | `"hello " ++ "world"`    |
 | `` `hello ${message}` `` | 같음                     |
 
@@ -176,11 +176,11 @@ sourceUrl: 'https://rescript-lang.org/docs/manual/latest/overview'
 | `throw new SomeError(...)`                | `raise(SomeError(...))`                          |
 | `try {a} catch (Err) {...} finally {...}` | <code>try a catch { &#124; Err => ...}</code> \* |
 
-\* finally는 없음
+\* finally 없음
 
 ### 블록(Blocks)
 
-마지막으로 `{}`로 경계가 나뉘어진 블록 표현은 암시적으로 리턴을 합니다. 자바스크립트에서는 즉시 실행 함수를 통해서 시뮬레이션해볼 수 있습니다. (함수 바디에 각각의 로컬 스코프를 가지고 있기 때문)
+마지막으로 `{}`로 경계가 나뉘어진 블록 표현은 암시적으로 리턴을 합니다. 자바스크립트에서는 즉시 실행 함수를 통해서 시뮬레이션해볼 수 있습니다. (함수 바디가 각각의 로컬 스코프를 가지고 있기 때문)
 
 <table>
   <thead>

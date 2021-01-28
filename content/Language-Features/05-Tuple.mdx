@@ -5,7 +5,7 @@ metaDescription: '튜플 자료구조'
 sourceUrl: 'https://rescript-lang.org/docs/manual/latest/tuple'
 ---
 
-튜플(Tuple)은 JavaScript에 존재하지 않는 ReScript만의 자료구조입니다.
+튜플(Tuple)은 자바스크립트에 존재하지 않는 리스크립트만의 자료구조입니다.
 
 튜플은 다음 특성을 가지고 있습니다.
 
@@ -19,12 +19,12 @@ let ageAndName = (24, "Lil' ReScript")
 let my3dCoordinates = (20.0, 30.5, 100.0)
 ```
 
-튜플 타입의 타입 어노테이션도 작성할 수 있습니다. 튜플의 값은 튜플 타입의 타입 어노테이션과 닮아야합니다.
+튜플 타입인 타입 어노테이션도 작성할 수 있습니다. 튜플의 값은 튜플 타입의 타입 어노테이션과 닮아야합니다.
 
 ```reason
 let ageAndName: (int, string) = (24, "Lil' ReScript")
 
-// 튜플 타입의 타입 어노테이션을 다른 이름의 타입으로 사용
+// 튜플 타입인 타입 어노테이션을 다른 이름의 타입으로 사용
 type coord3d = (float, float, float)
 let my3dCoordinates: coord3d = (20.0, 30.5, 100.0)
 ```
