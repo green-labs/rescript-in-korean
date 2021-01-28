@@ -1,7 +1,8 @@
 ---
-title: "패턴 매칭 / 구조분해"
-metaTitle: '패턴 매칭 / 구조분해'
+title: '패턴 매칭 / 구조분해'
+metaTitle: '패턴 매칭 / 구조분해(Pattern Matching / Destructuring)'
 metaDescription: 'Pattern matching and destructuring complex data structures in ReScript'
+sourceUrl: 'https://rescript-lang.org/docs/manual/latest/pattern-matching-destructuring'
 ---
 
 리스크립트의 **최고** 기능 중 하나는 패턴 매칭입니다. 패턴 매칭은 세가지 뛰어난 기능을 하나로 결합합니다.
@@ -21,6 +22,7 @@ let coordinates = (10, 20, 30)
 let (x, _, _) = coordinates
 Js.log(x) // 10
 ```
+
 ```javascript
 var coordinates = [10, 20, 30];
 var x = 10;
@@ -30,16 +32,16 @@ console.log(10);
 구조분해는 기본적으로 제공하는 대부분의 자료구조에서 작동합니다.
 
 ```reason
-// 레코드
+/* 레코드 */
 type student = {name: string, age: int}
 let student1 = {name: "John", age: 10}
-let {name} = student1 // "John" 값을 `name` 으로 할당
+let {name} = student1 /* "John" 값을 `name` 으로 할당 */
 
-// 배리언트
+/* 배리언트 */
 type result =
   | Success(string)
 let myResult = Success("You did it!")
-let Success(message) = myResult // "You did it!" 값을 `message` 으로 할당
+let Success(message) = myResult /* "You did it!" 값을 `message` 으로 할당 */
 ```
 
 일반적으로 바인딩을 배치하는 모든 곳에서 구조분해를 사용할 수 있습니다.
@@ -48,7 +50,7 @@ let Success(message) = myResult // "You did it!" 값을 `message` 으로 할당
 type result =
   | Success(string)
 let displayMessage = (Success(m)) => {
-  // 매개 변수를 구조분해해 Success 메시지 문자열을 직접 추출했습니다.
+  /* 매개 변수를 구조분해해 Success 메시지 문자열을 직접 추출했습니다. */
   Js.log(m)
 }
 displayMessage(Success("You did it!"))
@@ -57,7 +59,7 @@ displayMessage(Success("You did it!"))
 레코드는 구조분해시 필드 이름도 바꿀 수 있습니다.
 
 ```reason
-let {name: n} = student1 // "John" 값을 `n` 으로 할당
+let {name: n} = student1 /* "John" 값을 `n` 으로 할당 */
 ```
 
 최상위 수준에서 배열, 리스트를 구조분해할 수 있습니다.
@@ -65,11 +67,11 @@ let {name: n} = student1 // "John" 값을 `n` 으로 할당
 ```reason
 let myArray = [1, 2, 3]
 let [item1, item2, _] = myArray
-// 1은 `item1`에 할당, 2는 `item2`에 할당, 3번째 요소는 무시
+/* 1은 `item1`에 할당, 2는 `item2`에 할당, 3번째 요소는 무시 */
 
 let myList = list{1, 2, 3}
 let list{head, ...tail} = myList
-// 1은 `head`, `list{2, 3}` 은 tail에 할당
+/* 1은 `head`, `list{2, 3}` 은 tail에 할당 */
 ```
 
 하지만 위 배열 예제는 **강하게 비추합니다.** (가급적 튜플을 사용하세요) 또한 목록 예제는 오류가 발생합니다.
@@ -107,18 +109,19 @@ switch data {
   Js.log("Bah.")
 }
 ```
+
 ```javascript
 var data = {
-  TAG: /* GoodResult */1,
-  _0: "Product shipped!"
+  TAG: /* GoodResult */ 1,
+  _0: 'Product shipped!',
 };
 
-if (typeof data === "number") {
-  console.log("Bah.");
+if (typeof data === 'number') {
+  console.log('Bah.');
 } else if (data.TAG) {
-  console.log("Success! Product shipped!");
+  console.log('Success! Product shipped!');
 } else {
-  console.log("Something's wrong. The error code is: " + "Product shipped!".toString());
+  console.log("Something's wrong. The error code is: " + 'Product shipped!'.toString());
 }
 ```
 
@@ -162,7 +165,7 @@ let message = switch person1 {
 | Teacher({name: "Mary" | "Joe"}) =>
   `Hey, still going to the party on Saturday?`
 | Teacher({name}) =>
-  // 이름이 "Mary"와 "Joe"인 경우를 제외하고 매칭됩니다.
+  /* 이름이 "Mary"와 "Joe"인 경우를 제외하고 매칭됩니다. */
   `Hello ${name}.`
 | Student({name, reportCard: {passing: true, gpa}}) =>
   `Congrats ${name}, nice GPA of ${Js.Float.toString(gpa)} you got there!`
@@ -178,9 +181,10 @@ let message = switch person1 {
 }
 ```
 
-**참고** 어떻게 했냐면...
+**참고** 설명하자면
+
 - 값을 간결하지만 깊게 분석했습니다.
-- `"Mary" | "Joe"`, `Vacations | Sabbatical` 에서 **중첩 패턴 검사**를 사용했습니다. 
+- `"Mary" | "Joe"`, `Vacations | Sabbatical` 에서 **중첩 패턴 검사**를 사용했습니다.
 - `daysLeft` 숫자를 추출하기도 했습니다.
 - 마지막으로 인사말을 `message`에 할당했습니다.
 
@@ -196,16 +200,17 @@ let categoryId = switch (isBig, myAnimal) {
 | (false, Bird) => 5
 }
 ```
+
 ```javascript
 var categoryId = isBig ? (myAnimal + 1) | 0 : myAnimal >= 2 ? 5 : 4;
 ```
 
 **참고** 패턴 매칭시 튜플을 어떻게 평가하는지 다음 표를 참고하세요.
 
-`isBig` \ `myAnimal` | `Dog` | `Cat` | `Bird`
----------------------|-------|-------|--------
-`true`               |   1   |   2   |   3
-`false`              |   4   |   4   |   5
+| `isBig` \ `myAnimal` | `Dog` | `Cat` | `Bird` |
+| -------------------- | ----- | ----- | ------ |
+| `true`               | 1     | 2     | 3      |
+| `false`              | 4     | 4     | 5      |
 
 ### 폴-스루(Fall-Through) 패턴
 
@@ -221,16 +226,17 @@ switch myStatus {
 | Present => Js.log("Hey! How are you?")
 }
 ```
+
 ```javascript
 var myStatus = {
-  TAG: /* Vacations */0,
-  _0: 10
+  TAG: /* Vacations */ 0,
+  _0: 10,
 };
 
-if (typeof myStatus === "number") {
-  console.log("Hey! How are you?");
+if (typeof myStatus === 'number') {
+  console.log('Hey! How are you?');
 } else {
-  console.log("Come back in " + (10).toString() + " days!");
+  console.log('Come back in ' + (10).toString() + ' days!');
 }
 ```
 
@@ -246,11 +252,12 @@ switch person1 {
 | Student(_) => Js.log("Hey student")
 }
 ```
+
 ```javascript
 if (person1.TAG) {
-  console.log("Hey student");
+  console.log('Hey student');
 } else {
-  console.log("Hi teacher");
+  console.log('Hi teacher');
 }
 ```
 
@@ -262,11 +269,12 @@ switch myStatus {
 | _ => Js.log("Ok.")
 }
 ```
+
 ```javascript
-if (typeof myStatus === "number" || myStatus.TAG) {
-  console.log("Ok.");
+if (typeof myStatus === 'number' || myStatus.TAG) {
+  console.log('Ok.');
 } else {
-  console.log("Have fun!");
+  console.log('Have fun!');
 }
 ```
 
@@ -278,11 +286,12 @@ switch myStatus {
 | Sabbatical(_) | Sick | Present => Js.log("Ok.")
 }
 ```
+
 ```javascript
-if (typeof myStatus === "number" || myStatus.TAG) {
-  console.log("Ok.");
+if (typeof myStatus === 'number' || myStatus.TAG) {
+  console.log('Ok.');
 } else {
-  console.log("Have fun!");
+  console.log('Have fun!');
 }
 ```
 
@@ -305,12 +314,13 @@ switch person1 {
   }
 }
 ```
+
 ```javascript
 if (person1.TAG) {
   if (person1.reportCard.gpa < 0.5) {
     console.log("What's happening");
   } else {
-    console.log("Heyo");
+    console.log('Heyo');
   }
 }
 ```
@@ -323,16 +333,17 @@ switch person1 {
 | Student({reportCard: {gpa}}) when gpa < 0.5 =>
   Js.log("What's happening")
 | Student(_) =>
-  // fall-through, 모든 값 케이스
+  /* fall-through, 모든 값 케이스 */
   Js.log("Heyo")
 }
 ```
+
 ```javascript
 if (person1.TAG) {
   if (person1.reportCard.gpa < 0.5) {
     console.log("What's happening");
   } else {
-    console.log("Heyo");
+    console.log('Heyo');
   }
 }
 ```
@@ -357,20 +368,21 @@ switch students {
 | [student1] =>
   Js.log("There's a single student here: " ++ student1)
 | manyStudents =>
-  // 배열에 있는 이름들 출력
+  /* 배열에 있는 이름들 출력 */
   Js.log2("The students are: ", manyStudents)
 }
 ```
+
 ```javascript
-var students = ["Jane", "Harvey", "Patrick"];
+var students = ['Jane', 'Harvey', 'Patrick'];
 
 var len = students.length;
 
 if (len !== 1) {
   if (len !== 0) {
-    console.log("The students are: ", students);
+    console.log('The students are: ', students);
   } else {
-    console.log("There are no students");
+    console.log('There are no students');
   }
 } else {
   var student1 = students[0];
@@ -407,6 +419,7 @@ switch coordinates {
 | (x, centerY, _) => Js.log(x)
 }
 ```
+
 ```javascript
 var coordinates = [10, 20, 30];
 var centerY = 20;
@@ -465,13 +478,14 @@ switch myNullableValue {
 | None => Js.log("value is absent")
 }
 ```
+
 ```javascript
 var myNullableValue = 5;
 
 if (myNullableValue !== undefined) {
-  console.log("value is present");
+  console.log('value is present');
 } else {
-  console.log("value is absent");
+  console.log('value is absent');
 }
 ```
 

@@ -1,29 +1,29 @@
 ---
 title: '언박싱'
-metaTitle: '언박싱'
+metaTitle: '언박싱(Unboxed)'
 metaDescription: '래퍼를 언박싱합니다.'
+sourceUrl: 'https://rescript-lang.org/docs/manual/latest/unboxed'
 ---
-
-# 언박싱
 
 <!--Consider a ReScript variant with a single payload, and a record with a single field: -->
 
 리스크립트에서 단일 페이로드로 이루어진 배리언트와, 단일 필드로 이루어진 레코드를 살펴봅시다.
 
-```resonml
+```reason
 type name = Name(string)
 let studentName = Name("Joe")
 
 type greeting = {message: string}
 let hi = {message: "hello!"}
 ```
+
 ```js
-var studentName = /* Name */{
-  _0: "Joe"
+var studentName = /* Name */ {
+  _0: 'Joe',
 };
 
 var hi = {
-  message: "hello!"
+  message: 'hello!',
 };
 ```
 
@@ -41,8 +41,7 @@ For performance and certain JavaScript interop situations, ReScript offers a way
 언랩은 단일 필드 레코드 혹은 단일 페이로드-단일 생성자 배리언트가 JS로 변환될 때, 해당 객체의 래퍼를 벗겨냅니다.
 타입 선언 위에 `@unboxed`라고 달면 됩니다.
 
-
-```resonml
+```reason
 @unboxed
 type name = Name(string)
 let studentName = Name("Joe")
@@ -51,10 +50,11 @@ let studentName = Name("Joe")
 type greeting = {message: string}
 let hi = {message: "hello!"}
 ```
-```js
-var studentName = "Joe";
 
-var hi = "hello!";
+```js
+var studentName = 'Joe';
+
+var hi = 'hello!';
 ```
 
 <!-- Check the new output! Clean.-->
@@ -71,7 +71,7 @@ Suppose you have a game with a local/global coordinate system: -->
 
 아래와 같이 로컬 좌표계와 월드 좌표계를 쓰는 게임이 있습니다.
 
-```reasonml example
+```reason
 type coordinates = {x: float, y: float}
 
 let renderDot = (coordinates) => {
@@ -89,21 +89,22 @@ let playerLocalCoordinates = {x: 20.5, y: 30.5}
 
 renderDot(playerLocalCoordinates)
 ```
+
 ```js
 function renderDot(coordinates) {
-  console.log("Pretend to draw at:", coordinates.x, coordinates.y);
+  console.log('Pretend to draw at:', coordinates.x, coordinates.y);
 }
 
 function toWorldCoordinates(localCoordinates) {
   return {
     x: localCoordinates.x + 10,
-    y: localCoordinates.x + 20
+    y: localCoordinates.x + 20,
   };
 }
 
 var playerLocalCoordinates = {
   x: 20.5,
-  y: 30.5
+  y: 30.5,
 };
 
 renderDot(playerLocalCoordinates);
@@ -114,8 +115,7 @@ renderDot(playerLocalCoordinates);
 이런, 뭔가 잘못되었습니다. `renderDot`은 전역 좌표를 기준으로 렌더링하는데 인자로 로컬 좌표가 전달됐습니다.
 이제 코드를 수정해서 잘못된 좌표 타입이 전달되지 못하게 막아봅시다.
 
-
-```reasonml example
+```reason
 type coordinates = {x: float, y: float}
 @unboxed type localCoordinates = Local(coordinates)
 @unboxed type worldCoordinates = World(coordinates)
@@ -133,26 +133,27 @@ let toWorldCoordinates = (Local(coordinates)) => {
 
 let playerLocalCoordinates = Local({x: 20.5, y: 30.5})
 
-// 이제 이것은 에러입니다.
-// renderDot(playerLocalCoordinates)
-// 대신 아래처럼 합니다.:
+/* 이제 이것은 에러입니다. */
+/* renderDot(playerLocalCoordinates) */
+/* 대신 아래처럼 합니다.: */
 renderDot(playerLocalCoordinates->toWorldCoordinates)
 ```
+
 ```js
 function renderDot(coordinates) {
-  console.log("Pretend to draw at:", coordinates.x, coordinates.y);
+  console.log('Pretend to draw at:', coordinates.x, coordinates.y);
 }
 
 function toWorldCoordinates(coordinates) {
   return {
     x: coordinates.x + 10,
-    y: coordinates.x + 20
+    y: coordinates.x + 20,
   };
 }
 
 var playerLocalCoordinates = {
   x: 20.5,
-  y: 30.5
+  y: 30.5,
 };
 
 renderDot(toWorldCoordinates(playerLocalCoordinates));
@@ -161,6 +162,7 @@ renderDot(toWorldCoordinates(playerLocalCoordinates));
 <!-- Now `renderDot` only takes `worldCoordinates`. Through a nice combination of using distinct variant types + argument destructuring, we've achieved better safety **without compromising on performance**: the `unboxed` attribute compiled to clean, variant-wrapper-less JS code! Check the output.
 
 As for a record with a single field, the use-cases are a bit more edgy. We won't mention them here. -->
+
 이제 `renderDot`은 `worldCoordinates`만을 입력으로 받습니다.
 배리언트 타입으로 구분 + 인자 구조분해를 써서 더 안전한 코드를 만들었습니다. **성능 저하 없이요.**
 `unboxed` 속성 덕분에 배리언트 래퍼 없이 깔끔하게 JS 코드로 컴파일됐습니다. 결과를 살펴보세요.

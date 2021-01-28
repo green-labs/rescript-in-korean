@@ -1,14 +1,15 @@
 ---
 title: 'Null, Undefined 그리고 Option'
 metaTitle: 'Null, Undefined 그리고 Option'
-metaDescription: 'ReScript에서 nullable optional 값과 JS 인터롭(상호운용)'
+metaDescription: '리스크립트에서 nullable optional 값과 JS 인터롭(상호운용)'
+sourceUrl: 'https://rescript-lang.org/docs/manual/latest/null-undefined-option'
 ---
 
-ReScript 자체는 `null` 또는 `undefined`에 대한 개념이 없습니다. 이건 버그의 전체 범주를 제거하는 정말 _훌륭한_ 일입니다. 더 이상의 `undefined is not a function`, 그리고 `cannot access someAttribute of undefined` 에러는 없습니다!
+리스크립트 자체는 `null` 또는 `undefined`에 대한 개념이 없습니다. 이건 버그의 전체 범주를 제거하는 정말 _훌륭한_ 일입니다. 더 이상의 `undefined is not a function`, 그리고 `cannot access someAttribute of undefined` 에러는 없습니다!
 
-그러나 잠재적으로 존재하지 않는 값의 **개념**은 여전히 유용하며, ReScript에서도 안전하게 존재합니다.
+그러나 잠재적으로 존재하지 않는 값의 **개념**은 여전히 유용하며, 리스크립트에서도 안전하게 존재합니다.
 
-ReScript에서는 `option`타입으로 값을 감싸서 존재하는 값과 존재하지 않는 값을 표현합니다. `option`타입의 표준 라이브러러리 정의는 다음과 같습니다:
+리스크립트는 `option` 타입으로 값을 감싸서 존재하는 값과 존재하지 않는 값을 표현합니다. `option` 타입의 표준 라이브러러리 정의는 다음과 같습니다:
 
 ```reason
 type option<'a> = None | Some('a)
@@ -16,7 +17,7 @@ type option<'a> = None | Some('a)
 
 즉, "option 타입의 값은 None(존재하지 않음)이거나 Some으로 감싸진 실제 값"을 의미합니다.
 
-**Note** `option` 타입은 단지 일반적인 [variant](08-Variant.mdx) 입니다.
+**참고** `option` 타입은 단지 일반적인 [variant](08-Variant) 입니다.
 
 ## 예제
 
@@ -37,7 +38,7 @@ let licenseNumber =
   }
 ```
 
-이제 licenseNumber는 option 타입입니다. 나중에 다른 코드가 이 값을 받으면 [패턴 매칭](15-Pattern-Matching-Destructuring.mdx)을 통해 `Some('a)`와 `None`두 값을 모두 처리해야합니다.
+이제 licenseNumber는 option 타입입니다. 나중에 다른 코드가 이 값을 받으면 [패턴 매칭](15-Pattern-Matching-Destructuring)을 통해 `Some('a)`와 `None`두 값을 모두 처리해야합니다.
 
 ```reason
 switch licenseNumber {
@@ -48,9 +49,9 @@ switch licenseNumber {
 }
 ```
 
-위 예제에서는 일반적인 숫자를 `option` 타입으로 바꾸고 `None` 케이스에 대한 처리를 강제함으로써 ReScript는 개념적인 `null`값을 잘못 처리하거나 처리를 깜빡 잊을 가능성을 효과적으로 제거했습니다! **순수 ReScript 프로그램에는 null 에러가 없습니다**.
+위 예제에서는 일반적인 숫자를 `option` 타입으로 바꾸고 `None` 케이스에 대한 처리를 강제함으로써 리스크립트는 개념적인 `null`값을 잘못 처리하거나 처리를 깜빡 잊을 가능성을 효과적으로 제거했습니다! **순수 리스크립트 프로그램에는 null 에러가 없습니다**.
 
-## JavaScript undefined와 null의 Interoperate
+## 자바스크립트의 undefined와 null의 Interoperate
 
 `option` 타입은 JavaScript로 컴파일할 때 일반적으로 다음처럼 처리됩니다.
 
@@ -98,14 +99,14 @@ var Caml_option = require('./stdlib/caml_option.js');
 var x = Caml_option.some(undefined);
 ```
 
-`Caml_option.some`이 하는 일은 무엇일까요? 왜 x의 값이 `undefined`로 컴파일되지 않을까요? 간단히 말하자면, polymorphic `option` 타입(`'a`의 경우 `option<'a>`)을 다룰 경우, 만약 우리가 특별한 어노테이션을 지정하지 않으면 많은 작업이 까다로워집니다. 이것이 넌센스라도 걱정하지 마세요; 다음 2가지 규칙을 따르세요.
+`Caml_option.some`이 하는 일은 무엇일까요? 왜 x의 값이 `undefined`로 컴파일되지 않을까요? 간단히 말하자면, polymorphic `option` 타입(`'a`의 경우 `option<'a>`)을 다룰 경우, 만약 우리가 특별한 어노테이션을 지정하지 않으면 많은 작업이 까다로워집니다. 이것이 넌센스라도 걱정하지 마세요. 다음 2가지 규칙을 따르세요.
 
 - **절대로 중첩된 `option` 값(e.g. `Some(Some(Some(5)))`)을 JS 쪽으로 전달하지 마세요.**
 - **절대로 JS에서 오는 값을 `option<'a>`로 표시하지 마세요. 항상 구체적인 non-polymorphic type을 지정하세요.**
 
 ### 주의 2
 
-안타깝게도 많은 경우에 JavaScript 값은 `null` 또는 `undefined` *양쪽*일 수 있습니다._(역주. 양쪽 다 존재하지 않는 값의 개념이지만 JavaScript에서는 null과 undefined가 다른 취급을 받습니다.)_
+안타깝게도 많은 경우에 자바스크립트 값은 `null` 또는 `undefined` *양쪽*일 수 있습니다._(역주. 양쪽 다 존재하지 않는 값의 개념이지만 자바스크립트에서는 null과 undefined가 다른 취급을 받습니다.)_
 만약 `option<int>` 타입의 변수가 있을 경우 이 `option` 의 `None` 처리는 오직 `undefined`만 체크하고 `null`에 대해서는 체크하지 않습니다.
 
 #### 해법: 보다 세련되고 정교한 undefined & null Interop
@@ -114,7 +115,7 @@ var x = Caml_option.some(undefined);
 
 #### 예제
 
-JS의 `null`을 만들기 위해서는 `Js.Nullable.null`를 사용합니다. JS의 `undefined`을 만들기 위해서는 `Js.Nullable.undefined`를 사용합니다. (자연스럽게 `None`을 사용할수도 있습니다만, 여기의 핵심은 아닙니다; `Js.Nullable.*`는 작동하지 않습니다)
+JS의 `null`을 만들기 위해서는 `Js.Nullable.null`를 사용합니다. JS의 `undefined`을 만들기 위해서는 `Js.Nullable.undefined`를 사용합니다. (자연스럽게 `None`을 사용할수도 있습니다만, 여기의 핵심은 아닙니다. `Js.Nullable.*`는 작동하지 않습니다)
 
 예를 들어 `null` 과 `undefined` 둘 다 될수 있는 문자열을 받을 경우 다음처럼 타이핑 합니다.
 
@@ -122,7 +123,7 @@ JS의 `null`을 만들기 위해서는 `Js.Nullable.null`를 사용합니다. JS
 @bs.module("MyConstant") external myId: Js.Nullable.t<string> = "myId"
 ```
 
-ReScript 쪽에서 nullable 문자열을 생성하려면(아마 인터롭을 목적으로 JS 쪽에 전달하는 경우입니다) 다음처럼 하세요.
+리스크립트 쪽에서 nullable 문자열을 생성하려면(아마 인터롭을 목적으로 JS 쪽에 전달하는 경우입니다) 다음처럼 하세요.
 
 ```reason example
 @bs.module("MyIdValidator") external validate: Js.Nullable.t<string> => bool = "validate"

@@ -1,9 +1,8 @@
 ---
-title: 'Function(함수)'
-metaTitle: 'Function(함수)'
-metaDescription: 'Function syntax in ReScript'
+title: '함수'
+metaTitle: '함수 (Function)'
+metaDescription: '리스크립트에서의 함수 구문'
 sourceUrl: 'https://rescript-lang.org/docs/manual/latest/function'
-canonical: '/rescript-in-korean/function'
 ---
 
 _페이지 끝에 전체 함수 문법 치트 시트가 있습니다_.
@@ -17,14 +16,14 @@ let greet = (name) => "Hello " ++ name
 이 함수 선언은 `greet` 라는 이름으로 할당됩니다. 다음과 같이 호출할 수 있습니다.
 
 ```reason
-greet("world!") // "Hello world!"
+greet("world!") /* "Hello world!" */
 ```
 
 함수가 여러 인자를 받는 경우 콤마(,)를 구분자로 선언합니다.
 
 ```reason
 let add = (x, y, z) => x + y + z
-add(1, 2, 3) // 6
+add(1, 2, 3) /* 6 */
 ```
 
 긴 함수를 작성하려면 내용을 블록으로 감쌉니다.
@@ -40,22 +39,23 @@ let greetMore = (name) => {
 
 ## 이름이 있는 인자
 
-여러 인자를 받는 함수, 특히 인자가 동일한 타입인 함수는 호출할 때 혼동 될 수 있습니다. 
+여러 인자를 받는 함수, 특히 인자가 동일한 타입인 함수는 호출할 때 혼동 될 수 있습니다.
 
 ```reason
 let addCoordinates = (x, y) => {
-  // 여기서 x, y를 사용
+  /* 여기서 x, y를 사용 */
 }
-// ...
-addCoordinates(5, 6) // 어떤게 x고 y지?
+/* ... */
+addCoordinates(5, 6) /* 어떤게 x고 y지? */
 ```
+
 이런 경우 인자 이름 앞에 `~` 기호를 붙여 인자에 이름을 붙일 수 있습니다.
 
 ```reason
 let addCoordinates = (~x, ~y) => {
-  // 여기서 x, y를 사용
+  /* 여기서 x, y를 사용 */
 }
-// ...
+/* ... */
 addCoordinates(~x=5, ~y=6)
 ```
 
@@ -64,6 +64,7 @@ addCoordinates(~x=5, ~y=6)
 ```reason
 addCoordinates(~y=6, ~x=5)
 ```
+
 선언에서 `~x` 부분은 함수가 `x`로 표시된 인자를 받아들이고 동일한 이름으로 함수에서 참조 할 수 있음을 의미합니다.
 간결하게 작성하기 위해 함수 내부에서 다른 이름으로 인자를 참조 할 수도 있습니다.
 
@@ -71,18 +72,19 @@ addCoordinates(~y=6, ~x=5)
 let drawCircle = (~radius as r, ~color as c) => {
   setColor(c)
   startAt(r, r)
-  // ...
+  /* ... */
 }
 
 drawCircle(~radius=10, ~color="red")
 ```
+
 눈치 채셨겠지만, 사실 `(~radius)`는 `(~radius as radius)`의 축약입니다.
 
 인자에 타입을 기재하는 문법은 다음과 같습니다.
 
 ```reason
 let drawCircle = (~radius as r: int, ~color as c: string) => {
-  // 여기에 코드 작성
+  /* 여기에 코드 작성 */
 }
 ```
 
@@ -91,7 +93,7 @@ let drawCircle = (~radius as r: int, ~color as c: string) => {
 이름이 있는 인자는 선언시 선택 사항으로 만들 수 있습니다. 그리고 함수를 호출 할 때 생략 할 수 있습니다.
 
 ```reason
-// radius 는 생략 가능
+/* radius 는 생략 가능 */
 let drawCircle = (~color, ~radius=?, ()) => {
   setColor(color)
   switch radius {
@@ -115,7 +117,7 @@ _(역주: 위 코드 조각에서 `~radius=?, ()` 부분에 해당하는 설명�
 이름과 선택 인자가 있는 함수는 시그니쳐 및 타입 어노테이션과 관련해 혼란스러울 수 있습니다.
 실제로 이름과 선택이 지정된 인자의 타입은 함수를 호출하는지, 함수 내부에서 작업하는지에 따라 다르게 보입니다.
 함수 외부에서 원시 값을 전달하거나 (예:`int`) 전달하지 않을 수 있습니다.
-함수 내부에서는 인자가 항상 있지만 그 값은 option 입니다 (`option <int>`).
+함수 내부에서는 인자가 항상 있지만 그 값은 option 입니다. (`option <int>`)
 즉, 함수 타입을 작성하는지, 인자 타입 어노테이션을 작성하는지에따라 타입 시그니쳐가 다릅니다.
 첫 번째는 원시 값이고 두 번째는 option 입니다.
 
@@ -186,17 +188,18 @@ let rec neverTerminate = () => neverTerminate()
 간단한 재귀함수는 다음과 같습니다.
 
 ```reason
-// 리스트 중 하나가 `item`과 같을때까지 모든 항목을 재귀적으로 확인합니다.
-// 일치하는 항목이 있으면 'true'를 반환하고, 그렇지 않으면 'false'를 반환합니다.
+/* 리스트 중 하나가 `item`과 같을때까지 모든 항목을 재귀적으로 확인합니다. */
+/* 일치하는 항목이 있으면 'true'를 반환하고, 그렇지 않으면 'false'를 반환합니다. */
 let rec listHas = (list, item) =>
   switch list {
   | list{} => false
   | list{a, ...rest} => a === item || listHas(rest, item)
   }
 ```
+
 ```javascript
 function listHas(_list, item) {
-  while(true) {
+  while (true) {
     var list = _list;
     if (!list) {
       return false;
@@ -205,13 +208,13 @@ function listHas(_list, item) {
       return true;
     }
     _list = list.tl;
-    continue ;
-  };
+    continue;
+  }
 }
 ```
 
 함수를 재귀적으로 호출하는 것은 성능과 호출 스택에 좋지 않습니다.
-그러나 리스크립트는 지능적으로 [꼬리 재귀](https://stackoverflow.com/questions/33923/what-is-tail-recursion)을 사용해 빠른 JavaScript 루프로 컴파일합니다.
+그러나 리스크립트는 지능적으로 [꼬리 재귀](https://stackoverflow.com/questions/33923/what-is-tail-recursion)을 사용해 빠른 자바스크립트 루프로 컴파일합니다.
 위 코드의 JS 결과물을 확인해보세요!
 
 ### 상호 재귀 함수
@@ -222,19 +225,20 @@ function listHas(_list, item) {
 let rec callSecond = () => callFirst()
 and callFirst = () => callSecond()
 ```
+
 ```javascript
 function callSecond(_param) {
-  while(true) {
+  while (true) {
     _param = undefined;
-    continue ;
-  };
+    continue;
+  }
 }
 
 function callFirst(_param) {
-  while(true) {
+  while (true) {
     _param = undefined;
-    continue ;
-  };
+    continue;
+  }
 }
 ```
 
@@ -250,9 +254,10 @@ let add = (. x, y) => x + y
 
 add(. 1, 2)
 ```
+
 ```javascript
 function add(x, y) {
-  return x + y | 0;
+  return (x + y) | 0;
 }
 
 add(1, 2);
@@ -265,6 +270,7 @@ let echo = (. a) => a
 
 echo(. ignore())
 ```
+
 ```javascript
 function echo(a) {
   return a;
@@ -281,55 +287,56 @@ echo(undefined);
 JS 출력에서 `커리`런타임에 대한 언급을 제거하려면 사용하는 것이 좋습니다.
 
 ## 팁
+
 함수 문법의 치트 시트입니다.
 
 ### 선언
 
 ```reason
-// 익명함수
+/* 익명함수 */
 (x, y) => 1
-// 함수에 이름을 붙이다
+/* 함수에 이름을 붙이다 */
 let add = (x, y) => 1
 
-// 이름이 있는 인자와 약어 정의
+/* 이름이 있는 인자와 약어 정의 */
 let add = (~first as x, ~second as y) => x + y
-// 약어 정의 빼기
+/* 약어 정의 빼기 */
 let add = (~first, ~second) => first + second
 
-// 기본값과 이름이 있는 인자와 약어 정의
+/* 기본값과 이름이 있는 인자와 약어 정의 */
 let add = (~first as x=1, ~second as y=2) => x + y
-// 약어 정의 빼기
+/* 약어 정의 빼기 */
 let add = (~first=1, ~second=2) => first + second
 
-// 선택 인자와 약어 정의
+/* 선택 인자와 약어 정의 */
 let add = (~first as x=?, ~second as y=?) => switch x {...}
-// 약어 정의 빼기
+/* 약어 정의 빼기 */
 let add = (~first=?, ~second=?) => switch first {...}
 ```
 
 #### + 타입 어노테이션
 
 ```reason
-// 익명 함수
+/* 익명 함수 */
 (x: int, y: int): int => 1
-// 함수에 이름을 붙이다
+/* 함수에 이름을 붙이다 */
 let add = (x: int, y: int): int => 1
 
-// 이름이 있는 인자와 약어 정의
+/* 이름이 있는 인자와 약어 정의 */
 let add = (~first as x: int, ~second as y: int) : int => x + y
-// 약어 정의 빼기
+/* 약어 정의 빼기 */
 let add = (~first: int, ~second: int) : int => first + second
 
-// 기본값과 이름이 있는 인자와 약어 정의
+/* 기본값과 이름이 있는 인자와 약어 정의 */
 let add = (~first as x: int=1, ~second as y: int=2) : int => x + y
-// 약어 정의 빼기
+/* 약어 정의 빼기 */
 let add = (~first: int=1, ~second: int=2) : int => first + second
 
-// 선택 인자와 약어 정의
+/* 선택 인자와 약어 정의 */
 let add = (~first as x: option<int>=?, ~second as y: option<int>=?) : int => switch x {...}
-// 약어 정의 빼기
-// 참고로 호출하는 곳에서는 `option<int>`가 아닌 `int`로 호출 합니다.
-// 함수 내부에서 `first`, `second`는 `option<int>` 입니다.
+/* 약어 정의 빼기 */
+/* 참고로 호출하는 곳에서는 `option<int>`가 아닌 `int`로 호출 합니다. */
+/* 함수 내부에서 `first`, `second`는 `option<int>` 입니다. */
 let add = (~first: option<int>=?, ~second: option<int>=?) : int => switch first {...}
 ```
 
@@ -338,46 +345,49 @@ let add = (~first: option<int>=?, ~second: option<int>=?) : int => switch first 
 ```reason
 add(x, y)
 
-// 이름이 있는 인자에 명시적으로 전달
+/* 이름이 있는 인자에 명시적으로 전달 */
 add(~first=1, ~second=2)
-// 동일한 이름을 가진 값을 암묵적으로 전달
+/* 동일한 이름을 가진 값을 암묵적으로 전달 */
 add(~first, ~second)
 
-// 기본값이 있는 함수 호출, 일반 호출과 동일
+/* 기본값이 있는 함수 호출, 일반 호출과 동일 */
 add(~first=1, ~second=2)
 
-// 명시적으로 선택 인자 호출
+/* 명시적으로 선택 인자 호출 */
 add(~first=?Some(1), ~second=?Some(2))
-// 동일한 이름을 가진 값을 암묵적으로 전달
+
+/* 동일한 이름을 가진 값을 암묵적으로 전달 */
 add(~first?, ~second?)
 ```
 
 #### + 타입 어노테이션
 
 ```reason
-// 이름이 있는 인자에 명시적으로 전달
+/* 이름이 있는 인자에 명시적으로 전달 */
 add(~first=1: int, ~second=2: int)
-// 동일한 이름을 가진 값을 암묵적으로 전달
+
+/* 동일한 이름을 가진 값을 암묵적으로 전달 */
 add(~first: int, ~second: int)
 
-// 기본값이 있는 함수 호출, 일반 호출과 동일
+/* 기본값이 있는 함수 호출, 일반 호출과 동일 */
 add(~first=1: int, ~second=2: int)
 
-// 명시적으로 선택 인자 호출
+/* 명시적으로 선택 인자 호출 */
 add(~first=?Some(1): option<int>, ~second=?Some(2): option<int>)
-// 타입 어노테이션을 사용하는 경우 동일한 이름을 가진 값을 암묵적으로 전달 하는 방법은 없습니다.
+
+/* 타입 어노테이션을 사용하는 경우 동일한 이름을 가진 값을 암묵적으로 전달 하는 방법은 없습니다. */
 ```
 
 ### 독립적인 함수 시그니쳐
 
 ```reason
-// 첫번째, 두번째 인자 타입, 반환 타입
+/* 첫번째, 두번째 인자 타입, 반환 타입 */
 type add = (int, int) => int
 
-// 이름이 있는 인자
+/* 이름이 있는 인자 */
 type add = (~first: int, ~second: int) => int
 
-// 이름이 있는 인자
+/* 이름이 있는 인자 */
 type add = (~first: int=?, ~second: int=?, unit) => int
 ```
 

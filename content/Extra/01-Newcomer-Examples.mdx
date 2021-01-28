@@ -1,9 +1,8 @@
 ---
 title: '초보자를 위한 예제'
 metaTitle: 'Newcomer Examples'
-metaDescription: "Quick examples for users new to ReScript"
-sourceUrl: "https://rescript-lang.org/docs/manual/latest/newcomer-examples"
-canonical: "/docs/manual/latest/newcomer-examples"
+metaDescription: 'Quick examples for users new to ReScript'
+sourceUrl: 'https://rescript-lang.org/docs/manual/latest/newcomer-examples'
 ---
 
 이 섹션은 새로 리스크립트를 배우려는 분들을 위해 만들어졌습니다.
@@ -11,8 +10,6 @@ canonical: "/docs/manual/latest/newcomer-examples"
 초보자를 위한 좋은 아이디어가 있다면 언제든지 제안해주세요!
 
 ## "option" 타입 사용법 (10-Null-Undefined-and-Option)
-
-<CodeTab labels={["ReScript", "JS Output"]}>
 
 ```reason
 let possiblyNullValue1 = None
@@ -23,23 +20,19 @@ switch possiblyNullValue2 {
 | Some(message) => Js.log(message)
 }
 ```
+
 ```javascript
 var possiblyNullValue1;
-var possiblyNullValue2 = "Hello";
+var possiblyNullValue2 = 'Hello';
 
 if (possiblyNullValue2 !== undefined) {
   console.log(possiblyNullValue2);
 } else {
-  console.log("Nothing to see here.");
+  console.log('Nothing to see here.');
 }
-
 ```
 
-</CodeTab>
-
 ## 타입 매개변수 생성하기 (Generic)
-
-<CodeTab labels={["ReScript", "JS Output"]}>
 
 ```reason
 type universityStudent = {gpa: float}
@@ -49,15 +42,12 @@ type response<'studentType> = {
   student: 'studentType,
 }
 ```
+
 ```javascript
-// Empty output
+/* Empty output */
 ```
 
-</CodeTab>
-
 ## 자바스크립트 객체 생성하기
-
-<CodeTab labels={["ReScript", "JS Output"]}>
 
 ```reason
 let student1 = {
@@ -65,18 +55,15 @@ let student1 = {
   "age": 30,
 }
 ```
+
 ```javascript
 var student1 = {
-  name: "John",
+  name: 'John',
   age: 30,
 };
 ```
 
-</CodeTab>
-
-아니면 [레코드](06-Record)를 사용하세요.
-
-<CodeTab labels={["ReScript", "JS Output"]}>
+아니면 [레코드](/Language-Features/06-Record)를 사용하세요.
 
 ```reason
 type payload = {
@@ -89,25 +76,22 @@ let student1 = {
   age: 30,
 }
 ```
+
 ```javascript
 var student1 = {
-  name: "John",
+  name: 'John',
   age: 30,
 };
 ```
 
-</CodeTab>
-
 ## default export인 자바스크립트 모듈 모델링
 
-[자바스크립트 내보내기/가져오기](import-from-export-to-js.md#import-a-javascript-module-itself-es6-module-format)를 보세요.
+[자바스크립트 내보내기/가져오기](/JavaScript-Interop/06-Import-from-Export-to-JS)를 보세요.
 
 ## "option" 타입을 사용해 자바스크립트 nullable 타입 확인하기
 
 일반적으로 인자에 `null` 또는 `undefined`가 전달 될 확률이 있다면 `option`으로 변환합니다.
-리스크립트의 [`Js.Nullable`](api/js/nullable#t) 모듈의 헬퍼함수를 사용해 변환합니다. 이 케이스는 `toOption`을 사용합니다.
-
-<CodeTab labels={["ReScript", "JS Output"]}>
+리스크립트의 [`Js.Nullable`](https://rescript-lang.org/docs/manual/latest/api/js/nullable#t) 모듈의 헬퍼함수를 사용해 변환합니다. 이 케이스는 `toOption`을 사용합니다.
 
 ```reason
 let greetByName = (possiblyNullName) => {
@@ -118,16 +102,15 @@ let greetByName = (possiblyNullName) => {
   }
 }
 ```
+
 ```javascript
 function greetByName(possiblyNullName) {
   if (possiblyNullName == null) {
-    return "Hi";
+    return 'Hi';
   } else {
-    return "Hello " + possiblyNullName;
+    return 'Hello ' + possiblyNullName;
   }
 }
 ```
-
-</CodeTab>
 
 위 코드조각은 자바스크립트 `possiblyNullName == null`로 컴파일 되므로 `null`/`undefined`을 검사할 수 있습니다.

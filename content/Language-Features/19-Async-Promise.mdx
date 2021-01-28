@@ -10,7 +10,7 @@ sourceUrl: 'https://rescript-lang.org/docs/manual/latest/promise'
 
 ## 프로미스
 
-리스크립트는 [자바스크립트 프로미스](https://rescript-lang.org/docs/manual/latest/api/js/promise) 지원을 위해  준비된 바인딩이 있습니다. 프로미스를 사용하기 위해서는 일반적으로 밑의 3개의 함수를 사용합니다.
+리스크립트는 [자바스크립트 프로미스](https://rescript-lang.org/docs/manual/latest/api/js/promise) 지원을 위해 준비된 바인딩이 있습니다. 프로미스를 사용하기 위해서는 일반적으로 밑의 3개의 함수를 사용합니다.
 
 - Js.Promise.resolve: 'a => Js.Promise.t('a)
 
@@ -58,7 +58,7 @@ myPromise->Js.Promise.then_(value => {
 ```js
 var Js_exn = require('bs-platform/lib/js/js_exn.js');
 
-var myPromise = new Promise(function (resolve, reject) {
+var myPromise = new Promise(function(resolve, reject) {
   var n = 2;
   if (n !== undefined) {
     return resolve(n);
@@ -67,17 +67,17 @@ var myPromise = new Promise(function (resolve, reject) {
   }
 });
 
-var __x = myPromise.then(function (value) {
+var __x = myPromise.then(function(value) {
   console.log(value);
   return Promise.resolve((value + 2) | 0);
 });
 
-var __x$1 = __x.then(function (value) {
+var __x$1 = __x.then(function(value) {
   console.log(value);
   return Promise.resolve((value + 3) | 0);
 });
 
-__x$1.catch(function (err) {
+__x$1.catch(function(err) {
   console.log('Failure!!', err);
   return Promise.resolve(-2);
 });

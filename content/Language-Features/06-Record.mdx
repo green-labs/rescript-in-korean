@@ -1,18 +1,20 @@
 ---
-title: '레코드 (Record)'
-metaTitle: '레코드 (Record)'
+title: '레코드'
+metaTitle: '레코드(Record)'
 metaDescription: '레코드 자료구조'
 sourceUrl: 'https://rescript-lang.org/docs/manual/latest/record'
 ---
 
-레코드(Record)는 JavaScript 객체(Object)와 유사합니다. 다만,
+레코드(Record)는 자바스크립트 객체(Object)와 유사합니다. 다만,
 
 - 기본적으로 불변입니다.
 - 고정된 필드를 가지고 있습니다. (확장 불가)
 
 ### 타입 선언
+
 레코드는 반드시 타입 선언을 해야합니다.
-```
+
+```reason
 type person = {
   age: int,
   name: string
@@ -20,77 +22,92 @@ type person = {
 ```
 
 ### 생성
+
 `person` 레코드 생성 (위에 선언)
-```
+
+```reason
 let me = {
   age: 5,
   name: "Big ReScript"
 }
 ```
+
 새 레코드 값을 생성할 때 ReScript는 값의 형태가 맞는 레코드 타입 선언을 찾으려합니다. 그래서 `me` 는 `person` 타입으로 추론됩니다.
 
 **참고**: 타입 선언이 다른 파일이나 모듈에 있는 경우 어떤 파일이나 모듈인지 명시적으로 기재해야합니다.
-```
-// School.res
+
+```reason
+/* School.res */
 type person = {age: int, name: string}
 
-// Example.res
+/* Example.res */
 let me: School.person = {age: 20, name: "Big ReScript"}
 /* or */
 let me2 = {School.age: 20, name: "Big ReScript"}
 ```
+
 첫번째는 `School.res` 파일에 레코드 타입을 정의한 것이며, 두/세번째는 `School.res` 파일에 정의된 레코드 타입을 명시하는 방법입니다.
 
-
 ### 접근
+
 익숙한 .(dot) 어노테이션을 사용합니다.
-```
+
+```reason
 let name = me.name
 ```
 
 ### 불변 수정
+
 `...` spread 연산자를 사용해 이전 레코드로에서 새 레코드를 만들 수 있습니다. 원본 레코드는 변경되지 않습니다.
-```
+
+```reason
 let meNextYear = {...me, age: me.age + 1}
 ```
+
 **참고**: spread 는 레코드 형태가 타입에따라 고정되므로 레코드 값에 새 필드를 추가 할 수 없습니다.
 
 ### 가변 수정
+
 레코드 필드는 선택적으로 변경 가능(`mutable`)할 수 있습니다. 이렇게하면 `=` 연산자를 사용해 해당 필드를 효율적으로 업데이트 할 수 있습니다.
 
-``` 
+```reason
 type person = {
   name: string,
   mutable age: int
 }
 
 let baby = {name: "Baby ReScript", age: 5}
-baby.age = baby.age + 1 // `baby.age` is now 6. Happy birthday!
+baby.age = baby.age + 1 /* `baby.age` is now 6. Happy birthday! */
 ```
+
 타입 선언에 가변(`mutable`)으로 표시되어 있지 않은 필드는 변경할 수 없습니다.
 
-### JavaScript 출력
-ReScript 레코드는 JavaScript 객체로 컴파일 됩니다. 
+### 자바스크립트 출력
+
+리스크립트 레코드는 자바스크립트 객체로 컴파일 됩니다.
 
 ### 팁
+
 **레코드 타입은 필드 이름으로 찾습니다.** "이 함수는 `age` 필드가 있는 모든 레코드 타입을 사용하고 싶습니다." 와 같은 것은 불가능합니다. 다음은 의도한대로 동작하지 않습니다:
 
-``` 
+```reason
 type person = {age: int, name: string}
 type monster = {age: int, hasTentacles: bool}
 
 let getAge = (entity) => entity.age
 ```
+
 `getAge`는 파라미터 `entity`가 `age` 필드와 가장 가까운 레코드 타입인 `monster` 타입이어야한다고 추론할 것입니다. 그래서 다음 코드의 마지막 줄이 실패합니다.
 
-```
+```reason
 let kraken = {age: 9999, hasTentacles: true}
 let me = {age: 5, name: "Baby ReScript"}
 
 getAge(kraken)
-getAge(me) // 타입 오류!
+getAge(me) /* 타입 오류! */
 ```
-타입 시스템은 `me` 가 `person` 이고, `getAge` 는 `monster` 타입으로만 작동한다고 할 것입니다. 이러한 기능이 필요하다면 ReScript 객체(object) 를 사용해보세요.
+
+타입 시스템은 `me` 가 `person` 이고, `getAge` 는 `monster` 타입으로만 작동한다고 할 것입니다. 이러한 기능이 필요하다면 ReScript [객체(object)](07-Object) 를 사용해보세요.
 
 ### 디자인 결정
 

@@ -1,22 +1,17 @@
 ---
-title: "제어 흐름(Control Flow)"
-metaTitle: "제어 흐름(Control Flow)"
-metaDescription: "If, else, 삼항 표현(ternary), for 및 while과 같은 구조"
-sourceUrl: "https://rescript-lang.org/docs/manual/latest/control-flow"
-canonical: "/rescript-in-korean/control-flow"
+title: '제어 흐름'
+metaTitle: '제어 흐름(Control Flow)'
+metaDescription: 'If, else, 삼항 표현(ternary), for 및 while과 같은 구조'
+sourceUrl: 'https://rescript-lang.org/docs/manual/latest/control-flow'
 ---
-
-# 제어 흐름(Control Flow)
 
 리스크립트에서는 `if`, `else`, 삼항 표현(ternary expression), `for` 및 `while`을 지원합니다.
 
-리스크립트는 그 유명한 패턴 매칭 역시 지원합니다. 이와 관련한 자세한 내용은 [여기](pattern-matching-destructuring.md)에서 확인할 수 있습니다.
+리스크립트는 그 유명한 패턴 매칭 역시 지원합니다. 이와 관련한 자세한 내용은 [여기](15-Pattern-Matching-Destructuring)에서 확인할 수 있습니다.
 
 ## If-Else & 삼항 표현(Ternary)
 
 자바스크립트에서와 달리, 리스크립트의 `if`는 표현(expression)입니다. 즉, 바디(body)의 내용을 평가합니다.
-
-<CodeTab labels={["ReScript", "JS Output"]}>
 
 ```reason
 let message = if isMorning {
@@ -25,31 +20,26 @@ let message = if isMorning {
   "Hello!"
 }
 ```
+
 ```js
-var message = isMorning ? "Good morning!" : "Hello!";
+var message = isMorning ? 'Good morning!' : 'Hello!';
 ```
 
-</CodeTab>
-
-**Note:** `if-else` 표현에서 `else` 브랜치가 없는 경우, 암시적으로 `()`를 제공합니다. (`unit` 타입이라고 부릅니다). 다음을 확인하세요:
-<CodeTab labels={["ReScript", "JS Output"]}>
+**참고:** `if-else` 표현에서 `else` 브랜치가 없는 경우, 암시적으로 `()`를 제공합니다. (`unit` 타입이라고 부릅니다). 다음을 확인하세요.
 
 ```reason
 if showMenu {
   displayMenu()
 }
 ```
+
 ```js
 if (showMenu) {
   displayMenu();
 }
 ```
 
-</CodeTab>
-
-이는 다음과 기본적으로 같습니다:
-
-<CodeTab labels={["ReScript", "JS Output"]}>
+이는 다음과 기본적으로 같습니다.
 
 ```reason
 if showMenu {
@@ -58,15 +48,14 @@ if showMenu {
   ()
 }
 ```
+
 ```js
 if (showMenu) {
-  displayMenu()
+  displayMenu();
 }
 ```
 
-</CodeTab>
-
-아래에서 다른 방법으로 이를 확인할 수 있습니다. 물론 이건 명백히 잘못된 표현입니다:
+아래에서 다른 방법으로 이를 확인할 수 있습니다. 물론 이건 명백히 잘못된 표현입니다.
 
 ```reason
 let result = if showMenu {
@@ -78,115 +67,95 @@ let result = if showMenu {
 
 리스크립트는 삼항 축약 표현(ternary sugar)도 제공합니다. **그러나 가능하다면, if-else를 사용 할 것을 장려합니다**
 
-<CodeTab labels={["ReScript", "JS Output"]}>
-
 ```reason
 let message = isMorning ? "Good morning!" : "Hello!"
 ```
+
 ```js
-var message = isMorning ? "Good morning!" : "Hello!";
+var message = isMorning ? 'Good morning!' : 'Hello!';
 ```
 
-</CodeTab>
-
-**리스크립트에서는 다른 언어에서보다 `if-else`와 삼항 표현(ternary)을 극히 드물게 사용합니다**; 강력한 [패턴매칭](pattern-matching-destructuring.md)이 이전에 필수적이었던 이러한 유형의 코드들을 지워 버렸습니다.
+**리스크립트에서는 다른 언어에서보다 `if-else`와 삼항 표현(ternary)을 극히 드물게 사용합니다**; 강력한 [패턴매칭](15-Pattern-Matching-Destructuring)이 이전에 필수적이었던 이러한 유형의 코드들을 지워 버렸습니다.
 
 ## For 루프(loop)
 
 For 루프(loop)는 시작 값부터 끝 값까지(끝 값도 포함) 반복합니다.
-
-<CodeTab labels={["ReScript", "JS Output"]}>
 
 ```reason
 for i in startValueInclusive to endValueInclusive {
   Js.log(i)
 }
 ```
+
 ```js
-for(var i = startValueInclusive; i <= endValueInclusive; ++i){
+for (var i = startValueInclusive; i <= endValueInclusive; ++i) {
   console.log(i);
 }
 ```
 
-</CodeTab>
-
-<CodeTab labels={["ReScript", "JS Output"]}>
-
 ```reason example
-// prints: 1 2 3
+/* prints: 1 2 3 */
 for x in 1 to 3 {
   Js.log(x)
   Js.log(" ")
 }
 ```
+
 ```js
-for(var x = 1; x <= 3; ++x){
+for (var x = 1; x <= 3; ++x) {
   console.log(x);
-  console.log(" ");
+  console.log(' ');
 }
 ```
 
-</CodeTab>
-
-`for` 루프(loop)의 카운트를 `downto`를 이용하여 반대 방향으로 만들 수 있습니다.
-
-<CodeTab labels={["ReScript", "JS Output"]}>
+`for` 루프의 카운트를 `downto`를 이용하여 반대 방향으로 만들 수 있습니다.
 
 ```reason
 for i in startValueInclusive downto endValueInclusive {
   Js.log(i)
 }
 ```
+
 ```js
-for(var i = startValueInclusive; i >= endValueInclusive; --i){
+for (var i = startValueInclusive; i >= endValueInclusive; --i) {
   console.log(i);
 }
 ```
 
-</CodeTab>
-
-<CodeTab labels={["ReScript", "JS Output"]}>
-
 ```reason example
-// prints: 3 2 1
+/* prints: 3 2 1 */
 for x in 3 downto 1 {
   Js.log(x)
   Js.log(" ")
 }
 ```
+
 ```js
-for(var x = 3; x >= 1; --x){
+for (var x = 3; x >= 1; --x) {
   console.log(x);
-  console.log(" ");
+  console.log(' ');
 }
 ```
-
-</CodeTab>
 
 ## While 루프(loop)
 
-While 루프(loop)는 조건이 참(true)일 때까지 그 바디(body)의 코드 블록을 실행합니다.
-
-<CodeTab labels={["ReScript", "JS Output"]}>
+While 루프는 조건이 참(true)일 때까지 그 바디(body)의 코드 블록을 실행합니다.
 
 ```reason
 while testCondition {
-  // body here
+  /* body here */
 }
 ```
+
 ```js
 while (testCondition) {
-  // body here
+  /* body here */
 }
 ```
 
-</CodeTab>
+### 팁과 트릭
 
-### 팁 & 트릭(Tips & Tricks)
-
-리스크립트에는 루프(loop)를 탈출하는 `break` 키워드가 없습니다. (함수(function)에서 빠른 탈출을 위한 `return` 키워드도 없습니다.). 그러나 [뮤터블 바인딩](mutation.md)을 이용하여 while 루프(loop)를 쉽게 탈출할 수 있습니다.
-
-<CodeTab labels={["ReScript", "JS Output"]}>
+리스크립트에는 루프를 탈출하는 `break` 키워드가 없습니다. (함수에서 빠른 탈출을 위한 `return` 키워드도 없습니다.). 그러나 [뮤터블 바인딩](16-Mutation)을 이용하여 while 루프를 쉽게 탈출할 수 있습니다.
 
 ```reason example
 let break = ref(false)
@@ -199,18 +168,17 @@ while !break.contents {
   }
 }
 ```
+
 ```js
 var $$break = {
-  contents: false
+  contents: false,
 };
 
-while(!$$break.contents) {
+while (!$$break.contents) {
   if (Math.random() > 0.3) {
     $$break.contents = true;
   } else {
-    console.log("Still running");
+    console.log('Still running');
   }
-};
+}
 ```
-
-</CodeTab>

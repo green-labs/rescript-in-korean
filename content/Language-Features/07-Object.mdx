@@ -1,17 +1,16 @@
 ---
-title: 'Object'
-metaTitle: 'Object'
-metaDescription: 'Interoping with JS objects in ReScript'
+title: '객체'
+metaTitle: '객체(Object)'
+metaDescription: '리스크립트에서 자바스크립트 객체 인터롭'
 sourceUrl: 'https://rescript-lang.org/docs/manual/latest/object'
 ---
 
-
-리스크립트의 객체는 [레코드]()와 비슷합니다. 하지만...
+리스크립트의 객체는 [레코드](06-Record)와 비슷합니다. 하지만,
 
 - 타입 선언이 필요없습니다.
-- [레코드와 다르게]() 구조적(structural)이고 더 폴리몰픽합니다.
+- [레코드와 다르게](06-Record) 구조적(structural)이고 더 폴리몰픽합니다.
 - 객체가 JS로부터 전달된 것이 아니면 변경할 수 없습니다.
-- [패턴매칭]()을 지원하지 않습니다.
+- [패턴매칭](15-Parttern-Matching-Desctuctring)을 지원하지 않습니다.
 
 물론 리스크립트 레코드가 자바스크립트 객체로 깔끔하게 컴파일되긴 하지만, 자바스크립트 객체를 흉내내거나 바인딩할 때에는 리스크립트의 객체가 더 나은 선택일 수 있습니다.
 
@@ -29,7 +28,6 @@ type person = {
 ```
 
 필드 이름이 따옴표로 감싸져 있는 점을 제외하면 레코드 타입의 문법과 똑같아 보입니다.
-
 
 ## 만들기
 
@@ -67,7 +65,6 @@ let me: person = {
 
 이러면 타입 시스템은 에러를 내줍니다.
 
-
 ## 접근
 
 ```reason
@@ -75,9 +72,8 @@ let age = me["age"]
 ```
 
 ```javascript
-var age = me["age"];
+var age = me['age'];
 ```
-
 
 ## 변경
 
@@ -93,7 +89,6 @@ type student = {
 
 student1["name"] = "Mary"
 ```
-
 
 ## 팁
 
@@ -119,12 +114,12 @@ document["location"]["href"] = "rescript-lang.org"
 ```
 
 ```javascript
-document.addEventListener("mouseup", function(_event) {
-  console.log("clicked!");
+document.addEventListener('mouseup', function(_event) {
+  console.log('clicked!');
 });
 var loc = document.location;
-document.location.href = "rescript-lang.org";
+document.location.href = 'rescript-lang.org';
 ```
 
-여기서 사용된 기법은 [external]() 문서에도 설명이 있습니다.
+여기서 사용된 기법은 [external](/JavaScript-Interop/03-External-Bind-to-Any-JS-Library) 문서에도 설명이 있습니다.
 이 기법이 매우 훌륭한 이유는 사용하고자 하는 JS 라이브러리의 바인딩이 있든 없든 전혀 신경쓰지 않고도 일단 리스크립트 코드를 작성할 수 있기 때문입니다.

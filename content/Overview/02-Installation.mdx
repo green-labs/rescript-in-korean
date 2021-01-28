@@ -7,7 +7,7 @@ sourceUrl: 'https://rescript-lang.org/docs/manual/latest/installation'
 
 준비사항: NodeJS 환경, 그리고 NPM 또는 Yarn
 
-ReScript를 전역으로 설치하려면 다음처럼 합니다.
+리스크립트를 전역으로 설치하려면 다음처럼 합니다.
 
 ```sh
 npm install -g bs-platform
@@ -25,7 +25,7 @@ node src/Demo.bs.js
 
 <!-- TODO: rescript template -->
 
-ReScript 파일을 JavaScript로 컴파일 한 다음 NodeJS를 사용해 컴파일된 JavaScript 파일을 실행합니다. **우리는 다른 한쪽 탭에 작업중인 `.bs.js` 열어놓고 작업하는 것을 강력 추천합니다.** 이렇게하면 ReScript가 어떤 형태의 JavaScript 코드로 변경되는지 알 수 있습니다. 개발자가 읽을 수 있는 JavaScript 결과물을 만들어주는 환경은 그다지 많지 않습니다!
+리스크립트 파일을 자바스크립트로 컴파일 한 다음 NodeJS를 사용해 컴파일된 자바스크립트 파일을 실행합니다. **우리는 다른 한쪽 탭에 작업중인 `.bs.js` 열어놓고 작업하는 것을 강력 추천합니다.** 이렇게하면 ReScript가 어떤 형태의 JavaScript 코드로 변경되는지 알 수 있습니다. 개발자가 읽을 수 있는 자바스크립트 결과물을 만들어주는 환경은 그다지 많지 않습니다!
 
 개발하는 동안에는 `npm run build` 스크립트로 매번 컴파일하기보다는 `npm run start` 스크립트로 파일이 변경되면 자동으로 재컴파일되도록 하는 것이 편합니다.
 
@@ -33,9 +33,9 @@ ReScript 파일을 JavaScript로 컴파일 한 다음 NodeJS를 사용해 컴파
 
 ## 기존 JS 프로젝트와의 통합
 
-다음 단계를 따라하면 기존 JavaScript 프로젝트에 ReScript 환경을 구축할 수 있습니다.
+다음 단계를 따라하면 기존 자바스크립트 프로젝트에 리스크립트 환경을 구축할 수 있습니다.
 
-### ReScript 설치
+### 리스크립트 설치
 
 ```sh
 npm install --save-dev bs-platform
@@ -69,13 +69,13 @@ npm install --save-dev bs-platform
 }
 ```
 
-> 사용자의 디렉토리 구조에 따라 `sources` 필드의 정보를 ReScript 파일이 존재하는 위치로 알맞게 수정하세요.
+> 사용자의 디렉토리 구조에 따라 `sources` 필드의 정보를 리스크립트 파일이 존재하는 위치로 알맞게 수정하세요.
 
-`bsconfig.json`에 대한 자세한 설명은 [빌드 환경설정](https://rescript-lang.org/docs/manual/latest/build-configuration) 페이지를 참고하세요.
+`bsconfig.json`에 대한 자세한 설명은 [빌드 환경설정](/Build-System/02-Configuration) 페이지를 참고하세요.
 
 ### package.json에 스크립트 추가
 
-ReScript 컴파일에 도움이 되도록 `package.json`에 2가지 스크립트를 추가합니다.
+리스크립트 컴파일에 도움이 되도록 `package.json`에 2가지 스크립트를 추가합니다.
 
 ```json
 "scripts": {
@@ -86,9 +86,9 @@ ReScript 컴파일에 도움이 되도록 `package.json`에 2가지 스크립트
 
 ### React JS 사용
 
-ReScript 프로젝트에 React를 사용하려면 다음 단계를 추가하세요.
+리스크립트 프로젝트에 리액트를 사용하려면 다음 단계를 추가하세요.
 
-[Reason React](https://reasonml.github.io/reason-react/en/)를 설치합니다.
+[ReasonReact](https://reasonml.github.io/reason-react/en/)를 설치합니다.
 
 ```sh
 npm install reason-react
@@ -103,8 +103,8 @@ npm install reason-react
 
 ### 컴파일 된 코드 사용하기
 
-ReScript는 읽기 쉬운 JS로 컴파일되고 이 파일을 바벨이나 웹팩같은 기존 도구모음에 적용하는 것은 어렵지 않습니다.
+리스크립트는 읽기 쉬운 JS로 컴파일되고 이 파일을 바벨이나 웹팩같은 기존 도구모음에 적용하는 것은 어렵지 않습니다.
 
-[JS로 내보내기](import-from-export-to-js#export-to-javascript) 문서에 컴파일 된 모듈을 JS에서 사용하는 법을 배울 수 있습니다.
+[JS로 내보내기](/JavaScript-Interop/06-Import-from-Export-to-JS#export-to-javascript) 문서에 컴파일 된 모듈을 JS에서 사용하는 법을 배울 수 있습니다.
 
-[JS에서 가져오기](converting-from-js) 문서에서 기존 JS 코드를 ReScript로 가져오는 법을 알아볼 수 있습니다.
+[JS에서 가져오기](/Guides/01-Converting-from-JS) 문서에서 기존 JS 코드를 리스크립트로 가져오는 법을 알아볼 수 있습니다.
