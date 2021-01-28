@@ -30,9 +30,9 @@ export const baseStyles = css`
   }
   html,
   body {
-    font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Roboto Light', 'Oxygen',
-      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif,
-      'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+    font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+      'Roboto Light', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 
     font-size: 16px;
     scroll-behavior: smooth;
@@ -41,7 +41,7 @@ export const baseStyles = css`
     margin-left: auto;
   }
   .prism-code {
-    font-family: 'Fira Code', monospace; 
+    font-family: 'Fira Code', monospace;
   }
   a {
     transition: color 0.15s;
@@ -169,13 +169,13 @@ export const baseStyles = css`
   }
   .searchInput {
     width: 100%;
-    background-color: rgba(28,211,198,.12) !important;
+    background-color: rgba(28, 211, 198, 0.12) !important;
     border-width: 0 !important;
-    color: #C2C2C2;
+    color: #c2c2c2;
     padding: 10px;
     border-radius: 5px;
     color: #fff;
-    opacity: .6;
+    opacity: 0.6;
     padding-left: 38px;
     max-width: 600px;
   }
@@ -238,7 +238,7 @@ export const baseStyles = css`
     line-height: 1.5;
     font-weight: 300;
     color: #fff !important;
-    
+
     /* text-transform: uppercase; */
   }
   .headerTitle a {
@@ -320,7 +320,7 @@ export const baseStyles = css`
     display: flex;
     align-items: center;
   }
-  
+
   .navBarUL li a img,
   .navBarUL li a .shareIcon {
     width: 20px;
@@ -332,7 +332,7 @@ export const baseStyles = css`
     border: 0 !important;
     background-color: rgb(245, 247, 249); /* !important; */
   }
-  
+
   blockquote {
     color: rgb(116, 129, 141);
     margin: 0px 0px 24px;
@@ -350,7 +350,8 @@ export const baseStyles = css`
   .socialWrapper li a {
     display: contents;
   }
-  .discordBtn, .twitterBtn {
+  .discordBtn,
+  .twitterBtn {
     border-radius: 4px;
     border: solid 1px #d1d2d3;
     background-color: #f1f5f8;
@@ -361,7 +362,7 @@ export const baseStyles = css`
     display: flex;
     align-items: center;
     justify-content: center;
-    opacity: .8;
+    opacity: 0.8;
     cursor: pointer;
   }
   .twitterBtn img {
@@ -370,7 +371,8 @@ export const baseStyles = css`
   .discordBtn img {
     width: 10px !important;
   }
-  .discordBtn:hover, .twitterBtn:hover {
+  .discordBtn:hover,
+  .twitterBtn:hover {
     opacity: 1;
   }
   .discordBtn {
@@ -746,7 +748,7 @@ export const baseStyles = css`
 
   @media (max-width: 767px) {
     .navBarNav .switch {
-      display:none;
+      display: none;
     }
     .formElement svg path {
       fill: #001934;
@@ -876,7 +878,6 @@ export const baseStyles = css`
       right: 0;
       top: 35px;
       max-height: fit-content;
-      position: static;
     }
   }
 
