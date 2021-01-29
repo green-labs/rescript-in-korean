@@ -48,7 +48,7 @@ const config = {
     description: 'ReScript in Korean',
     ogImage: '/rescript-in-korean/og.png',
     docsLocation: 'https://github.com/green-labs/rescript-in-korean/tree/main/content',
-    favicon: 'https://green-labs.github.io/favicon.ico',
+    favicon: 'https://green-labs.github.io/rescript-in-korean/favicon.png',
   },
   pwa: {
     enabled: false, // disabling this will also remove the existing service worker.
@@ -62,7 +62,7 @@ const config = {
       crossOrigin: 'use-credentials',
       icons: [
         {
-          src: 'https://green-labs.github.io/favicon.ico',
+          src: 'https://green-labs.github.io/rescript-in-korean/favicon.png',
           sizes: `512x512`,
           type: `image/png`,
         },
