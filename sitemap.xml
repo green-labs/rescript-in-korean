@@ -6,15 +6,14 @@
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/JavaScript-Interop</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/Language-Features</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/Overview</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/bs.deriving</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/Build-System/01-Overview</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/Build-System/01-Overview</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/Build-System/02-Configuration</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/Build-System/04-Interop-with-JS-Build-Systems</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/Build-System/03-Configuration-Schema</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/Build-System/04-Interop-with-JS-Build-Systems</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/Build-System/05-Performance</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/Extra/02-Project-Structure</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/Extra/01-Newcomer-Examples</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/Extra/02-Project-Structure</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/Extra/03-FAQ</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/Guides/01-Converting-from-JS</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/Guides/02-Libraries</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
@@ -61,7 +60,4 @@
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/Overview/03-EditorPlugins</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/Overview/04-Migrate-to-ReScript-Syntax</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/Overview/05-Try</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/bs.deriving/01-accessors</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/bs.deriving/02-jsConverter</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/bs.deriving/03-abstract</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 </urlset>
