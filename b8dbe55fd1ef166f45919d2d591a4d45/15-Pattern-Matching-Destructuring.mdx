@@ -1,0 +1,556 @@
+---
+title: "패턴 매칭 / 구조분해"
+metaTitle: '패턴 매칭 / 구조분해'
+metaDescription: 'Pattern matching and destructuring complex data structures in ReScript'
+---
+
+리스크립트의 **최고** 기능 중 하나는 패턴 매칭입니다. 패턴 매칭은 세가지 뛰어난 기능을 하나로 결합합니다.
+
+- 구조분해
+- 데이터 형태에 따른 `switch` 구문
+- 완전성 검사
+
+각 기능별로 자세히 살펴보겠습니다.
+
+## 구조분해
+
+자바스크립트 조차도 우리가 원하는 부분을 추출하고 변수 이름을 할당하기 위해 자료구조를 "개방"하는 구조분해 기능이 있습니다.
+
+```reason
+let coordinates = (10, 20, 30)
+let (x, _, _) = coordinates
+Js.log(x) // 10
+```
+```javascript
+var coordinates = [10, 20, 30];
+var x = 10;
+console.log(10);
+```
+
+구조분해는 기본적으로 제공하는 대부분의 자료구조에서 작동합니다.
+
+```reason
+// 레코드
+type student = {name: string, age: int}
+let student1 = {name: "John", age: 10}
+let {name} = student1 // "John" 값을 `name` 으로 할당
+
+// 배리언트
+type result =
+  | Success(string)
+let myResult = Success("You did it!")
+let Success(message) = myResult // "You did it!" 값을 `message` 으로 할당
+```
+
+일반적으로 바인딩을 배치하는 모든 곳에서 구조분해를 사용할 수 있습니다.
+
+```reason
+type result =
+  | Success(string)
+let displayMessage = (Success(m)) => {
+  // 매개 변수를 구조분해해 Success 메시지 문자열을 직접 추출했습니다.
+  Js.log(m)
+}
+displayMessage(Success("You did it!"))
+```
+
+레코드는 구조분해시 필드 이름도 바꿀 수 있습니다.
+
+```reason
+let {name: n} = student1 // "John" 값을 `n` 으로 할당
+```
+
+최상위 수준에서 배열, 리스트를 구조분해할 수 있습니다.
+
+```reason
+let myArray = [1, 2, 3]
+let [item1, item2, _] = myArray
+// 1은 `item1`에 할당, 2는 `item2`에 할당, 3번째 요소는 무시
+
+let myList = list{1, 2, 3}
+let list{head, ...tail} = myList
+// 1은 `head`, `list{2, 3}` 은 tail에 할당
+```
+
+하지만 위 배열 예제는 **강하게 비추합니다.** (가급적 튜플을 사용하세요) 또한 목록 예제는 오류가 발생합니다.
+단지 이런것도 가능하다는 것을 보여주기 위한 예시입니다.
+다음 섹션에서 볼 수 있듯이 배열과 목록을 올바르게 구조분해하는 방법은 `switch`를 사용하는 것입니다.
+
+## 데이터 형태에 따른 switch 구문
+
+패턴 매칭은 구조분해가 되는 장점을 지니는 동시에, 작성자가 의도하는 코드의 구조에는 영향을 주지 않습니다.
+여러분들의 코드에 대한 발상을 전환하는 방식이 있습니다. 바로 데이터의 형태에 따라 다른 코드가 실행되도록 만드는 것입니다.
+
+배리언트를 고려하세요.
+
+```reason
+type payload =
+  | BadResult(int)
+  | GoodResult(string)
+  | NoResult
+```
+
+위 세 가지 케이스를 각각 다르게 처리하고 싶습니다.
+예를 들어 값이 `GoodResult(...)`면 성공 메시지를 출력하고, `NoResult`면 다른 작업을 수행합니다.
+
+다른 언어에서는 if-else를 연달아 작성하곤 할텐데, 이는 읽기가 어렵고 오류가 생기기 쉬운 방식입니다.
+리스크립트에서는 if-else 대신 초강력한 `switch` 패턴 매칭으로 구조 분해를 하고, 각각 분해된 결과의 오른편에 작성된 코드가 실행되도록 합니다.
+
+```reason
+let data = GoodResult("Product shipped!")
+switch data {
+| GoodResult(theMessage) =>
+  Js.log("Success! " ++ theMessage)
+| BadResult(errorCode) =>
+  Js.log("Something's wrong. The error code is: " ++ Js.Int.toString(errorCode))
+| NoResult =>
+  Js.log("Bah.")
+}
+```
+```javascript
+var data = {
+  TAG: /* GoodResult */1,
+  _0: "Product shipped!"
+};
+
+if (typeof data === "number") {
+  console.log("Bah.");
+} else if (data.TAG) {
+  console.log("Success! Product shipped!");
+} else {
+  console.log("Something's wrong. The error code is: " + "Product shipped!".toString());
+}
+```
+
+이 경우 `message` 값은 `"Success! Product shipped!"` 입니다.
+
+갑자기 값을 지저분하게 확인하는 if-else 조합이 정확한 값의 형태를 기반으로 실행할 수 있는 깔끔하고 컴파일러가 검증한 선형적인 코드로 변경됐습니다.
+
+### 복잡한 예시
+
+다른 언어로 코딩할 때 골치아픈 시나리오 예시를 보여드리겠습니다. 아래와 같은 자료구조가 주어졌다고 합시다.
+
+```reason
+type status = Vacations(int) | Sabbatical(int) | Sick | Present
+type reportCard = {passing: bool, gpa: float}
+type person =
+  | Teacher({
+    name: string,
+    age: int,
+  })
+  | Student({
+    name: string,
+    status: status,
+    reportCard: reportCard,
+  })
+```
+
+다음 요구사항을 상상해보세요.
+
+- 이름이 `Mary` 또는 `Joe` 인 교사(`Teacher`)는 친근한 인사를 합니다.
+- 다른 교사들(`Teacher`)은 격식 차린 인사를 합니다.
+- 학생(`Student`)은 학기를 통과하면 점수와 함께 축하를 합니다.
+- 학생(`Student`)의 GPA가 0점이고 휴가 중이거나 안식일이면 다른 메세지를 표시합니다.
+- 그 외 나머지 학생(`Student`)를 위한 메세지를 표시합니다.
+
+리스크립트는 쉽게 할 수 있습니다!
+
+```reason
+let person1 = Teacher({name: "Jane", age: 35})
+
+let message = switch person1 {
+| Teacher({name: "Mary" | "Joe"}) =>
+  `Hey, still going to the party on Saturday?`
+| Teacher({name}) =>
+  // 이름이 "Mary"와 "Joe"인 경우를 제외하고 매칭됩니다.
+  `Hello ${name}.`
+| Student({name, reportCard: {passing: true, gpa}}) =>
+  `Congrats ${name}, nice GPA of ${Js.Float.toString(gpa)} you got there!`
+| Student({
+    reportCard: {gpa: 0.0},
+    status: Vacations(daysLeft) | Sabbatical(daysLeft)
+  }) =>
+  `Come back in ${Js.Int.toString(daysLeft)} days!`
+| Student({status: Sick}) =>
+  `How are you feeling?`
+| Student({name}) =>
+  `Good luck next semester ${name}!`
+}
+```
+
+**참고** 어떻게 했냐면...
+- 값을 간결하지만 깊게 분석했습니다.
+- `"Mary" | "Joe"`, `Vacations | Sabbatical` 에서 **중첩 패턴 검사**를 사용했습니다. 
+- `daysLeft` 숫자를 추출하기도 했습니다.
+- 마지막으로 인사말을 `message`에 할당했습니다.
+
+다른 예시로 인라인 튜플을 패턴 매칭 해보겠습니다.
+
+```reason
+type animal = Dog | Cat | Bird
+let categoryId = switch (isBig, myAnimal) {
+| (true, Dog) => 1
+| (true, Cat) => 2
+| (true, Bird) => 3
+| (false, Dog | Cat) => 4
+| (false, Bird) => 5
+}
+```
+```javascript
+var categoryId = isBig ? (myAnimal + 1) | 0 : myAnimal >= 2 ? 5 : 4;
+```
+
+**참고** 패턴 매칭시 튜플을 어떻게 평가하는지 다음 표를 참고하세요.
+
+`isBig` \ `myAnimal` | `Dog` | `Cat` | `Bird`
+---------------------|-------|-------|--------
+`true`               |   1   |   2   |   3
+`false`              |   4   |   4   |   5
+
+### 폴-스루(Fall-Through) 패턴
+
+이전 `person` 예제에서 보여준 중첩 패턴 검사는 `switch`의 최상위 수준에서도 작동합니다.
+
+```reason
+let myStatus = Vacations(10)
+
+switch myStatus {
+| Vacations(days)
+| Sabbatical(days) => Js.log(`Come back in ${Js.Int.toString(days)} days!`)
+| Sick
+| Present => Js.log("Hey! How are you?")
+}
+```
+```javascript
+var myStatus = {
+  TAG: /* Vacations */0,
+  _0: 10
+};
+
+if (typeof myStatus === "number") {
+  console.log("Hey! How are you?");
+} else {
+  console.log("Come back in " + (10).toString() + " days!");
+}
+```
+
+여러 케이스가 동일한 처리를 해야하면 특정 타입으로 로직을 정리할 수 있습니다.
+
+### 일부 값을 무시
+
+`Teacher(payload)`와 같은 값에서 `Teacher` 부분만 패턴 매칭하고 `payload`를 완전히 무시하려는 경우, 다음과 같이 `_` 와일드 카드를 사용할 수 있습니다.
+
+```reason
+switch person1 {
+| Teacher(_) => Js.log("Hi teacher")
+| Student(_) => Js.log("Hey student")
+}
+```
+```javascript
+if (person1.TAG) {
+  console.log("Hey student");
+} else {
+  console.log("Hi teacher");
+}
+```
+
+`_` 는 `switch`의 최상위 수준에서도 작동하며 포괄 조건으로 사용됩니다.
+
+```reason
+switch myStatus {
+| Vacations(_) => Js.log("Have fun!")
+| _ => Js.log("Ok.")
+}
+```
+```javascript
+if (typeof myStatus === "number" || myStatus.TAG) {
+  console.log("Ok.");
+} else {
+  console.log("Have fun!");
+}
+```
+
+최상위에서 포괄 조건을 **남용하지 마세요**. 가급적 모든 케이스를 작성하는 것이 좋습니다.
+
+```reason
+switch myStatus {
+| Vacations(_) => Js.log("Have fun!")
+| Sabbatical(_) | Sick | Present => Js.log("Ok.")
+}
+```
+```javascript
+if (typeof myStatus === "number" || myStatus.TAG) {
+  console.log("Ok.");
+} else {
+  console.log("Have fun!");
+}
+```
+
+장황해 보이지만 한번만 작성하면 됩니다. 이렇게 함으로 새로운 배리언트 케이스를 추가할 때 도움을 얻을 수 있습니다.
+만약 위와 같이 작성한 뒤, `status` 타입에 `Quarantined` 케이스를 추가한다면 패턴 매칭이 있는 부분을 반드시 수정해야합니다.
+하지만 최상위에서 포괄 조건을 사용했다면 추가한 케이스가 있음에도 불구하고 아무런 문제없이 작동하기 때문에 잠재적으로 버그가 발생 할 수 있습니다.
+
+### When 절
+
+때때로 값의 형태와 함께 다른 조건을 검사해야하는 경우가 있습니다. 그럴때 이렇게 작성할 수 있겠죠.
+
+```reason
+switch person1 {
+| Teacher(_) => () // 아무것도 안함
+| Student({reportCard: {gpa}}) =>
+  if gpa < 0.5 {
+    Js.log("What's happening")
+  } else {
+    Js.log("Heyo")
+  }
+}
+```
+```javascript
+if (person1.TAG) {
+  if (person1.reportCard.gpa < 0.5) {
+    console.log("What's happening");
+  } else {
+    console.log("Heyo");
+  }
+}
+```
+
+`switch`는 패턴을 선형으로 유지하기 위해 `if` 조건을 같이 사용할 수 있는 기능을 지원합니다.
+
+```reason
+switch person1 {
+| Teacher(_) => () // 아무것도 안함
+| Student({reportCard: {gpa}}) when gpa < 0.5 =>
+  Js.log("What's happening")
+| Student(_) =>
+  // fall-through, 모든 값 케이스
+  Js.log("Heyo")
+}
+```
+```javascript
+if (person1.TAG) {
+  if (person1.reportCard.gpa < 0.5) {
+    console.log("What's happening");
+  } else {
+    console.log("Heyo");
+  }
+}
+```
+
+### 예외 매칭
+
+함수에서 예외가 발생하면(나중에 설명) 함수가 반환하는 값 외 예외 값도 매칭할 수 있습니다.
+
+```reason
+switch List.find(i => i === theItem, myItems) {
+| item => Js.log(item)
+| exception Not_found => Js.log("No such item found!")
+}
+```
+
+### 배열 매칭
+
+```reason
+let students = ["Jane", "Harvey", "Patrick"]
+switch students {
+| [] => Js.log("There are no students")
+| [student1] =>
+  Js.log("There's a single student here: " ++ student1)
+| manyStudents =>
+  // 배열에 있는 이름들 출력
+  Js.log2("The students are: ", manyStudents)
+}
+```
+```javascript
+var students = ["Jane", "Harvey", "Patrick"];
+
+var len = students.length;
+
+if (len !== 1) {
+  if (len !== 0) {
+    console.log("The students are: ", students);
+  } else {
+    console.log("There are no students");
+  }
+} else {
+  var student1 = students[0];
+  console.log("There's a single student here: " + student1);
+}
+```
+
+### 목록 매칭
+
+목록 패턴 매칭은 배열과 유사하지만 목록의 꼬리(`tail`)를 추출하는 추가 기능이 있습니다. (`tail` 은 첫 번째 요소를 제외한 모든 요소입니다.)
+
+```reason
+let rec printStudents = (students) => {
+  switch students {
+  | list{} => () // 끝
+  | list{student} => Js.log("Last student: " ++ student)
+  | list{student1, ...otherStudents} =>
+    Js.log(student1)
+    printStudents(otherStudents)
+  }
+}
+0printStudents(list{"Jane", "Harvey", "Patrick"})
+```
+
+### 작은 함정
+
+**참고**: 리터럴(예: 구체적인 값)은 let-binding 한 이름이나 항목이 아닌, 패턴으로만 전달할 수 있습니다. 다음은 예상대로 작동하지 않습니다.
+_(역주: let-binding 한 변수 등으로 패턴매칭 할 수 없음을 의미합니다. 아래 추가 설명이 있습니다.)_
+
+```reason
+let coordinates = (10, 20, 30)
+let centerY = 20
+switch coordinates {
+| (x, centerY, _) => Js.log(x)
+}
+```
+```javascript
+var coordinates = [10, 20, 30];
+var centerY = 20;
+
+console.log(10);
+```
+
+리스크립트를 처음 사용하는 위와 같은 코드를 작성하는 실수를 할 수 있습니다. `coordinates`의 두 번째 값이 `centerY`와 동일한 값일 때 매칭될거라고 생각했기 때문입니다.
+하지만 이 코드 조각은 "`coordinates` 가 3개 요소를 가지고 있는 튜플 형태에 일치하는 가?"로 해석되고, "두 번째 값을 `centerY` 라는 이름에 할당"하는 것으로 동작합니다.
+의도와 다르게 동작하기 때문에 주의해야합니다.
+
+## 완전성 검사
+
+위의 기능만으로는 충분하지 않을 수 있기에 리스크립트는 가장 중요한 패턴 매칭 기능으로 **누락 된 패턴이 있는지 컴파일 시점에 검사**하는 기능을 제공합니다.
+
+위의 예시 중 하나를 다시 살펴 보겠습니다.
+
+```reason
+let message = switch person1 {
+| Teacher({name: "Mary" | "Joe"}) =>
+  `Hey, still going to the party on Saturday?`
+| Student({name, reportCard: {passing: true, gpa}}) =>
+  `Congrats ${name}, nice GPA of ${Js.Float.toString(gpa)} you got there!`
+| Student({
+    reportCard: {gpa: 0.0},
+    status: Vacations(daysLeft) | Sabbatical(daysLeft)
+  }) =>
+  `Come back in ${Js.Int.toString(daysLeft)} days!`
+| Student({status: Sick}) =>
+  `How are you feeling?`
+| Student({name}) =>
+  `Good luck next semester ${name}!`
+}
+```
+
+무엇을 제거했는지 보셨나요?
+`person1`의 `Teacher({name})`이 `Mary` 또는 `Joe` 가 아닐때 나머지 경우를 처리하는 부분을 생략했습니다.
+
+값이 가질 수 있는 모든 시나리오를 처리하지 못할 때 대부분의 프로그램 버그가 발생합니다.
+다른 사람이 작성한 코드를 리팩토링 할때도 자주 발생하구요.
+다행히 리스크립트는 컴파일러에서 다음과 같이 알려줍니다.
+
+```
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a value that is not matched:
+Some({name: ""})
+```
+
+**쾅!** 코드를 실행하기 전에 중요한 버그가 발생할 가능성을 없앴습니다. 다음은 대부분의 nullable 값이 처리되는 방식입니다.
+
+```reason
+let myNullableValue = Some(5)
+
+switch myNullableValue {
+| Some(v) => Js.log("value is present")
+| None => Js.log("value is absent")
+}
+```
+```javascript
+var myNullableValue = 5;
+
+if (myNullableValue !== undefined) {
+  console.log("value is present");
+} else {
+  console.log("value is absent");
+}
+```
+
+`None` 케이스를 처리하지 않으면 컴파일러가 경고합니다. 더 이상 코드에 `undefined` 버그가 없습니다!
+
+## 결론과 팁
+
+간결한 구조분해 구문, `switch` 의 적절한 조건 처리, 완전성 검사를 통해 패턴 매칭이 올바른 코드 작성을 위한 획기적인 수단임을 알기 바랍니다.
+
+다음은 몇가지 조언입니다.
+
+와일드카드 `_` 를 너무 남용하지 마세요.
+이렇게하면 컴파일러가 더 나은 완전성 검사를 제공하지 못합니다. 배리언트에 새 케이스를 추가하는 리팩토링을 할 때 특히 중요합니다.
+무한한 가능성이 있을때만 `_`를 사용하세요. 예를 들면 값이 `string`, `int` 라던가..
+
+`when` 절을 아껴서 사용하세요.
+
+**가능하면 패턴 매칭를 평평하게(flatten) 만드세요**. 이게 진짜 버그를 제거하는 좋은 방법입니다.
+최악인 코드조각에서 최고인 코드까지 예시를 보여드리겠습니다.
+
+```reason
+let optionBoolToBool = opt => {
+  if opt == None {
+    false
+  } else if opt === Some(true) {
+    true
+  } else {
+    false
+  }
+}
+```
+
+이제 이 코드조각은 어리석은 방법입니다. =) 패턴 매칭으로 바꿔봅시다.
+
+```reason
+let optionBoolToBool = opt => {
+  switch opt {
+  | None => false
+  | Some(a) => a ? true : false
+  }
+}
+```
+
+약간 더 좋지만 여전히 중첩됩니다. 위 패턴 매칭을 이렇게 작성할 수도 있습니다.
+
+```reason
+let optionBoolToBool = opt => {
+  switch opt {
+  | None => false
+  | Some(true) => true
+  | Some(false) => false
+  }
+}
+```
+
+훨씬 더 선형적이네요! 여기서 더 나아가 아래처럼 바꾸고 싶은 유혹이 드실겁니다.
+
+```reason
+let optionBoolToBool = opt => {
+  switch opt {
+  | Some(true) => true
+  | _ => false
+  }
+}
+```
+
+훨씬 더 간결하지만 언급했던 완전한 검사를 활용할 수 없게 됐습니다. 가급적 사용하지 마세요.
+
+가장 잘 작성한 코드조각은 이렇습니다.
+
+```reason
+let optionBoolToBool = opt => {
+  switch opt {
+  | Some(trueOrFalse) => trueOrFalse
+  | None => false
+  }
+}
+```
+
+이쯤되면 이 코드조각에서 실수하기 꽤 어렵습니다!
+분기가 많은 if-else를 사용할 때마다 패턴 매칭을 고려해보세요.
+더 간결하고 [성능](08-Variant#design-decisions) 도 더 뛰어납니다.
