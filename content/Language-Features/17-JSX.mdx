@@ -9,7 +9,7 @@ sourceUrl: 'https://rescript-lang.org/docs/manual/latest/jsx'
 
 리스크립트는 JSX 문법을 지원하지만 [ReactJS](https://facebook.github.io/react/docs/introducing-jsx.html)에 있는 것과 조금 다릅니다. 리스크립트 JSX는 ReactJS와 관련이 없습니다. 일반 함수 호출로 변환되기 때문입니다.
 
-**참고** [ReasonReact](https://reasonml.github.io/reason-react/en/ 를 사용하시는 분들에게: ReasonReact가 JSX를 변화시키는 것은 아닙니다. 자세한 내용은 사용 섹션을 참고하세요.
+**참고** [ReasonReact](https://reasonml.github.io/reason-react/en/) 를 사용하시는 분들에게: ReasonReact가 JSX를 변화시키는 것은 아닙니다. 자세한 내용은 사용 섹션을 참고하세요.
 
 ## 대문자 태그
 
@@ -121,7 +121,7 @@ React.createElement(MyComponent.make, MyComponent.makeProps(null, undefined), ch
 React.createElement(MyComponent.make, MyComponent.makeProps(myChild, undefined));
 ```
 
-이 방법은 `myChild`를 리스트로 감싸지 _않고_ 인자로 넘길 수 있습니다. (ReasonReact의 경우에는 배열). 위에서 말했듯 이렇게 변경됩니다.
+이 방법은 `myChild`를 리스트로 감싸지 _않고_ 인자로 넘길 수 있습니다. (ReasonReact의 경우에는 배열) 위에서 말했듯 이렇게 변경됩니다.
 
 ```reason
 @JSX MyComponent.createElement(~children=myChild, ())
@@ -186,7 +186,7 @@ React.createElement(
 
 ## JS, JSX 에서의 다른점
 
-- 속성과 children은 늘 `{}`를 필요로 하는 것은 아닙니다만 학습의 용이성을 위해 보여주고 있습니다. 아마 포매팅을 하시면, 어떤 괄호는 사라지고, 어떤 부분은 괄호로 변경될 것입니다.
+- 속성과 children은 늘 `{}`를 필요로 하는 것은 아닙니다만, 학습의 용이성을 위해 보여주고 있습니다. 아마 포매팅을 하시면, 어떤 괄호는 사라지고, 어떤 부분은 괄호로 변경될 것입니다.
 - JSX Props spread 구문은 지원하지 않습니다. `<Comp {...props} />`. 우리가 위에 설명한 children spread 기능이 있는것과 조금 관련이 있습니다. `<Comp> ...children </Comp>`.
 - 약어!
 

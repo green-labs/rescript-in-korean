@@ -63,9 +63,9 @@ let result = if showMenu {
 }
 ```
 
-위 코드에서, `else` 브랜치는 암시적으로 `unit` 타입을 가지는 반면 `if` 브랜치는 `int` 타입을 가진다는 내용의 타입 에러가 납니다. 직관적으로도 이것은 상식적입니다: 만약 `showMenu`가 `false`라면 `result`의 값은 뭐가 돼야 할까요?
+위 코드에서, `else` 브랜치는 암시적으로 `unit` 타입을 반환하고 `if` 브랜치는 `int` 타입을 반환하기 때문에 두 타입이 다르다는 오류가 발생합니다. 직관적으로 봐도 이것은 상식적입니다: 만약 `showMenu`가 `false`라면 `result`의 값은 뭐가 돼야 할까요?
 
-리스크립트는 삼항 축약 표현(ternary sugar)도 제공합니다. **그러나 가능하다면, if-else를 사용 할 것을 장려합니다**
+리스크립트는 삼항 축약 표현(ternary sugar)도 제공합니다. **그러나 가능하면, if-else를 사용 할 것을 장려합니다**
 
 ```reason
 let message = isMorning ? "Good morning!" : "Hello!"
@@ -75,7 +75,7 @@ let message = isMorning ? "Good morning!" : "Hello!"
 var message = isMorning ? 'Good morning!' : 'Hello!';
 ```
 
-**리스크립트에서는 다른 언어에서보다 `if-else`와 삼항 표현(ternary)을 극히 드물게 사용합니다**; 강력한 [패턴매칭](15-Pattern-Matching-Destructuring)이 이전에 필수적이었던 이러한 유형의 코드들을 지워 버렸습니다.
+**리스크립트에서는 다른 언어에서보다 `if-else`와 삼항 표현(ternary)을 극히 드물게 사용합니다**; 강력한 [패턴매칭](15-Pattern-Matching-Destructuring)이 이전에 필수로 사용해야 했던 코드들을 지워 버렸습니다.
 
 ## For 루프(loop)
 
@@ -108,7 +108,7 @@ for (var x = 1; x <= 3; ++x) {
 }
 ```
 
-`for` 루프의 카운트를 `downto`를 이용하여 반대 방향으로 만들 수 있습니다.
+`for` 루프 카운트에 `downto`를 이용하면 반대 방향으로 반복할 수 있습니다.
 
 ```reason
 for i in startValueInclusive downto endValueInclusive {
@@ -155,7 +155,7 @@ while (testCondition) {
 
 ### 팁과 트릭
 
-리스크립트에는 루프를 탈출하는 `break` 키워드가 없습니다. (함수에서 빠른 탈출을 위한 `return` 키워드도 없습니다.). 그러나 [뮤터블 바인딩](16-Mutation)을 이용하여 while 루프를 쉽게 탈출할 수 있습니다.
+리스크립트는 루프를 탈출하는 `break` 키워드가 없습니다. (함수에서 빠른 탈출을 위한 `return` 키워드도 없습니다.) 그러나 [뮤터블 바인딩](16-Mutation)을 이용해 while 루프를 쉽게 탈출할 수 있습니다.
 
 ```reason example
 let break = ref(false)
