@@ -2,7 +2,7 @@ const config = {
   gatsby: {
     pathPrefix: '/rescript-in-korean',
     siteUrl: 'https://green-labs.github.io/rescript-in-korean',
-    gaTrackingId: null,
+    gaTrackingId: 'G-1KE5PEMPTL',
     trailingSlash: false,
   },
   header: {
