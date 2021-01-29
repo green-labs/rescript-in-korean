@@ -15,7 +15,7 @@ sourceUrl: 'https://rescript-lang.org/docs/manual/latest/converting-from-js'
 
 ## 1단계: 리스크립트 설치
 
-프로젝트에서 `npm install --save-dev bs-platform`를 실행하고, [새로운 프로젝트를 생성](Overview/02-Installation)하는것 처럼 `bsconfig.json`을 프로젝트 루트에 추가하세요. 그리고 `bsb -w`를 실행합니다.
+프로젝트에서 `npm install --save-dev bs-platform`를 실행하고, [새로운 프로젝트를 생성](/Overview/02-Installation)하는것 처럼 `bsconfig.json`을 프로젝트 루트에 추가하세요. 그리고 `bsb -w`를 실행합니다.
 
 ## 2단계: 모든 자바스크립트 파일 복사-붙여넣기
 
@@ -35,7 +35,7 @@ function queryResult(usePayload, payload) {
 }
 ```
 
-첫번째로 [`%%raw` 자바스크립트 임베딩 기법](embed-raw-javascript)을 사용해 파일 내용을 새로운 파일 `src/Main.res` 로 복사합니다.
+첫번째로 [`%%raw` 자바스크립트 임베딩 기법](/JavaScript-Interop/01-Embed-Raw-Javascript)을 사용해 파일 내용을 새로운 파일 `src/Main.res` 로 복사합니다.
 
 ```reason
 %%raw(`
@@ -151,7 +151,7 @@ let queryResult = (usePayload, payload) => {
 ## 4단계: "external" 추가 및 타입 수정
 
 이전 섹션의 타입 오류는 `payload`의 레코드 선언을 찾을 수 없었기 때문에 발생했습니다. (`student` 필드를 참조하려 했음)
-가능한 한 빠르게 변환하려 하므로 [객체](Language-Features/07-Object)를 사용해 타입 선언을 하지 않아도 되도록 합니다.
+가능한 한 빠르게 변환하려 하므로 [객체](/Language-Features/07-Object)를 사용해 타입 선언을 하지 않아도 되도록 합니다.
 
 ```reason
 %%raw(`
@@ -208,7 +208,7 @@ exports.queryResult = queryResult;
 
 급한대로 school을 'whatever라는 폴리모픽 타입으로 컴파일러에게 알리고 이후 어떻게 사용되는지에 따라 알아서 추론되도록 했습니다.
 추론기법 자체에는 문제가 없지만 자바스크립트의 값을 적당히 가져오는 행위가 어느정도 위험성을 지닙니다.
-이것이 [`external`](external) 페이지에서 보여준 인터롭 기법입니다.
+이것이 [`external`](/JavaScript-Interop/03-External-Bind-to-Any-JS-Library) 페이지에서 보여준 인터롭 기법입니다.
 
 어쨌든 파일은 다시 타입 검사를 통과합니다. `.bs.js` 출력을 확인하고 원본 `.js` 파일과 비교하세요. 여기까지가 리스크립트로 변환하는 과정입니다!
 
@@ -263,7 +263,7 @@ let queryResult = (usePayload, payload) => {
 - 자바스크립트 코드를 raw 임베딩한 리스크립트 파일로 붙여넣기 합니다.
 - 컴파일 결과물을 열어두고 원본과 비교 및 확인하세요. 테스트가 필요없게요.
 - 문법이 정확한지 항상 확인하세요. 타입은 나중에 수정하니까요.
-- [객체](Language-Features/07-Object)를 (과하게) 사용해 빠르게 전환하세요.
+- [객체](/Language-Features/07-Object)를 (과하게) 사용해 빠르게 전환하세요.
 - 견고하게 하려면 타입을 정리하세요. (선택)
 - 너무 오버하면 상사나 팀원들의 반감을 살 수 있습니다.
 - 기존 코드의 의미나 성능을 그대로 유지하면서 변환을 완료했다는 점을 어필하세요. 변환된 코드는 팀 동료들이 봤을 때에도 아주 친숙할 겁니다.

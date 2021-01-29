@@ -7,7 +7,7 @@ sourceUrl: 'https://rescript-lang.org/docs/manual/latest/unboxed'
 
 <!--Consider a ReScript variant with a single payload, and a record with a single field: -->
 
-리스크립트에서 단일 페이로드로 이루어진 배리언트와, 단일 필드로 이루어진 레코드를 살펴봅시다.
+리스크립트에서 단일 페이로드로 이루어진 배리언트와 단일 필드로 이루어진 레코드를 살펴봅시다.
 
 ```reason
 type name = Name(string)
@@ -17,7 +17,7 @@ type greeting = {message: string}
 let hi = {message: "hello!"}
 ```
 
-```js
+```javascript
 var studentName = /* Name */ {
   _0: 'Joe',
 };
@@ -31,7 +31,7 @@ var hi = {
 If you check the JavaScript output, you'll see the `studentName` and `hi` JS object, as expected (see the [variant JS output](variant#javascript-output) and [record JS output](record#javascript-output) sections for details).
 -->
 
-자바스크립트 출력을 보면, 학생 이름 또는 인사가 자바스크립트 객체에 포함된 것을 볼 수 있습니다. (자세한 내용은 [variant JS output](variant#javascript-output)과 [record JS output](record#javascript-output)를 참고하세요)
+자바스크립트 출력을 보면, `studentName` 또는 `hi`가 자바스크립트 객체에 포함된 것을 볼 수 있습니다. (자세한 내용은 [배리언트의 자바스크립트 결과물](08-Variant#javascript-output)과 [레코드의 자바스크립트 결과물](06-Record#javascript-output)을 참고하세요)
 
 <!--
 For performance and certain JavaScript interop situations, ReScript offers a way to unwrap (aka unbox) the JS object wrappers from the output for records with a single field and variants with a single constructor and single payload. Annotate their type declaration with the attribute `@unboxed`:
@@ -51,7 +51,7 @@ type greeting = {message: string}
 let hi = {message: "hello!"}
 ```
 
-```js
+```javascript
 var studentName = 'Joe';
 
 var hi = 'hello!';
@@ -90,7 +90,7 @@ let playerLocalCoordinates = {x: 20.5, y: 30.5}
 renderDot(playerLocalCoordinates)
 ```
 
-```js
+```javascript
 function renderDot(coordinates) {
   console.log('Pretend to draw at:', coordinates.x, coordinates.y);
 }
@@ -133,13 +133,13 @@ let toWorldCoordinates = (Local(coordinates)) => {
 
 let playerLocalCoordinates = Local({x: 20.5, y: 30.5})
 
-/* 이제 이것은 에러입니다. */
+/* 이제 이렇게 호출하면 오류가 발생합니다! */
 /* renderDot(playerLocalCoordinates) */
-/* 대신 아래처럼 합니다.: */
+/* 대산 이렇게 사용하도록 강제합니다. */
 renderDot(playerLocalCoordinates->toWorldCoordinates)
 ```
 
-```js
+```javascript
 function renderDot(coordinates) {
   console.log('Pretend to draw at:', coordinates.x, coordinates.y);
 }
