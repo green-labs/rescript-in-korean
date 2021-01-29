@@ -97,7 +97,7 @@ const Header = ({ location, isDarkThemeActive, toggleActiveTheme }) => (
           <nav className={'navBarDefault'}>
             <div className={'navBarHeader'}>
               <Link to={finalLogoLink} className={'navBarBrand'}>
-              <img src={'/logo.png'}/>
+              <img src={'/rescript-in-korean/logo.png'}/>
               </Link>
             </div>
             
