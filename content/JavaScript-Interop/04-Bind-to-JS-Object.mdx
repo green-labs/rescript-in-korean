@@ -1,26 +1,41 @@
 ---
-title: 'Bind to JS Object'
-metaTitle: 'Bind to JS Object'
-metaDescription: 'Interop with JS objects in ReScript'
+title: '자바스크립트 객체에 바인딩하기.'
+metaTitle: '자바스크립트 객체에 바인딩하기'
+metaDescription: '리스크립트와 자바스크립트 객체간 연동하기'
 sourceUrl: 'https://rescript-lang.org/docs/manual/latest/bind-to-js-object'
 ---
 
-JavaScript objects are a combination of several use-cases:
+<!-- JavaScript objects are a combination of several use-cases:
 
 - As a "record" or "struct" in other languages (like ReScript and C).
 - As a hash map.
 - As a class.
 - As a module to import/export.
 
-ReScript cleanly separates the binding methods for JS object based on these 4 use-cases. This page documents the first three. Binding to JS module objects is described in the [Import from/Export to JS](import-from-export-to-js.md) section.
+ReScript cleanly separates the binding methods for JS object based on these 4 use-cases. This page documents the first three. Binding to JS module objects is described in the [Import from/Export to JS](import-from-export-to-js.md) section.-->
 
 <!-- TODO: mention bs.scope here too? -->
 
-## Bind to Record-like JS Objects
+자바스크립트 객체의 쓰임새는 다음과 같습니다.
 
-### Bind Using ReScript Record
+- C나 Rescript의 구조나 레코드 같은 개념
+- 해쉬 맵
+- 클래스
+- 모듈의 가져오기/내보내기
 
-If your JavaScript object has fixed fields, then it's conceptually like a ReScript record. Since a ReScript record compiles to a clean JavaScript object, you can definitely type a JS object as a ReScript record!
+리스크립트는 각 4가지 경우마다 서로 다르게 자바스크립트 객체로 바인딩하는 도구를 제공합니다. 이 장에서는 처음 3가지에 대해 설명합니다. 자바스크립트 모듈에 바인딩하는 것은 [자바스크립트로부터 내보내기/가져오기](06-Bind-to-Global-JS-Values.mdx)를 참고하십시오.
+
+<!-- ## Bind to Record-like JS Objects -->
+
+## 레코드를 자바스크립트 객체에 바인딩하기
+
+<!-- ### Bind Using ReScript Record -->
+
+### 리스크립트 레코드를 사용하여 바인딩하기
+
+<!-- If your JavaScript object has fixed fields, then it's conceptually like a ReScript record. Since a ReScript record compiles to a clean JavaScript object, you can definitely type a JS object as a ReScript record! -->
+
+만약 자바스크립트 객체가 고정된 필드들을 가지고 있는 경우는 리스크립트 레코드에 해당합니다. 리스크립트 레코드는 깔끔하게 자바스크립트 객체에 컴파일되므로, 명확하게 자바스크립트 객체를 리스크립트 레코드처럼 타입정의를 할 수 있습니다.
 
 ```reason
 type person = {
@@ -40,11 +55,16 @@ var MySchool = require('MySchool');
 var johnName = MySchool.john.name;
 ```
 
-External is documented [here](external.md). `@bs.module` is documented [here](import-from-export-to-js.md).
+<!-- External is documented [here](external.md). `@bs.module` is documented [here](import-from-export-to-js.md).-->
 
-### Bind Using ReScript Object
+`External`은 [여기](?)를 참고하십시오. `@bs.module`은 [여기](06-Import-from-Export-to-JS.mdx)를 참고하십시오.
 
-Alternatively, you can use [ReScript object](object.md) to model a JS object too:
+<!-- ### Bind Using ReScript Object-->
+
+## 리스크립트 객체를 사용하여 바인드하기
+<!-- Alternatively, you can use [ReScript object](object.md) to model a JS object too: -->
+
+위와 같이 하는 대신, [리스크립트](../Language-Features/07-Object.mdx)를 사용하여 다음과 같이 자바스크립트 객체를 모델링할 수 있습니다.
 
 ```reason
 type person = {
@@ -64,9 +84,13 @@ var MySchool = require('MySchool');
 var johnName = MySchool.john.name;
 ```
 
-### Bind Using Special @bs Getters & Setters
+<!-- ### Bind Using Special @bs Getters & Setters -->
 
-Alternatively, you can use `bs.get` and `bs.set` to bind to individual fields of a JS object:
+### @bs 게터/세터를 이용한 바인딩
+
+<!-- Alternatively, you can use `bs.get` and `bs.set` to bind to individual fields of a JS object: -->
+
+위의 방법 말고도, 자바스크립트 객체의 개별 필드들을 `bs.get`과 `bs.set`을 이용하여 바인딩할 수 있습니다.
 
 ```reason
 type textarea
@@ -75,9 +99,12 @@ type textarea
 ```
 
 ```js
+
 ```
 
-You can also use `bs.get_index` and `bs.set_index` to access a dynamic property or an index:
+<!--  You can also use `bs.get_index` and `bs.set_index` to access a dynamic property or an index: -->
+
+`bs.get_index`와 `bs.set_index`를 사용하여 인덱스 또는 동적 프로퍼티에 접근할 수 있습니다.
 
 ```reason
 type t
@@ -96,18 +123,31 @@ i32arr[0] = 42;
 console.log(i32arr[0]);
 ```
 
-## Bind to Hash Map-like JS Object
+<!-- ## Bind to Hash Map-like JS Object -->
 
-If your JavaScript object:
+## 해쉬 맵처럼 쓰이는 자바스크립트 객체에 바인딩하기
+
+<!-- If your JavaScript object:
 
 - might or might not add/remove keys
 - contains only values that are of the same type
 
-Then it's not really an object, it's a hash map. Use [Js.Dict](api/js/dict), which contains operations like `get`, `set`, etc. and cleanly compiles to a JavaScript object still.
+Then it's not really an object, it's a hash map. Use [Js.Dict](api/js/dict), which contains operations like `get`, `set`, etc. and cleanly compiles to a JavaScript object still. -->>
 
-## Bind to a JS Object That's a Class
+자바스크립트 객체가 다음과 같이 쓰이는 경우가 있습니다.
 
-Use `bs.new` to emulate e.g. `new Date()`:
+- 키들이 추가되거나 삭제 됩니다.
+- 모든 값이 같은 타입을 가집니다.
+
+그렇다면 이것은 객체보다는 해쉬맵에 가깝습니다. 그렇다면 [Js.Dict](?)를 사용하십시오. 이것은 `get` 및 `set` 연산을 포함하며, 깔끔하게 자바스크립트 객체로 컴파일됩니다.
+
+<!-- ## Bind to a JS Object That's a Class -->
+
+## 클래스에 해당하는 자바스크립트 객체에 바인딩하기
+
+<!-- Use `bs.new` to emulate e.g. `new Date()`: -->
+
+`new Date()`를 에뮬레이션하기 위해 `bs.new`를 사용합니다.
 
 ```reason
 type t
@@ -120,7 +160,9 @@ let date = createDate()
 var date = new Date();
 ```
 
-You can chain `bs.new` and `bs.module` if the JS module you're importing is itself a class:
+<!-- You can chain `bs.new` and `bs.module` if the JS module you're importing is itself a class: -->
+
+자바스크립트 모듈을 가져와서 클래스로 선언하고 객체를 생성하고 싶으면 `bs.new`와 `bs.module`을 함께 쓰면 됩니다.
 
 ```reason
 type t
