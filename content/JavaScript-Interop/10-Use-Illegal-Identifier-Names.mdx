@@ -3,15 +3,16 @@ title: 'Use Illegal Identifier Names'
 metaTitle: 'Use Illegal Identifier Names'
 metaDescription: 'Handling (JS) naming collisions in ReScript'
 sourceUrl: 'https://rescript-lang.org/docs/manual/latest/use-illegal-identifier-names'
+canonical: 'https://rescript-lang.org/docs/manual/latest/use-illegal-identifier-names'
 ---
 
-Sometime, for e.g. a let binding or a record field, you might want to use:
+때때로 let 바인딩 또는 레코드 필드에 이런 것을 사용하고 싶을 수 있습니다.
 
-- A capitalized name.
-- A name that contains illegal characters (e.g. emojis, hyphen, space).
-- A name that's one of ReScript's reserved keywords.
+- 대문자 이름
+- 들어가서는 안 될 문자열을 이름에 포함시킬 경우
+- 리스크립트 예약어일 경우
 
-We provide an escape hatch syntax for these cases:
+우리는 이스케이프 해치를 사용해서 다음 구문을 제공합니다.
 
 ```reason
 let \"my-🍎" = 10
@@ -45,4 +46,4 @@ function calculate(Props) {
 }
 ```
 
-결과물을 보세요. 자바스크립트 인터롭을 할 경우 **꼭 필요할 경우만 사용하세요**. This is a last-resort feature. If you abuse this, many of the compiler guarantees will go away.
+결과물을 보세요. 자바스크립트 인터롭을 할 경우 **꼭 필요할 경우만 사용하세요**. 이건 최후의 수단입니다. 이것을 남용하면 많은 컴파일러 보증이 사라집니다.
