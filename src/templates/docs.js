@@ -73,11 +73,12 @@ export default class MDXRuntimeTest extends Component {
     // rescript source path
     const sourceUrl = mdx.frontmatter?.sourceUrl;
 
-    let canonicalUrl = config.gatsby.siteUrl;
+    const canonical = mdx.frontmatter?.canonical;
+    
 
-    canonicalUrl =
-      config.gatsby.pathPrefix !== '/' ? canonicalUrl + config.gatsby.pathPrefix : canonicalUrl;
-    canonicalUrl = canonicalUrl + mdx.fields.slug;
+    // canonicalUrl =
+    //   config.gatsby.pathPrefix !== '/' ? canonicalUrl + config.gatsby.pathPrefix : canonicalUrl;
+    // canonicalUrl = canonicalUrl + mdx.fields.slug;
 
     return (
       <Layout {...this.props}>
@@ -91,7 +92,7 @@ export default class MDXRuntimeTest extends Component {
           {metaDescription ? (
             <meta property="twitter:description" content={metaDescription} />
           ) : null}
-          <link rel="canonical" href={canonicalUrl} />
+          {canonical && <link rel="canonical" href={canonical} />}
         </Helmet>
         <div className={'titleWrapper'}>
           <StyledHeading>{mdx.fields.title}</StyledHeading>
@@ -145,6 +146,7 @@ export const pageQuery = graphql`
         metaTitle
         metaDescription
         sourceUrl
+        canonical
       }
     }
     allMdx {
