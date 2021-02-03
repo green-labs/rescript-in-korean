@@ -4,28 +4,28 @@ metaTitle: 'JavaScript Interop'
 metaDescription: 'ReScript in Korean - JavaScript Interop'
 ---
 
-**[Embed Raw JavaScript](/JavaScript-Interop/01-Embed-Raw-JavaScript)**
+**[Raw 자바스크립트 임베드하기](/JavaScript-Interop/01-Embed-Raw-JavaScript)**
 
-**[Shared Data Types](/JavaScript-Interop/02-Shared-Data-Types)**
+**[공용 자료구조](/JavaScript-Interop/02-Shared-Data-Types)**
 
-**[External (Bind to Any JS Library)](/JavaScript-Interop/03-External-Bind-to-Any-JS-Library)**
+**[외부 라이브러리 (모든 자바스크립트 라이브러리 바인딩)](/JavaScript-Interop/03-External-Bind-to-Any-JS-Library)**
 
-**[Bind to JS Object](/JavaScript-Interop/04-Bind-to-JS-Object)**
+**[자바스크립트 객체 바인딩](/JavaScript-Interop/04-Bind-to-JS-Object)**
 
-**[Bind to JS Function](/JavaScript-Interop/05-Bind-to-JS-Function)**
+**[자바스크립트 함수 바인딩](/JavaScript-Interop/05-Bind-to-JS-Function)**
 
-**[Import from / Export to JS](/JavaScript-Interop/06-Import-from-Export-to-JS)**
+**[자바스크립 모듈 가져오기/내보내기](/JavaScript-Interop/06-Import-from-Export-to-JS)**
 
-**[Bind to Global JS Values](/JavaScript-Interop/07-Bind-to-Global-JS-Values)**
+**[전역 자바스크립트 값 바인딩](/JavaScript-Interop/07-Bind-to-Global-JS-Values)**
 
 **[JSON](/JavaScript-Interop/08-JSON)**
 
-**[Inlining Constants](/JavaScript-Interop/09-Inlining-Constants)**
+**[인라인 상수](/JavaScript-Interop/09-Inlining-Constants)**
 
-**[Use Illegal Identifier Names](/JavaScript-Interop/10-Use-Illegal-Identifier-Names)**
+**[사용해선 안될 식별자 이름 사용하기](/JavaScript-Interop/10-Use-Illegal-Identifier-Names)**
 
-**[Generate Converters & Helpers](/JavaScript-Interop/11-Generate-Converters-Helpers)**
+**[컨버터와 헬퍼 사용하기](/JavaScript-Interop/11-Generate-Converters-Helpers)**
 
-**[Browser Support & Polyfills](/JavaScript-Interop/12-Browser-Support-Polyfills)**
+**[브라우저 지원과 폴리필](/JavaScript-Interop/12-Browser-Support-Polyfills)**
 
-**[Interop Cheatsheet](/JavaScript-Interop/13-Interop-Cheatsheet)**
+**[인터롭 치트시트](/JavaScript-Interop/13-Interop-Cheatsheet)**
