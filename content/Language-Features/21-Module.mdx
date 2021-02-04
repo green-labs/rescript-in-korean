@@ -276,7 +276,7 @@ module type MyList = {
 
 ### 모든 .resi 파일은 시그니쳐
 
-`React.res` 파일이 `React` 모듈에 암묵적으로 정의되듯이, `React.resi` 는 암묵적으로 `React` 시그니쳐를 정의합니다. `React.resi`를 제공하지 않으면, `React.res`의 시그니쳐는 기본적으로 모듈의 모든 필드를 노출합니다. 구현 파일이 포함되어 있지 않기 때문에, 생태계에서는 `.resi` 파일을 사용해 모듈의 공용 API 문서 처럼 사용합니다.
+`React.res` 파일이 `React` 모듈에 암묵적으로 정의되듯이, `React.resi` 는 암묵적으로 `React` 시그니쳐를 정의합니다. 구현 파일이 포함되어 있지 않기 때문에, 생태계에서는 `.resi` 파일을 모듈의 공용 API 문서처럼 사용합니다. `React.resi`를 제공하지 않으면, `React.res`의 시그니쳐는 기본적으로 모듈의 모든 필드를 노출합니다. 
 
 ```reason
 /* React.res 파일입니다. (아래 구현은 React 모듈로 컴파일합니다.) */
