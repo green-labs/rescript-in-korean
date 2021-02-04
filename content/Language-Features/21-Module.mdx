@@ -318,7 +318,7 @@ module type Comparable = {
 }
 
 module MakeSet = (Item: Comparable) => {
-  // 리스트를 자료 구조로 사용합니다.
+  /* 리스트를 자료 구조로 사용합니다. */
   type backingType = list<Item.t>
   let empty = list{}
   let add = (currentSet: backingType, newItem: Item.t): backingType =>
