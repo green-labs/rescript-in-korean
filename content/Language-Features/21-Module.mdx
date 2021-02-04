@@ -324,7 +324,7 @@ module MakeSet = (Item: Comparable) => {
   let add = (currentSet: backingType, newItem: Item.t): backingType =>
     // 아이템이 존재한다면,
     if List.exists(x => Item.equal(x, newItem), currentSet) {
-      currentSet // 동일한 불변 집합(리스트 타입)을 반환합니다.
+      currentSet /* 동일한 불변 집합(리스트 타입)을 반환합니다. */
     } else {
       list{
         newItem,
