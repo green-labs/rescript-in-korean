@@ -1,43 +1,45 @@
 ---
-title: 'Shared Data Types'
-metaTitle: 'Shared Data Types'
+title: '데이터 타입 공유'
+metaTitle: '데이터 타입 공유'
 metaDescription: 'Data types that share runtime presentation between JS and ReScript'
 sourceUrl: 'https://rescript-lang.org/docs/manual/latest/shared-data-types'
-canonical: 'https://rescript-lang.org/docs/manual/latest/embed-raw-javascript'
+canonical: 'https://rescript-lang.org/docs/manual/latest/shared-data-types'
 ---
 
-ReScript's built-in values of type `string`, `float`, `array` and a few others have a rather interesting property: they compile to the exact same value in JavaScript!
+리스크립트의 내장 값인 `string`, `float`, `array` 외 기타 몇 가지 타입은 다소 흥미로운 속성을 가지고 있습니다. 자바스크립트에서 정확히 동일한 값으로 컴파일됩니다!
 
-This means that if you're passing e.g. a ReScript string to the JavaScript side, the JS side can directly use it as a native JS string. It also means that you can import a JS string and pretend it's a native ReScript string.
+예를 들어 리스크립트에서 작성한 문자열을 자바스크립트의 문자열로 직접 사용할 수 있음을 의미합니다. 또한 자바스크립트 문자열을 리스크립트에 가져와서 리스크립트 문자열인 척 할 수 있습니다.
 
-Unlike most compiled-to-js languages, in ReScript, **you don't need to write data converters back and forth for most of our values**!
+자바스크립트로 컴파일하는 대부분의 언어와 달리, 리스크립트에서는 **대부분의 값을 호환을 위해 서로 변환하는 로직을 작성할 필요가 없습니다!**
 
-**Shared, bidirectionally usable types**:
+**양방향으로 사용 가능한 타입**
 
-- String. ReScript strings are JavaScript strings, vice-versa. (Caveat: only our backtick string `` `hello 👋 ${personName}` `` supports unicode and interpolation).
-- Float. ReScript floats are JS numbers, vice-versa.
-- Array. In addition to the [JS Array API](api/js/array), we provide our own [Belt.Array](api/belt/array#set) API too.
-- Tuple. Compiles to a JS array. You can treat a fixed-sized, heterogenous JS array as ReScript tuple too.
+- 문자열. 리스크립트 문자열은 자바스크립트 문자열입니다.(반대로도 가능. 단, 백틱 문자열 `` `hello 👋 ${personName}` ``만 유니코드 및 보간을 지원합니다.).
+- 실수. 리스크립트 실수는 자바스크립트 숫자입니다.(반대로도 가능)
+- 배열. [자바스크립트 배열 API](https://rescript-lang.org/docs/manual/latest/api/js/array)외 자체 [Belt.Array](https://rescript-lang.org/docs/manual/latest/api/belt/array) API 도 제공합니다.
+- 튜플. 자바스크립트 배열로 컴파일합니다. 고정 된 크기의 이종(heterogenous) 자바스크립트 배열도 리스크립트 튜플로 취급 할 수 있습니다.
 - Boolean.
-- Record. Record compiles to JS object. Therefore you can also treat JS objects as records. If they're too dynamic, consider modeling them on the ReScript side as a hashmap/dictionary [`Js.Dict`](api/js/dict) or a ReScript object.
-- Object. ReScript objects are JavaScript objects, vice-versa.
-- Unit. The `unit` type, which has a single value `()`, compiles to `undefined` too. Likewise, you can treat an incoming JS `undefined` as `()`.
+- 레코드. 레코드는 자바스크립트 객체로 컴파일합니다. 따라서 자바스크립트 객체를 레코드로 취급 할 수 있습니다. 너무 동적이라면 리스크립트에서 해시 맵/사전 [`Js.Dict`](https://rescript-lang.org/docs/manual/latest/api/js/dict) 또는 리스크립트 객체로 모델링하는 것이 좋습니다.
+- 객체. 리스크립트 객체는 자바스크립트 객체입니다.(반대로도 가능)
+- 유닛(unit). 단일 값 `()` 를 갖는 `unit` 타입은 `undefined`로 컴파일합니다. 마찬가지로 자바스크립트 `undefined`를 리스크립트 `()`로 처리 할 수 있습니다.
 
 <!-- TODO: talk about poly variant -->
 
-**Types that are slightly different than JS, but that you can still use from JS**:
+**자바스크립트와 약간 다르지만 여전히 자바스크립트에서 사용할 수 있는 유형**
 
 - Int. **Ints are 32-bits**! Be careful, you can potentially treat them as JS numbers and vice-versa, but if the number's large, then you better treat JS numbers as floats. For example, we bind to Js.Date using `float`s.
-- Option. The `option` type's `None` value compiles into JS `undefined`. The `Some` value, e.g. `Some(5)`, compiles to `5`. Likewise, you can treat an incoming JS `undefined` as `None`. **JS `null` isn't handled here**. If your JS value can be `null`, use [Js.Nullable](api/js/nullable) helpers.
-- Exception.
+- 정수. **정수는 32비트입니다!** 조심하세요. 자바스크립트 숫자로 취급 할 수 있고, 반대로도 가능합니다. 하지만 숫자가 크면 자바스크립트 숫자를 실수로 취급하는 것이 좋습니다. 예를 들어 `float`를 사용해 `Js.Date`에 바인딩하는 경우입니다.
+- 옵션. `option` 타입의 `None` 은 자바스크립트 `undefined`로 컴파일합니다. `Some`은 실제 값으로 컴파일 합니다.(예: `Some(5)`는 `5`로 컴파일 합니다.) 마찬가지로 자바스크립트 `undefined`는 `None`으로 처라힐 수 있습니다. **자바스크립트 `null`은 여기서 처리하지 않습니다.** 값이 자바스크립트 `null`일 수 있는 경우 [Js.Nullable](https://rescript-lang.org/docs/manual/latest/api/js/nullable) 헬퍼를 사용하세요.
+- 예외.
 - Variant. Check the compiled JavaScript output of variant to see its shape. We don't recommend exporting a ReScript variant for pure JS usage, but you can do that if you have some interop needs.
-- List, which is just a regular variant.
+- 배리언트. 배리언트를 컴파일한 자바스크립트 결과물을 확인하세요. 순수 자바스크립트 사용을 위해 리스크립트 배리언트를 내보내는 것은 권장하지 않지만 인터롭이 필요하다면 그렇게 할 수 있습니다.
+- 리스트, 일반적인 배리언트입니다. _(역주: 원문과 달리 컴파일 결과를 보면 아시겠지만 객체로 컴파일 됩니다.)_
 
-**Non-shared types (aka internal types)**:
+**호환되지 않는 타입 (일명 내부 타입)**
 
-- Character.
-- Int64.
-- Lazy values.
-- Everything else.
+- 문자.
+- 64비트 정수
+- 지연된 값.
+- 기타 등등.
 
-The non-shared types need your manual conversions if you want to export them for JS consumption. For a seamless JS / TypeScript / Flow integration experience, you might want to use [genType](https://github.com/cristianoc/gentype) instead of doing conversions by hand.
+호환되지 않는 타입을 자바스크립트에서 사용하려면 수동으로 변환해야합니다. 원활한 자바스크립트 / 타입스크립트 / 리스크립트간 통합 환경을 위해, 수동으로 변환하지말고 [genType](https://github.com/cristianoc/gentype)을 사용하는 것이 좋습니다.
