@@ -1,58 +1,58 @@
 ---
-title: 'External (Bind to Any JS Library)'
-metaTitle: 'External (Bind to Any JS Library)'
+title: 'External (자바스크립트 라이브러리 바인딩)'
+metaTitle: 'External (자바스크립트 라이브러리 바인딩)'
 metaDescription: 'The external keyword'
 sourceUrl: 'https://rescript-lang.org/docs/manual/latest/external'
 canonical: 'https://rescript-lang.org/docs/manual/latest/external'
 ---
 
-`external` is the primary ReScript features for bringing in and using JavaScript values.
+`external`은 자바스크립트 값을 가져오고 사용하기 위한 리스크립트 주요 기능입니다.
 
-`external` is like a let binding, but:
+`external`은 let 바인딩와 비슷합니다만,
 
-- The right side of `=` isn't a value; it's the name of the JS value you're referring to.
-- The type for the binding is mandatory, since we need to know what the type of that JS value is.
-- Can only exist at the top level of a file or module.
+- `=` 오른쪽은 값이 아닙니다. 자바스크립트에서 참조할 값 이름입니다.
+- 바인딩 타입은 자바스크립트 값의 타입을 알아야하므로 필수입니다.
+- 파일 또는 모듈의 최상위 수준에만 존재할 수 있습니다.
 
 ```reason
 @bs.val external setTimeout: (unit => unit, int) => float = "setTimeout"
 ```
 
-```js
-// Empty output
+```javascript
+// 결과물 없음
 ```
 
-There are several kinds of `external`s, differentiated and/or augmented through the `@bs` notation they carry. This page deals with the general, shared mechanism behind most `external`s. The different `@bs` annotations are documented in their respective pages later. A few notable ones:
+여러 종류의 'external'이 있으며, `@bs`표기법으로 차별화 또는 확장합니다. 이 페이지는 대부분의 `external`이 동작하는 메커니즘을 다룹니다. 다른 `@bs` 어노테이션은 각 페이지를 확인해보세요. 다음은 주목할만한 페이지입니다.
 
-- `@bs.val`, `@bs.scope`: [bind to global JS values](bind-to-global-js-values).
-- `@bs.module`: [bind to JS imported/exported values](import-from-export-to-js).
-- `@bs.send`: [bind to JS methods](bind-to-js-function).
+- `@bs.val`, `@bs.scope`: [전역 자바스크립트 변수 바인딩](07-Bind-To-Global-Js-Values).
+- `@bs.module`: [자바스크립트 값 내보내기/가져오기](06-Import-From-Export-To-Js).
+- `@bs.send`: [자바스크립트 함수 바인딩](07-Bind-To-Js-Function).
 
-## Usage
+## 사용법
 
-Once declared, you can use an `external` as a normal value, just like a let binding.
+일단 선언하면 let 바인딩처럼 `external`을 일반 값으로 사용할 수 있습니다.
 
-## Tips & Tricks
+## 팁
 
-`external` + ReScript objects are a wonderful combination for quick prototyping. Check the JS output tab:
+`external` + 리스크립트 객체는 빠른 프로토타이핑을 위한 훌륭한 조합입니다. 다음 코드조각의 자바스크립트 결과물을 확인해보세요.
 
 ```reason
-/* The type of document is just some random type 'a that we won't bother to specify */
+/* document의 타입은 지정할 필요가 없는 임의의 타입('a) 입니다. */
 @bs.val external document: 'a = "document"
 
-/* call a method */
+/* 함수 호출 */
 document["addEventListener"]("mouseup", _event => {
   Js.log("clicked!")
 })
 
-/* get a property */
+/* 속성 얻기 */
 let loc = document["location"]
 
-/* set a property */
+/* 속성에 할당 */
 document["location"]["href"] = "rescript-lang.org"
 ```
 
-```js
+```javascript
 document.addEventListener('mouseup', function(_event) {
   console.log('clicked!');
 });
@@ -62,20 +62,26 @@ var loc = document.location;
 document.location.href = 'rescript-lang.org';
 ```
 
-We've specified `document`'s type as `'a`, aka a placeholder type that's polymorphic. Any value can be passed there, so you're not getting much type safety (except the inferences at various call sites). However, this is excellent for quickly getting started using a JavaScript library in ReScript **without needing the equivalent of a repository of typed bindings** like TypeScript's `DefinitelyTyped` repo.
+위 코드조각에서 `document`의 타입을 폴리모픽 타입인 `'a`로 지정했습니다. 모든 값이 전달 될 수 있으므로 타입 안전성을 많이 얻지 못합니다. (다양한 호출로부터 추론 제외) 그러나 타입 정의 리포지토리없이(타입스크립트의 `DefinitelyTyped` 리포지토리 같은) 리스크립트에서 자바스크립트 라이브러리를 사용해 빠르게 시작하기 좋습니다.
 
-However, if you want to more rigidly bind to the JavaScript library you want, keep reading the next few interop pages.
+하지만 원하는 자바스크립트 라이브러리를 더 엄격하게 바인딩하려면 다른 인터롭 페이지를 계속 읽으세요.
 
-## Performance & Output Readability
+## 성능 & 결과물 가독성
 
-`external`s declarations are inlined into their callers during compilation, **and completely disappear from the JS output**. This means any time you use one, you can be sure that you're not incurring extra JavaScript <-> ReScript conversion cost.
+`external` 선언은 컴파일시 호출자에 인라인되어 자바스크립트 결과물에서 완전히 사라집니다. 즉, 사용할 때마다 추가 자바스크립트 <-> 리스크립트간 변환 비용이 발생하지 않는지 확인할 수 있습니다.
 
-Additionally, no extra ReScript-specific runtime is better for output readability.
+또한 결과물 가독성을 위해 더 나은 추가 리스크립트 런타임이 필요하지 않습니다.
 
-> **Note:** do also use `external`s and the `@bs.blabla` attributes in the interface files. Otherwise the inlining won't happen.
+> **참고:** 인터페이스 파일에서도 `external`와 `@bs.blahblah` 속성을 사용하세요. 그러면 인라인이 발생하지 않습니다.
 
-## Design Decisions
+## 디자인 의사결정
 
-ReScript takes interoperating with existing code very seriously. Our type system has very strong guarantees. However, such strong feature also means that, without a great interop system, it'd be very hard to gradually convert a codebase over to ReScript. Fortunately, our interop are comprehensive and cooperate very well with most existing JavaScript code.
+리스크립트는 기존 코드와의 인터롭을 매우 중요하게 생각합니다.
+리스크립트의 타입 시스템은 매우 강력한데, 이는 다시 말하면 훌륭한 인터롭 체계가 없을 경우 점진적으로 리스크립트로 포팅하는 작업이 매우 어렵다는 뜻입니다.
+다행히도 리스크립트의 인터롭은 직관적일 뿐더러 대부분의 자바스크립트 코드와 잘 호환합니다.
 
-The combination of a sound type system + great interop means that we get the benefits of a traditional gradual type system regarding incremental codebase coverage & conversion, without the downside of such gradual type system: complex features to support existing patterns, slow analysis, diminishing return in terms of type coverage, etc.
+안전한 타입 시스템과 훌륭한 인터롭의 조합을 통해, 전통적으로 많이 사용되는 점진적 타입시스템의 장점을 누릴 수 있습니다.
+즉, 코드베이스를 점진적으로 부담없이 변환할 수 있습니다.
+그럼에도 점진적 타입 시스템의 단점을 공유하지는 않습니다.
+점진적 타입 시스템은 기존 코드에 끼워넣어야 하기 때문에 기능적으로 복잡하고 느립니다. 그리고 커버리지를 높인다고 그 효용이 비례해서 늘지 않습니다.
+반면 리스크립트는 그렇지 않습니다.
