@@ -74,8 +74,14 @@ document.location.href = 'rescript-lang.org';
 
 > **참고:** 인터페이스 파일에서도 `external`와 `@bs.blahblah` 속성을 사용하세요. 그러면 인라인이 발생하지 않습니다.
 
-## Design Decisions
+## 디자인 의사결정
 
-ReScript takes interoperating with existing code very seriously. Our type system has very strong guarantees. However, such strong feature also means that, without a great interop system, it'd be very hard to gradually convert a codebase over to ReScript. Fortunately, our interop are comprehensive and cooperate very well with most existing JavaScript code.
+리스크립트는 기존 코드와의 인터롭을 매우 중요하게 생각합니다.
+리스크립트의 타입 시스템은 매우 강력한데, 이는 다시 말하면 훌륭한 인터롭 체계가 없을 경우 점진적으로 리스크립트로 포팅하는 작업이 매우 어렵다는 뜻입니다.
+다행히도 리스크립트의 인터롭은 직관적일 뿐더러 대부분의 자바스크립트 코드와 잘 호환합니다.
 
-The combination of a sound type system + great interop means that we get the benefits of a traditional gradual type system regarding incremental codebase coverage & conversion, without the downside of such gradual type system: complex features to support existing patterns, slow analysis, diminishing return in terms of type coverage, etc.
+안전한 타입 시스템과 훌륭한 인터롭의 조합을 통해, 전통적으로 많이 사용되는 점진적 타입시스템의 장점을 누릴 수 있습니다.
+즉, 코드베이스를 점진적으로 부담없이 변환할 수 있습니다.
+그럼에도 점진적 타입 시스템의 단점을 공유하지는 않습니다.
+점진적 타입 시스템은 기존 코드에 끼워넣어야 하기 때문에 기능적으로 복잡하고 느립니다. 그리고 커버리지를 높인다고 그 효용이 비례해서 늘지 않습니다.
+반면 리스크립트는 그렇지 않습니다.
