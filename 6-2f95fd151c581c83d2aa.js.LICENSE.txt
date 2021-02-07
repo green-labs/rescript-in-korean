@@ -4,4 +4,4 @@
   http://jedwatson.github.io/classnames
 */
 
-/*! algoliasearch-lite.umd.js | 4.8.3 | © Algolia, inc. | https://github.com/algolia/algoliasearch-client-javascript */
+/*! algoliasearch-lite.umd.js | 4.8.4 | © Algolia, inc. | https://github.com/algolia/algoliasearch-client-javascript */
