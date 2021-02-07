@@ -22,7 +22,7 @@ metaDescription: 'ReScript in Korean - JavaScript Interop'
 
 **[인라인 상수](/JavaScript-Interop/09-Inlining-Constants)**
 
-**[사용해선 안될 식별자 이름 사용하기](/JavaScript-Interop/10-Use-Illegal-Identifier-Names)**
+**[예약어와 겹치는 이름 사용하기](/JavaScript-Interop/10-Use-Illegal-Identifier-Names)**
 
 **[컨버터와 헬퍼 사용하기](/JavaScript-Interop/11-Generate-Converters-Helpers)**
 
