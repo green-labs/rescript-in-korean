@@ -1,5 +1,5 @@
 ---
-title: 'JavaScript Interop'
+title: '자바스크립트 인터롭'
 metaTitle: 'JavaScript Interop'
 metaDescription: 'ReScript in Korean - JavaScript Interop'
 ---

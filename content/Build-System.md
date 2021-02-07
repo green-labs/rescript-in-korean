@@ -1,5 +1,5 @@
 ---
-title: 'Build System'
+title: '빌드 시스템'
 metaTitle: 'Build System'
 metaDescription: 'ReScript in Korean - Build System'
 ---

@@ -1,5 +1,5 @@
 ---
-title: 'Extra'
+title: '그 외'
 metaTitle: 'Extra'
 metaDescription: 'ReScript in Korean - Extra'
 ---

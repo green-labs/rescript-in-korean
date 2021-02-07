@@ -1,5 +1,5 @@
 ---
-title: 'Overview'
+title: '개요'
 metaTitle: 'Overview'
 metaDescription: 'ReScript in Korean - Overview'
 ---

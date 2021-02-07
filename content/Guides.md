@@ -1,5 +1,5 @@
 ---
-title: 'Guides'
+title: '가이드'
 metaTitle: 'Guides'
 metaDescription: 'ReScript in Korean - Guides'
 ---

@@ -1,5 +1,5 @@
 ---
-title: 'Language Features'
+title: '언어적인 특징'
 metaTitle: 'Language Features'
 metaDescription: 'ReScript in Korean - Language Features'
 ---
