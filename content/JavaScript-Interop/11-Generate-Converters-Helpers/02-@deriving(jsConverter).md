@@ -6,7 +6,7 @@ sourceUrl: 'https://rescript-lang.org/docs/manual/latest/inlining-constants'
 canonical: 'https://rescript-lang.org/docs/manual/latest/inlining-constants'
 ---
 
-deriving(jsConverter)는 세 가지 용도에 사용됩니다.
+`@deriving(jsConverter)`는 세 가지 용도에 사용됩니다.
 
 1. 배리언트에 붙여서 JS 정수 enum으로의 변환기 생성하기
 2. 폴리모픽 배리언트에 붙여서 JS 문자열 enum으로의 변환기 생성하기
@@ -14,7 +14,7 @@ deriving(jsConverter)는 세 가지 용도에 사용됩니다.
 
 ## 1. 배리언트에 붙여서 JS 정수 enum으로의 변환기 생성하기
 
-배리언트 타입에 deriving(jsConverter)를 쓰면 JS 정수 enum ↔ 리스크립트 배리언트 사이의 변환을 해주는 컨버터를 만들어줍니다.
+배리언트 타입에 `@deriving(jsConverter)`를 쓰면 JS 정수 enum ↔ 리스크립트 배리언트 사이의 변환을 해주는 컨버터를 만들어줍니다.
 
 ```reason
 @deriving(jsConverter)
@@ -33,12 +33,12 @@ let fruitToJs: fruit => int;
 let fruitFromJs: int => option(fruit);
 ```
 
-fruitToJs 는 각각의 배리언트 생성자가 정수에 대응됩니다.
+`fruitToJs`는 각각의 배리언트 생성자가 정수에 대응됩니다.
 정수는 0부터 시작하고 정의된 순서대로 숫자를 부여합니다.
 
-fruitFromJs는 option타입의 값을 반환하는데, 왜냐하면 모든 정수가 생성자에 대응하는 것은 아니기 때문입니다.
+`fruitFromJs`는 `option`타입의 값을 반환하는데, 왜냐하면 모든 정수가 생성자에 대응하는 것은 아니기 때문입니다.
 
-추가로, 각 생성자에 `@as 1234` 이런식으로 쓰면 그 생성되는 결과를 커스터마이징 할 수 있습니다.
+추가로, 각 생성자에 `@as(1234)` 이런식으로 쓰면 그 생성되는 결과를 커스터마이징 할 수 있습니다.
 
 ### 사용법
 
@@ -46,8 +46,8 @@ fruitFromJs는 option타입의 값을 반환하는데, 왜냐하면 모든 정�
 @deriving(jsConverter)
 type fruit =
   | Apple
-  | @as 10 Orange
-  | @as 100 Kiwi
+  | @as(10) Orange
+  | @as(100) Kiwi
   | Watermelon;
 
 let zero = fruitToJs(Apple); /* 0 */
@@ -65,10 +65,10 @@ switch (fruitFromJs(100)) {
 Js 객체 ↔ 레코드 때와 비슷하게, `newType`이라는 것을 써서 JS enums이 정수라는 사실으르 감출 수 있습니다.
 
 ```reason
-@deriving {jsConverter: newType}
+@deriving({jsConverter: newType})
 type fruit =
   | Apple
-  | @as 100 Kiwi
+  | @as(100) Kiwi
   | Watermelon;
 ```
 
@@ -88,10 +88,10 @@ abs_fruit를 만들 수 있는 유일한 방법은 fruitToJs를 사용하는 것
 ### 사용법
 
 ```reason
-@deriving {jsConverter: newType}
+@deriving({jsConverter: newType})
 type fruit =
   | Apple
-  | @as 100 Kiwi
+  | @as(100) Kiwi
   | Watermelon;
 
 let opaqueValue = fruitToJs(Apple);
@@ -111,13 +111,13 @@ let error = fruitFromJs(100); /* 아무 숫자나 넣을 수 없음 */
 ```reason
 @deriving(jsConverter)
 type fruit =
-  | `Apple
-  | @as {j|"miniCoconut"|j} `Kiwi
-  | `Watermelon
+  | #Apple
+  | @as("miniCoconut"}) #Kiwi
+  | #Watermelon
 ;
 
-let appleString = fruitToJs(`Apple); /* "Apple" */
-let kiwiString = fruitToJs(`Kiwi); /* "miniCoconut" */
+let appleString = fruitToJs(#Apple); /* "Apple" */
+let kiwiString = fruitToJs(#Kiwi); /* "miniCoconut" */
 ```
 
 전과 비슷하게 `@deriving {jsConverter:newType}` 이렇게 해서 추상 타입을 뱉어줄 수도 있습니다.
@@ -146,7 +146,7 @@ let coordinatesToJs: coordinates => {"x": int, "y": int};
 let coordinatesFromJs: {.. "x": int, "y": int} => coordinates;
 ```
 
-**주**:
+**주의**:
 
 - `coordinatesFromJs` 는 열린 객체 타입을 사용하므로 추가적인 필드를 허용합니다.
 - 변환기는 얕게(shallow) 동작합니다. 다시 말해 재귀적으로 세부 필드를 변환하지 않습니다. 이는 속도와 단순함을 유지하기 위한 결정인데, 유스케이스의 80%는 문제가 없을 것입니다.
@@ -175,7 +175,7 @@ external jsCoordinates : coordinates = "jsCoordinates";
 그렇게 하려면 `@deriving(jsConverter)`에 `newType` 옵션을 쓰면 됩니다.
 
 ```reason
-@deriving {jsConverter: newType}
+@deriving({jsConverter: newType})
 type coordinates = {
   x: int,
   y: int,
