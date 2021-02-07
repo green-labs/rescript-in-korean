@@ -7,7 +7,6 @@ canonical: 'https://rescript-lang.org/docs/manual/latest/inlining-constants'
 ---
 
 이 어노테이션은 대개 권장되지 않으며 가급적 평범한 레코드를 사용하는 것이 바람직합니다.
-
 특정 시나리오에서는 유용할 수 있겠지만, 그다지 좋은 모양새는 아닐것입니다.
 
 @deriving(abstract)는 레코드에 붙일 수 있습니다.
@@ -18,7 +17,7 @@ canonical: 'https://rescript-lang.org/docs/manual/latest/inlining-constants'
 바로 옵션 필드를 가진 레코드를 JS 객체로 변환할 때, JS에 undefined가 나오지 않게 하려는 경우입니다.
 (예: `{name: "Carl", age: undefined}` vs. `{name: "Carl"}`)
 
-이런 시나리오에 대해서는 [옵셔널 레이블](https://rescript-lang.org/docs/manual/latest/generate-converters-accessors#optional-labels) 섹션을 참고하세요.
+이런 시나리오에 대해서는 아래의 "옵셔널 레이블" 섹션을 참고하세요.
 
 ### 사용 예시
 
@@ -90,7 +89,7 @@ let joe = person(~age=20, ~job="teacher", ());
 **주의**: 옵셔널 필드를 윈한다면 `@bs.optional`을 붙여야 합니다.
 단순히 name을 `option(string)`으로 한다고 되는게 아닙니다.
 
-주의: 생성함수가 옵셔널 필드를 포함하고 있으므로, 마지막 인자로 `()`를 써서 [함수 applying을 의미함을](https://rescript-lang.org/docs/manual/latest/function#optional-labeled-arguments) 알려줘야 합니다.
+주의: 생성함수가 옵셔널 필드를 포함하고 있으므로, 마지막 인자로 `()`를 써서 [함수 applying을 의미함을](https://green-labs.github.io/rescript-in-korean/Language-Features/12-Function#%EC%9D%B4%EB%A6%84%EC%9D%B4%EC%9E%88%EB%8A%94%EC%84%A0%ED%83%9D%EC%9D%B8%EC%9E%90) 알려줘야 합니다.
 
 
 ### 접근자
@@ -100,7 +99,7 @@ let joe = person(~age=20, ~job="teacher", ());
 
 **읽기**
 
-deriving(abstract) 레코드 타입의 필드마다 하나의 게터 함수가 생깁니다.
+`@deriving(abstract)` 레코드 타입의 필드마다 하나의 게터 함수가 생깁니다.
 위 예시에서는 nameGet, ageGet, jobGet 함수가 생깁니다.
 `person`값을 받아서 각각 string, int, string을 리턴합니다.
 

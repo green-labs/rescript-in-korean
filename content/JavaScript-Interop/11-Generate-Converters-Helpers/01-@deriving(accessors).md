@@ -26,7 +26,7 @@ type action =
 
 위 예시에서 Submit과 같이 페이로드를 가지고 있는 배리언트 생성자는 함수로 생성되고, Click이나 Cancel같은 페이로드가 없는 태그는 평범한 정수가 생성됩니다. (정수는 배리언트의 내부 식별에 쓰임)
 
-**주:**
+**주의:**
 
 - 접근자는 소문자로 생성됩니다.
 - 이렇게 생성된 헬퍼 함수는 JS쪽에서도 쓸 수 있습니다. 그렇지만 이 값에 의존한 코드를 작성하지는 마세요.
@@ -52,7 +52,7 @@ let s = submit("hello"); /* gives Submit("hello") */
 @deriving(accessors)
 type pet = {name: string}
 
-let pets = [|{name: "bob"}, {name: "bob2"}|
+let pets = [{name: "bob"}, {name: "bob2"}]
 
 pets
  ->Belt.Array.map(name) // p => p.name
