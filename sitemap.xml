@@ -2,8 +2,8 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/Build-System</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/Extra</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/JavaScript-Interop</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/Guides</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/JavaScript-Interop</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/Language-Features</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/Overview</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
@@ -60,4 +60,8 @@
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/Overview/03-EditorPlugins</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/Overview/04-Migrate-to-ReScript-Syntax</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/Overview/05-Try</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/JavaScript-Interop/11-Generate-Converters-Helpers/01-accessors</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/JavaScript-Interop/11-Generate-Converters-Helpers/02-jsConverter</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/JavaScript-Interop/11-Generate-Converters-Helpers/03-abstract</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/JavaScript-Interop/11-Generate-Converters-Helpers/04-obj</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 </urlset>
