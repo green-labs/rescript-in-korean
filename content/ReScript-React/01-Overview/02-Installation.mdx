@@ -1,23 +1,23 @@
 ---
 title: 설치
-metaTitle: 02-Installation
-metaDescription: 'Installation and Setup'
+metaTitle: 02-설치
+metaDescription: '설치와 설정'
 canonical: 'https://rescript-lang.org/docs/react/latest/installation'
 sourceUrl: 'https://rescript-lang.org/docs/react/latest/installation'
 ---
 
-**Requirements:**
+**요구 사항:**
 
-- `bs-platfrom@8.3` or later
-- `react@16.8.1` or later
+- `bs-platfrom@8.3` 또는 그 이상
+- `react@16.8.1` 또는 그 이상
 
-Add following dependency to your ReScript project (in case you don't have any project yet, check out the [installation instructions](/docs/manual/latest/installation) in the manual):
+리스크립트 프로젝트에 다음 의존성을 추가합니다 (프로젝트가 아직 없는 경우 매뉴얼의 [설치 지침](/docs/manual/latest/installation)를 확인하세요):
 
 ```
 npm install @rescript/react --save
 ```
 
-Then add the following setting to your existing `bsconfig.json`:
+그 후 기존 `bsconfig.json`에 다음 설정을 추가합니다.
 
 ```json
 {
@@ -26,7 +26,7 @@ Then add the following setting to your existing `bsconfig.json`:
 }
 ```
 
-To test your setup, create a new `.res` file in your source directory and add the following code:
+설정을 테스트하기 위해, 소스 디렉토리에 새 `.res` 파일을 만들고 다음 코드를 추가합니다:
 
 ```reason
 // src/Test.res
@@ -36,23 +36,23 @@ let make = () => {
 }
 ```
 
-Now run `npx bsb -make-world` and you should see a successful build.
+이제 `npx bsb -make-world`를 실행하면 성공적인 빌드를 확인할 수 있습니다.
 
-## Exposed Modules
+## 노출된 모듈
 
-After a successful installation, `@rescript/react` will make following modules available in your project's global scope:
+성공적인 설치 후, `@rescript/react`는 프로젝트 전역 스코프에서 다음 모듈들을 사용할 수 있도록 합니다.
 
-- `React`: Bindings to React
-- `ReactDOM`: Bindings to the ReactDOM
-- `ReactDOMServer`: Bindings to the ReactDOMServer
-- `ReactEvent`: Bindings to React's synthetic events
-- `ReactDOMStyle`: Bindings to the inline style API
-- `RescriptReactRouter`: A simple, yet fully featured router with minimal memory allocations
+- `React`: React 바인딩
+- `ReactDOM`: ReactDOM 바인딩
+- `ReactDOMServer`: ReactDOMServer 바인딩
+- `ReactEvent`: React의 합성 이벤트 바인딩
+- `ReactDOMStyle`: 인라인 스타일 API 바인딩
+- `RescriptReactRouter`: 최소한의 메모리가 할당된 단순하지만 완전한 기능을 갖춘 라우터
 
-### Deprecated Modules
+### 사용되지 않는 모듈
 
-`rescript-react` has gone a long way, so we still keep around a few modules for legacy reasons. We will deprecate them in the future in favor of...
+`rescript-react`는 역사가 긴 만큼 레거시 호환을 위해 몇 가지 모듈을 계속 유지하고 있습니다. 앞으로 제거외거나 대체될 모듈들은 아래와 같습니다.
 
 - `ReactDOMRe` -> `ReactDOM`
 
-Actual usage and for each module will be discussed in the rest of this documentation.
+실제 사용법과 각 모듈에 대한 내용은 이 문서의 나머지 부분에서 설명합니다.
