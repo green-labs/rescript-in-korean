@@ -20,7 +20,6 @@
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/Guides/02-Libraries</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/JavaScript-Interop/01-Embed-Raw-JavaScript</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/JavaScript-Interop/02-Shared-Data-Types</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/JavaScript-Interop/03-External-Bind-to-Any-JS-Library</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/JavaScript-Interop/04-Bind-to-JS-Object</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/JavaScript-Interop/05-Bind-to-JS-Function</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/JavaScript-Interop/06-Import-from-Export-to-JS</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
@@ -28,8 +27,8 @@
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/JavaScript-Interop/08-JSON</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/JavaScript-Interop/09-Inlining-Constants</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/JavaScript-Interop/10-Use-Illegal-Identifier-Names</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/JavaScript-Interop/12-Browser-Support-Polyfills</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/JavaScript-Interop/11-Generate-Converters-Helpers</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/JavaScript-Interop/12-Browser-Support-Polyfills</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/JavaScript-Interop/13-Interop-Cheatsheet</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/Language-Features/01-Overview</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/Language-Features/02-Let-Binding</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
@@ -65,6 +64,7 @@
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/ReScript-React/02-Main-Concepts</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/ReScript-React/03-Hooks-and-State-Management</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/ReScript-React/04-Guides</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/JavaScript-Interop/03-External-Bind-to-Any-JS-Library</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/JavaScript-Interop/11-Generate-Converters-Helpers/01-@deriving(accessors)</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/JavaScript-Interop/11-Generate-Converters-Helpers/02-@deriving(jsConverter)</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/JavaScript-Interop/11-Generate-Converters-Helpers/03-@deriving(abstract)</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
