@@ -45,6 +45,7 @@
     "is-absolute-url": "^3.0.3",
     "lodash.flatten": "^4.4.0",
     "lodash.startcase": "^4.4.0",
+    "prop-types": "^15.7.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-feather": "^2.0.9",
@@ -52,8 +53,10 @@
     "react-helmet": "^6.1.0",
     "react-id-generator": "^3.0.1",
     "react-instantsearch-dom": "^6.8.2",
+    "react-is": "^17.0.1",
     "react-live": "^2.2.3",
     "react-loadable": "^5.5.0",
+    "regenerator-runtime": "^0.13.7",
     "styled-components": "^5.2.1",
     "styled-icons": "^10.24.0",
     "yarn": "^1.22.10"
