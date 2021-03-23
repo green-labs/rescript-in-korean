@@ -1,27 +1,27 @@
 ---
 title: 컴포넌트와 Props
 metaTitle: 03-컴포넌트와 Props(Components and Props)
-metaDescription: 'Basic concepts for components and props in ReScript & React'
+metaDescription: '리스크립트와 리액트에서 컴포넌트와 Props의 기본 개념'
 canonical: 'https://rescript-lang.org/docs/react/latest/components-and-props'
 sourceUrl: 'https://rescript-lang.org/docs/react/latest/components-and-props'
 ---
 
-Components let you split the UI into independent, reusable pieces, and think about each piece in isolation. This page provides an introduction to the idea of components.
+컴포넌트는 독립적으로 재사용 가능한 부분으로 UI를 쪼갤 수 있게 해줍니다. 그리고 각 부분을 독립적으로 구성할 수 있습니다. 이 페이지에서는 컴포넌트의 개념을 설명합니다.
 
-## What is a Component?
+## 컴포넌트는 무엇이죠?
 
-A React component is a function describing a UI element that receives a `props` object as a parameter (data describing the dynamic parts of the UI) and returns a `React.element`.
+리액트 컴포넌트는 `props` 객체를 매개 변수(UI의 동적 부분에 대해 설명하는 데이터)로 받고 UI 요소를 설명하며 `React.element` 타입을 반환하는 함수입니다.
 
-The nice thing about this concept is that you can solely focus on the input and output. The component function receives some data and returns some opaque `React.element` that is managed by the React framework to render your UI.
+이 개념의 좋은 점은 인풋과 아웃풋에만 집중할 수 있다는 것입니다. 컴포넌트 함수는 데이터를 받고 UI를 렌더링하기 위해 리액트 프레임워크에서 관리하는 불투명(opaque)한 `React.element`를 반환합니다.
 
-> If you want to know more about the low level details on how a component interface is implemented, refer to the [Beyond JSX](./beyond-jsx) page.
+> 컴포넌트 인터페이스 구현 방법에 대한 자세한 내용이 궁금하다면 [JSX를 넘어서](./beyond-jsx) 페이지를 참조하세요.
 
-## Component Example
+## 컴포넌트 예제
 
-Let's start with a first example to see how a ReScript React component looks like:
+리스크립트 리액트 컴포넌트가 어떻게 생겼는지 첫 예제를 살펴보죠.
 
 ```reason
-// src/Greeting.res
+/* src/Greeting.res */
 @react.component
 let make = () => {
   <div>
@@ -30,28 +30,18 @@ let make = () => {
 }
 ```
 
-```js
-var React = require('react');
+**중요** 컴포넌트 함수 이름을 항상 `make`로 지정하고 `@react.component` 속성을 추가하는 것을 잊지 마세요.
 
-function Greeting(Props) {
-  return React.createElement('div', undefined, 'Hello ReScripters!');
-}
+우리는  어떤 props 도 받지 않는 `make` 함수를 포함한 `Greeting.res` 파일을 만들었습니다. 이 함수는 `React.element` 타입을 반환합니다. 또한 DOM에 렌더링될 때 `<div> Hello ReScripters! </div>` 이렇게 표현됩니다.
 
-var make = Greeting;
-```
+또한 우리가 만든 함수가 리액트 컴포넌트의 순수 자바스크립트 버전으로 직접 변환되어 출력됨을 알 수 있습니다. 자바스크립트에서 `<div>`가 `React.createElement("div",...)` 호출로 어떻게 변환되는지 확인하세요.
 
-**Important:** Always make sure to name your component function `make` and don't forget to add the `@react.component` attribute.
+## Props 정의하기
 
-We've created a `Greeting.res` file that contains a `make` function that doesn't receive any props (the function doesn't receive any parameters), and returns a `React.element` that represents `<div> Hello ReScripters! </div>` in the rendered DOM.
-
-You can also see in the the JS output that the function we created was directly translated into the pure JS version of a ReactJS component. Note how a `<div>` transforms into a `React.createElement("div",...)` call in JavaScript.
-
-## Defining Props
-
-In ReactJS, props are usually described as a single `props` object. In ReScript, we use [labeled arguments](/docs/manual/latest/function#labeled-arguments) to define our props parameters instead. Here's an example:
+리액트에서, props는 주로 단일 `props` 객체입니다. 리스크립트에서 우리는 [이름 있는 인자](https://green-labs.github.io/rescript-in-korean/Language-Features/12-Function#%EC%9D%B4%EB%A6%84%EC%9D%B4%EC%9E%88%EB%8A%94%EC%9D%B8%EC%9E%90)를 사용해 props 매개 변수를 정의합니다. 예를 들면 다음과 같습니다.
 
 ```reason
-// src/Article.res
+/* src/Article.res */
 @react.component
 let make = (~title: string, ~visitorCount: int, ~children: React.element) => {
   let visitorCountMsg = "You are visitor number: " ++ Belt.Int.toString(visitorCount);
@@ -63,32 +53,12 @@ let make = (~title: string, ~visitorCount: int, ~children: React.element) => {
 }
 ```
 
-```js
-var React = require('react');
+### 옵셔널 Props
 
-function Article(Props) {
-  var title = Props.title;
-  var visitorCount = Props.visitorCount;
-  var children = Props.children;
-  var visitorCountMsg = 'You are visitor number: ' + String(visitorCount);
-  return React.createElement(
-    'div',
-    undefined,
-    React.createElement('div', undefined, title),
-    React.createElement('div', undefined, visitorCountMsg),
-    children
-  );
-}
-
-var make = Article;
-```
-
-### Optional Props
-
-We can leverage the full power of labeled arguments to define optional props as well:
+이름 있는 인자의 모든 기능을 사용해 옵셔널 Props를 정의할 수도 있습니다.
 
 ```reason
-// Greeting.res
+/* Greeting.res */
 @react.component
 let make = (~name: option<string>=?) => {
   let greeting = switch name {
@@ -99,17 +69,9 @@ let make = (~name: option<string>=?) => {
 }
 ```
 
-```js
-function Greeting(Props) {
-  var name = Props.name;
-  var greeting = name !== undefined ? 'Hello ' + name + '!' : 'Hello stranger!';
-  return React.createElement('div', undefined, greeting);
-}
-```
+**참고** `@react.component` 속성은 `make` 함수에 마지막 매개 변수에 암시적으로 `()`를 추가합니다. (우리가 직접 하지 않아도 되게끔).
 
-**참고** The `@react.component` attribute implicitly adds the last `()` parameter to our `make` function for us (no need to do it ourselves).
-
-In JSX, you can apply optional props with some special syntax:
+JSX에서 특별한 문법으로 옵셔널 Props 를 적용할 수 있습니다.
 
 ```reason
 let name = Some("Andrea")
@@ -117,43 +79,29 @@ let name = Some("Andrea")
 <Greeting ?name />
 ```
 
-```js
-var Caml_option = require('./stdlib/caml_option.js');
-var name = 'Andrea';
+### key 와 ref라는 특별한 Props
 
-var tmp = {};
+`key` 또는 `ref` 로 props를 정의할 수 없습니다. 리액트는 이 props를 다르게 취급하며 컴파일러는 컴포넌트 함수에서 `~key` 또는 `~ref` 인수를 정의할 때마다 오류를 발생시킵니다.
 
-if (name !== undefined) {
-  tmp.name = Caml_option.valFromOption(name);
-}
+`key`와 `ref`에 상응하는 내용은 [배열과 키](./arrays-and-keys) and [리액트 Refs 포워딩](./forwarding-refs) 섹션에서 더 자세히 설명합니다
 
-var greeting = React.createElement(Playground$Greeting, tmp);
-```
+### 허용되지 않는 Props 이름 (ex. keyword)
 
-### Special Props key and ref
+`type`같은 Prop 이름은 (`<input type="text" />` 처럼) 구문상 유효하지 않습니다. `type`은 리스크립트에서 예약된 단어입니다. `<input type_="text" />` 처럼 `_`를 붙여 사용하세요.
 
-You can't define any props called `key` or `ref`. React treats those props differently and the compiler will will yield an error whenever you try to define a `~key` or `~ref` argument in your component function.
+`aria-*`같은 경우는 `ariaLabel`처럼 카멜 케이스를 이용합니다. DOM 컴포넌트를 위헤 리스크립트-리액트는 내부적으로 `aria-label`로 번역합니다.
 
-Check out the corresponding [Arrays and Keys](./arrays-and-keys) and [Forwarding React Refs](./forwarding-refs) sections for more details.
-
-### Handling Invalid Prop Names (e.g. keywords)
-
-Prop names like `type` (as in `<input type="text" />`) aren't syntactically valid; `type` is a reserved keyword in ReScript. Use `<input type_="text" />` instead.
-
-For `aria-*` use camelCasing, e.g., `ariaLabel`. For DOM components, we'll translate it to `aria-label` under the hood.
-
-For `data-*` this is a bit trickier; words with `-` in them aren't valid in ReScript. When you do want to write them, e.g., `<div data-name="click me" />`, check out the [React.cloneElement](./rendering-elements#cloning-elements) or [React.createDOMElementVariadic](./rendering-elements#creating-dom-elements) section.
+`data-*`는 경우는 좀 까다롭습니다. 단어에 `-`글자가 포함되는 것을 리스크립트는 허용하지 않기 때문입니다. 만일 `<div data-name="click me" />` 처럼 `data-*`를 사용하고싶다면, [React.cloneElement](./rendering-elements#cloning-elements) or [React.createDOMElementVariadic](./rendering-elements#creating-dom-elements) 섹션을 살펴보세요.
 
 ## Children Props
 
-In React `props.children` is a special attribute to represent the nested elements within a parent element:
+리액트에서 `props.children` 속성은 부모 엘레멘트와 관계된 계층 구조를 표현하는 특별한 속성입니다.
 
 ```reason
 let element = <div> child1 child2 </div>
 ```
 
-By default, whenever you are passing children like in the expression above, `children` will be treated
-as a `React.element`:
+기본적으로 위 표현식과 같이 자식 속성을 전달할 때마다 `children`이 `React.element` 타입으로 처리됩니다.
 
 ```reason
 module MyList = {
@@ -171,31 +119,11 @@ module MyList = {
 </MyList>
 ```
 
-```js
-function MyList(Props) {
-  var children = Props.children;
-  return React.createElement('ul', undefined, children);
-}
+흥미롭게도 단 하나의 엘레멘트를 보내든 여러 엘레멘트를 보내든, 리액트는 늘 단 하나의 `React.element` 타입으로 `children`을 만들어 보냅니다.
 
-var MyList = {
-  make: MyList,
-};
+`children` 타입을 재정의하는것도 가능합니다. 여기 예시가 있습니다.
 
-React.createElement(
-  MyList,
-  {
-    children: null,
-  },
-  React.createElement('li', undefined, 'Item 1'),
-  React.createElement('li', undefined, 'Item 2')
-);
-```
-
-Interestingly, it doesn't matter if you are passing just one element, or several, React will always collapse its children to a single `React.element`.
-
-It is also possible to redefine the `children` type as well. Here are some examples:
-
-**Component with a mandatory `string` as children:**
+**컴포넌트와 `string` 타입인 children props**
 
 ```reason
 module StringChildren = {
@@ -209,11 +137,11 @@ module StringChildren = {
 
 <StringChildren> "My Child" </StringChildren>
 
-// This will cause a type check error
+/* 이건 타입 에러를 발생시킵니다. */
 <StringChildren/>
 ```
 
-**Component with an optional `React.element` as children:**
+**컴포넌트와 옵셔널 `React.element` Children**
 
 ```reason
 module OptionalChildren = {
@@ -234,7 +162,7 @@ module OptionalChildren = {
 </div>
 ```
 
-**Component that doesn't allow children at all:**
+**어떠한 자식 컴포넌트도 받지 않는 컴포넌트**
 
 ```reason
 module NoChildren = {
@@ -246,24 +174,24 @@ module NoChildren = {
   }
 }
 
-// The compiler will raise a type error here
+/* 컴파일러는 에러를 발생시킵니다. */
 <NoChildren> <div/> </NoChildren>
 ```
 
-Children props are really tempting to be abused as a way to model hierarchies, e.g. `<List> <ListHeader/> <Item/> </List>` (`List` should only allow `Item` / `ListHeader` elements), but this kind of constraint is hard to enforce because all components end up being a `React.element`, so it would require notorious runtime checking within `List` to verify that all children are in fact of type `Item` or `ListHeader`.
+Children props는 계층구조를 모델링하기위해 악용되는(abused) 편입니다. 예를들면 `<List> <ListHeader/> <Item/> </List>` (이 구조에서 `List`는 오직 `Item` 또는 `ListHeader` 엘레멘트를 받고싶습니다), 그러나 이런 종류의 제약 조건은 모든 컴포넌트가 `React.element`이기 때문에 적용하기 어렵습니다. 따라서 모든 Children Props가 실제로 `Item` 또는 `ListHeader` 타입인지 확인하기 위해서 악명높은 런타임 타입 검사가 필요합니다.
 
-The best way to approach this kind of issue is by using props instead of children, e.g. `<List header="..." items=[{id: "...", text: "..."}]/>`. This way it's easy to type check the constraints, and it also spares component consumers from memorizing and remembering component constraints.
+이 경우 가장 좋은 접근은 Children 대신 Props를 사용하는 것입니다. 예를 들어 `<List header="..." items=[{id: "...", text: "..."}]/>` 처럼 Props를 사용하는 것이죠. 이 방법은 제약 조건을 입력하기 쉽고 컴포넌트 엘레멘트를 실제 사용하는 곳에서 컴포넌트 Props 제약 조건을 기억하고있지 않아도 됩니다.
 
-**The best use-case for `children` is to pass down `React.element`s without any semantic order or implementation details!**
+**`children`의 가장 좋은 사용 사례는 의미적 순서나 구현의 상세를 제외하고 `React.element`를 전달하는 것입니다!**
 
-## Props & Type Inference
+## Props 와 타입 추론
 
-The ReScript type system is really good at inferring the prop types just by looking at its prop usage.
+리스크립트 타입 시스템은 사용되는 prop 을 살피고 매우 적절하게 타입을 추론합니다.
 
-For simple cases, well-scoped usage, or experimentation, it's still fine to omit type annotations:
+간단한 경우, 범위가 넓은 사용이나 실험적인 경우에는 타입 어노테이션은 생략하는 것이 좋습니다. 다음처럼 말이죠
 
 ```reason
-// Button.res
+/* Button.res */
 
 @react.component
 let make = (~onClick, ~msg, ~children) => {
@@ -274,16 +202,16 @@ let make = (~onClick, ~msg, ~children) => {
 }
 ```
 
-In the example above, `onClick` will be inferred as `ReactEvent.Mouse.t => unit`, `msg` as `string` and `children` as `React.element`. Type inference is especially useful when you just forward values to some smaller (privately scoped) functions.
+위 예시에서 `onClick`은 `ReactEvent.Mouse.t => unit`로 추론되고 `msg`는 `string` 그리고 `children`은 `React.element`로 추론됩니다. 타입 추론은 값을 더 작은(privately scoped) 함수로 전달할 때 특히 더 잘 동작합니다.
 
-Even tough type inference spares us a lot of keyboard typing, we still recommend to explicitly type your props (just like with any public API) for better type visibility and to prevent confusing type errors.
+엄격한 타입 추론으로 많은 키보드 입력이 필요하지 않지만, 우리는 가시성을 높이고 타입 오류를 방지하기 위해 공공 API를 대하는 것처럼 props의 타입을 명시적으로 입력하는 것을 여전히 추천합니다.
 
-## Using Components in JSX
+## JSX에서 컴포넌트 사용
 
-Every ReScript component can be used in JSX. For example, if we want to use our `Greeting` component within our `App` component, we can do this:
+모든 리스크립트 컴포넌트는 JSX에서 사용할 수 있습니다. 예를 들면 `Greeting` 컴포넌트를 우리의 `App` 컴포넌트와 같이 사용싶을 때는 다음처럼 합니다.
 
 ```reason
-// src/App.re
+/* src/App.re */
 
 @react.component
 let make = () => {
@@ -293,24 +221,13 @@ let make = () => {
 }
 ```
 
-```js
-var React = require('react');
-var Greeting = require('./Greeting.js');
+**참고** 리액트 컴포넌트는 대문자로 시작합니다. 원시 DOM 엘레멘트는 `div` 또는 `button` 처럼 소문자로 시작합니다. JSX 스펙과 코드 변환에 대한 정보는 [JSX language manual section](/docs/manual/latest/jsx#capitalized-tag) 여기서 더 찾을 수 있습니다.
 
-function App(Props) {
-  return React.createElement('div', undefined, React.createElement(Greeting.make, {}));
-}
+### 컴포넌트 직접 작성하기
 
-var make = App;
-```
+JSX 사용되는 컴포넌트를 작성하기위해 `@react.component` 데코레이터를 꼭 사용할 필요는 없습니다. 대신에 우리는 `make`와 `makeProps` 함수로 `makeProps: 'a => props`와 `make: props => React.element` 함수를 정의해 이걸 리액트 컴포넌트처럼 동작하게 할 수 있습니다.
 
-**참고** React components are capitalized; primitive DOM elements like `div` or `button` are uncapitalized. More infos on the JSX specifics and code transformations can be found in our [JSX language manual section](/docs/manual/latest/jsx#capitalized-tag).
-
-### Handwritten Components
-
-You don't need to use the `@react.component` decorator to write components that can be used in JSX. Instead you can write a pair of `make` and `makeProps` functions such that type `makeProps: 'a => props` and `make: props => React.element` and these will always work as React components.
-
-This works with your own version of `@obj`, or any other function that takes named args and returns a single props structure. For example:
+이것은 `@obj`의 고유한 버전, 또는 다른 명명된 파라메터를 받고 단일 props 구조를 반환하는 다른 모든 함수에서 작동합니다. 예를 들면 다음과 같습니다.
 
 ```reason
 module Link = {
@@ -330,31 +247,14 @@ module Link = {
 <Link href="/docs"> {React.string("Docs")} </Link>
 ```
 
-```js
-function Link(props) {
-  return React.createElement(
-    'a',
-    {
-      href: props.href,
-    },
-    props.children
-  );
-}
+`@react.component` 데코레이터와 생성된 인터페이스의 더 자세한 내용은 [JSX를 넘어서](./beyond-jsx) 페이지에서 찾을 수 있습니다..
 
-React.createElement(Link, {
-  href: '/docs',
-  children: 'Docs',
-});
-```
+## 서브모듈 컴포넌트
 
-More details on the `@react.component` decorator and its generated interface can be found in our [Beyond JSX](./beyond-jsx) page.
-
-## Submodule Components
-
-We can also represent React components as submodules, which makes it very convenient to build more complex UI without the need to create multiple files for each composite component (that's probably only used by the parent component anyways):
+또한 리액트 컴포넌트를 하위 모듈로 표현할 수 있으므로 합성(Composite) 컴포넌트에 대해 여러 파일을 만들 필요없이 더 복잡한 UI를 빌드할 수 있습니다. (서브 모듈은 어쨌든 부모 컴포넌트에서만 사용됨)
 
 ```reason
-// src/Button.res
+/* src/Button.res */
 module Label = {
   @react.component
   let make = (~title: string) => {
@@ -371,7 +271,7 @@ let make = (~children) => {
 }
 ```
 
-The `Button.res` file defined above is now containing a `Label` component, that can also be used by other components, either by writing the fully qualified module name (`<Button.Label title="My Button"/>`) or by using a module alias to shortcut the full qualifier:
+위에 정의 된 `Button.res` 파일에는 이제 정규화된 모듈인 (`<Button.Label title="My Button"/>`)을 작성했기 때문에 다른 컴포넌트에서도 사용할 수 있는 `Label` 컴포넌트가 포함됩니다.
 
 ```reason
 module Label = Button.Label
@@ -379,31 +279,31 @@ module Label = Button.Label
 let content = <Label title="Test"/>
 ```
 
-## Component Naming
+## 컴포넌트 네이밍
 
-Because components are actually a pair of functions, they have to belong to a module to be used in JSX. It makes sense to use these modules for identification purposes as well. `@react.component` automatically adds the name for you based on the module you are in.
+컴포넌트는 실제로 한 쌍의 함수이기 때문에 JSX에서 사용할 모듈에 속해야 합니다. 각각의 컴포넌트를 식별하는 목적으로도 모듈을 사용하는 것이 좋습니다. `@react.component`는 우리가 작성한 모듈에 따라 자동으로 이름을 추가합니다.
 
 ```reason
-// File.res
+/* File.res */
 
-// will be named `File` in dev tools
+/* 개발 도구에서 `File`이라는 이름으로 보일 거에요 */
 @react.component
 let make = ...
 
-// will be named `File$component` in dev tools
+/* 개발 도구에서 `File$component`이라는 이름으로 보일 거에요 */
 @react.component
 let component = ...
 
 module Nested = {
-  // will be named `File$Nested` in dev tools
+  /* 개발 도구에서 `File$Nested`라는 이름으로 보일 거에요 */
   @react.component
   let make = ...
 };
 ```
 
-If you need a dynamic name for higher-order components or you would like to set your own name you can use `React.setDisplayName(make, "NameThatShouldBeInDevTools")`.
+고차 컴포넌트(HoC)에 대한 동적 이름이 필요하거나 고유 디스플레이 이름을 설정하려면 `React.setDisplayName(make, "NameThatShouldBeInDevTools")` 함수를 이용합니다.
 
-## Tips & Tricks
+## 팁과 트릭들
 
-- Start with one component file and utilize submodule components as your component grows. Consider splitting up in multiple files when really necessary.
-- Keep your directory hierarchy flat. Instead of `article/Header.res` use `ArticleHeader.res` etc. Filenames are unique across the codebase, so filenames tend to be very specific `ArticleUserHeaderCard.res`, which is not necessarily a bad thing, since it clearly expresses the intent of the component within its name, and makes it also very easy to find, match and refactor across the whole codebase.
+- 하나의 컴포넌트 파일로 시작하고 컴포넌트가 커지면 서브모듈 컴포넌트를 활용해보세요. 정말 필요할 경우 여러 파일로 분할하는 것을 고려하세요.
+- 디렉토리 계층구조를 평평하게(Flat)하게 유지하세요. `article/Header.res` 같은 계층 구조보다 `ArticleHeader.res`처럼요. 파일 이름은 코드베이스 전체에서 고유하므로 파일 이름은 `ArticleUserHeaderCard.res`처럼 구체적으로 서술되는 경향이 있습니다. 파일 이름 내에서 구성 요소의 의미를 명확하게 표현하기 때문에 검색할 때 매우 쉽습니다. 또한 리팩토링에서 유리하기 때문에 파일이름이 길다고 반드시 나쁜 것은 아닙니다.
