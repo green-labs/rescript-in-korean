@@ -15,9 +15,6 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v2
 
-      - name: Cache Setting
-        uses: c-hive/gha-yarn-cache@v1
-
       - name: Use Node.js 12
         uses: actions/setup-node@v1
         with:
