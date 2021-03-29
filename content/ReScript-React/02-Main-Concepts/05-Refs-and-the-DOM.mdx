@@ -1,7 +1,7 @@
 ---
 title: Refs와 DOM
 metaTitle: 05-Refs와 DOM(Refs and the DOM)
-metaDescription: 'Using Refs and DOM elements in ReScript and React'
+metaDescription: '리스크립트와 리액트에서 Refs와 DOM 요소 사용하기'
 canonical: 'https://rescript-lang.org/docs/react/latest/refs-and-the-dom'
 sourceUrl: 'https://rescript-lang.org/docs/react/latest/refs-and-the-dom'
 ---
@@ -10,7 +10,7 @@ Refs provide a way to access DOM nodes or React elements created within your `ma
 
 In the typical React dataflow, [props](./components-and-props) are the only way that parent components interact with their children. To modify a child, you re-render it with new props. However, there are a few cases where you need to imperatively modify a child outside of the typical dataflow. The child to be modified could be an `React.element`, or it could be a `Dom.element`. For both of these cases, React provides an escape hatch.
 
-A `React.ref` is defined like this:
+`React.ref`의 정의는 다음과 같습니다.
 
 ```reason
 type t<'value> = { mutable current: 'value }
@@ -18,7 +18,7 @@ type t<'value> = { mutable current: 'value }
 
 > _Note that the `Ref.ref` should not to be confused with the builtin [ref type](/docs/manual/latest/mutation), the language feature that enables mutation._
 
-## When to use Refs
+## 언제 Refs를 사용하나요
 
 There are a few good use cases for refs:
 
@@ -29,7 +29,7 @@ There are a few good use cases for refs:
 
 Avoid using refs for anything that can be done declaratively.
 
-## Creating Refs
+## Refs 생성하기
 
 A React ref is represented as a `React.ref('value)` type, a container managing a mutable value of type `'value`. You can create this kind of ref with the [React.useRef](./hooks-ref) hook:
 
@@ -50,7 +50,7 @@ let make = () => {
 
 The example above defines a binding `clicks` of type `React.ref(int)`. Note how changing the value `clicks.current` doesn't trigger any re-rendering of the component.
 
-## Accessing Refs
+## Refs 접근하기
 
 When a ref is passed to an element during render, a reference to the node becomes accessible at the current attribute of the ref.
 
@@ -66,12 +66,12 @@ The value of the ref differs depending on the type of the node:
 
 Here are some examples:
 
-### Adding a Ref to a DOM Element
+### DOM 요소에 Ref 추가하기
 
 This code uses a `React.ref` to store a reference to an `input` DOM node to put focus on a text field when a button was clicked:
 
 ```reason
-// CustomTextInput.res
+/* CustomTextInput.res */
 
 @bs.send external focus: Dom.element => unit = "focus"
 
@@ -94,32 +94,6 @@ let make = () => {
 }
 ```
 
-```js
-function CustomTextInput(Props) {
-  var textInput = React.useRef(null);
-  var onClick = function(param) {
-    var dom = textInput.current;
-    if (!(dom == null)) {
-      dom.focus();
-      return;
-    }
-  };
-  return React.createElement(
-    'div',
-    undefined,
-    React.createElement('input', {
-      ref: textInput,
-      type: 'text',
-    }),
-    React.createElement('input', {
-      type: 'button',
-      value: 'Focus the text input',
-      onClick: onClick,
-    })
-  );
-}
-```
-
 A few things happened here, so let's break them down:
 
 - We initialize our `textInput` ref as a `Js.Nullable.null`
@@ -128,9 +102,9 @@ A few things happened here, so let's break them down:
 
 React will assign the `current` field with the DOM element when the component mounts, and assign it back to null when it unmounts.
 
-### Refs and Component Functions
+### Refs와 컴포넌트 함수
 
-In React, you **can't** pass a `ref` attribute to a component function:
+리액트에서 우리는 `ref` 속성을 컴포넌트 함수에 인자로 사용할 수 없습니다.
 
 ```reason
 module MyComp = {
@@ -142,18 +116,18 @@ module MyComp = {
 let make = () => {
   let textInput = React.useRef(Js.Nullable.null)
 
-  // This will **not** work
+  /* 이 코드는 컴파일이 되지 않습니다. */
   <MyComp ref={ReactDOM.Ref.domRef(textInput)} />
 }
 ```
 
 ```js
-// Compiler Error:
-// Ref cannot be passed as a normal prop. Please use `forwardRef`
-// API instead
+/* Compiler Error: */
+/* Ref cannot be passed as a normal prop. Please use `forwardRef` */
+/* API instead */
 ```
 
-The snippet above will not compile and output an error that looks like this: `"Ref cannot be passed as a normal prop. Please use forwardRef API instead."`.
+위 예시는 컴파일 되지 않고 다음과 같은 에러를 뿜을 것입니다. `"Ref cannot be passed as a normal prop. Please use forwardRef API instead."`.
 
 As the error message implies, If you want to allow people to take a ref to your component function, you can use [ref forwarding](./forwarding-refs) (possibly in conjunction with useImperativeHandle) instead.
 
@@ -163,7 +137,7 @@ In rare cases, you might want to have access to a child’s DOM node from a pare
 
 we recommend to use [ref forwarding](./forwarding-refs) for these cases. **Ref forwarding lets components opt into exposing any child component’s ref as their own**. You can find a detailed example of how to expose a child’s DOM node to a parent component in the ref forwarding documentation.
 
-## Callback Refs
+## 콜백 Refs
 
 React also supports another way to set refs called “callback refs” (`React.Ref.callbackDomRef`), which gives more fine-grain control over when refs are set and unset.
 
@@ -174,7 +148,7 @@ Instead of passing a ref value created by `React.useRef()`, you can pass in a ca
 The example below implements a common pattern: using the ref callback to store a reference to a DOM node in an instance property.
 
 ```reason
-// CustomTextInput.re
+/* CustomTextInput.re */
 
 @bs.send external focus: Dom.element => unit = "focus"
 
@@ -197,33 +171,6 @@ let make = () => {
       type_="button" value="Focus the text input" onClick={focusTextInput}
     />
   </div>
-}
-```
-
-```js
-function CustomTextInput(Props) {
-  var textInput = React.useRef(null);
-  var setTextInputRef = function(element) {
-    textInput.current = element;
-  };
-  var focusTextInput = function(param) {
-    return Belt_Option.forEach(Caml_option.nullable_to_opt(textInput.current), function(input) {
-      input.focus();
-    });
-  };
-  return React.createElement(
-    'div',
-    undefined,
-    React.createElement('input', {
-      ref: setTextInputRef,
-      type: 'text',
-    }),
-    React.createElement('input', {
-      type: 'button',
-      value: 'Focus the text input',
-      onClick: focusTextInput,
-    })
-  );
 }
 ```
 
@@ -254,32 +201,4 @@ let make = () => {
 }
 ```
 
-```js
-function CustomTextInput(Props) {
-  var setInputRef = Props.setInputRef;
-  return React.createElement(
-    'div',
-    undefined,
-    React.createElement('input', {
-      ref: setInputRef,
-      type: 'text',
-    })
-  );
-}
-
-var CustomTextInput = {
-  make: CustomTextInput,
-};
-
-function Parent(Props) {
-  var textInput = React.useRef(null);
-  var setInputRef = function(element) {
-    textInput.current = element;
-  };
-  return React.createElement(CustomTextInput, {
-    setInputRef: setInputRef,
-  });
-}
-```
-
-In the example above, `Parent` passes its ref callback as an `setInputRef` prop to the `CustomTextInput`, and the `CustomTextInput` passes the same function as a special ref attribute to the `<input>`. As a result, the `textInput` ref in Parent will be set to the DOM node corresponding to the `<input>` element in the `CustomTextInput`.
+위 예시에서, `Parent`는 passes its ref callback as an `setInputRef` prop to the `CustomTextInput`, and the `CustomTextInput` passes the same function as a special ref attribute to the `<input>`. As a result, the `textInput` ref in Parent will be set to the DOM node corresponding to the `<input>` element in the `CustomTextInput`.
