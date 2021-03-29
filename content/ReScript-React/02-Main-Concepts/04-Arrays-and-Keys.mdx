@@ -1,16 +1,16 @@
 ---
 title: 배열과 키
 metaTitle: 04-배열과 키(Arrays and Keys)
-metaDescription: 'Rendering arrays and handling keys in ReScript and React'
+metaDescription: '리스크립트와 리액트에서 배열 렌더링과 키를 핸들링하기'
 canonical: 'https://rescript-lang.org/docs/react/latest/arrays-and-keys'
 sourceUrl: 'https://rescript-lang.org/docs/react/latest/arrays-and-keys'
 ---
 
-Whenever we are transforming data into an array of elements and put it in our React tree, we need to make sure to give every element an unique identifier to help React distinguish elements for each render. This page will explain the `key` attribute and how to apply it whenever we need to map data to `React.element`s.
+데이터를 엘레멘트 배열로 변환하고 이를 리액트 트리에 넣을때마다 리액트가 렌더링에 대해 각 엘레멘트마다 구별할 수 있도록 고유한 식별자를 넣어야합니다. 이 페이지에서는 `key`속성과 데이터를 `React.element` 타입에 매핑할 때마다 적용하는 방법을 설명합니다.
 
-## Keys & Rendering Arrays
+## 키 그리고 배열 렌더링하기
 
-Keys help React identify which elements have been changed, added, or removed throughout each render. Keys should be given to elements inside the array to give the elements a stable identity:
+키는 리액트가 각 렌더링 과정에서 변경, 추가 또는 제거 된 엘레멘트를 식별하는 데 도움이 됩니다. 엘레멘트에 안정적인 ID를 제공하려면 배열 내부 엘레멘트에 키를 주입해야합니다.
 
 ```reason
 let numbers = [1, 2, 3, 4, 5];
@@ -20,7 +20,7 @@ let items = Belt.Array.map(numbers, (number) => {
 })
 ```
 
-The best way to pick a key is to use a string that uniquely identifies a list item among its siblings. Most often you would use IDs from your data as keys:
+키 값으로 가장 좋은 것은 형제(siblings) 요소 중에서 각각 고유하게 식별할 수 있는 문자열을 사용하는 것입니다. 대부분의 경우 데이터의 ID를 키로 사용합니다.
 
 ```reason
 type todo = {id: string, text: string}
@@ -35,20 +35,20 @@ let items = Belt.Array.map(todos, todo => {
 })
 ```
 
-If you don’t have stable IDs for rendered items, you may use the item index as a key as a last resort:
+만일 렌더링 요소에 안정적인 ID가 없다면 마지막 수단으로 index 값을 키로 사용할 수 있습니다.
 
 ```reason {2,3}
 let items = Belt.Array.mapWithIndex(todos, (todo, i) => {
-  // Only do this if items have no stable id
+  /* 안정적인 ID 값이 없을 때만 Index를 사용하세요 */
   <li key={i}>
     {todo.text}
   </li>
 });
 ```
 
-### Keys Must Only Be Unique Among Siblings
+### 키 값은 형제 요소들 사이에서 각각 고유해야합니다.
 
-Keys used within arrays should be unique among their siblings. However they don’t need to be globally unique. We can use the same keys when we produce two different arrays:
+배열 내에서 사용되는 키는 형제 요소 사이에서 고유해야합니다. 하지만 글로벌한 영역에서 고유할 필요는 없습니다. 두 개의 다른 배열을 생성할 때 고유한 키를 사용할 수 있습니다.
 
 ```reason {6,10,17,18,25,27}
 type post = {id: string, title: string, content: string}
@@ -90,9 +90,9 @@ let posts = [
 let blog = <Blog posts/>
 ```
 
-## Rendering list Values
+## 리스트 렌더링하기
 
-In case you ever want to render a `list` of items, you can do something like this:
+아이템의 `list`를 렌더링하기 원하시면 이런 식으로 할 수 있습니다.
 
 ```reason
 type todo = {id: string, text: string}
@@ -113,6 +113,6 @@ let items =
 <div> {React.array(items)} </div>
 ```
 
-We use `Belt.List.toArray` to convert our list to an array before creating our `array<React.element>`. Please note that using `list` has performance impact due to extra conversion costs.
+우리는 `array<React.element>`를 생성하기 전에 `Belt.List.toArray`를 이용해 list를 array로 변환해야합니다. `list`를 사용하면 `array`로의 추가적 변환 비용이 발생합니다.
 
-In 99% you'll want to use arrays (seamless interop, faster JS code), but in some cases it might make sense to use a `list` to leverage advanced pattern matching features etc.
+아마 99%의 경우에 배열을(원활한 인터롭, 빠른 자바스크립트 코드) 사용할것입니다. 하지만 경우에 따라 고급 패턴 매칭 기능을 사용하고 싶을 때 `list` 타입을 사용하기도 합니다.
