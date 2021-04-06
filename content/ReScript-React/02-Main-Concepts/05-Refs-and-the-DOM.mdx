@@ -6,9 +6,9 @@ canonical: 'https://rescript-lang.org/docs/react/latest/refs-and-the-dom'
 sourceUrl: 'https://rescript-lang.org/docs/react/latest/refs-and-the-dom'
 ---
 
-Refs provide a way to access DOM nodes or React elements created within your `make` component function.
+Refs는 컴포넌트 함수 `make`로 만들어진 DOM 노드나 리액트 요소에 접근하는 방법을 제공합니다.
 
-In the typical React dataflow, [props](./components-and-props) are the only way that parent components interact with their children. To modify a child, you re-render it with new props. However, there are a few cases where you need to imperatively modify a child outside of the typical dataflow. The child to be modified could be an `React.element`, or it could be a `Dom.element`. For both of these cases, React provides an escape hatch.
+일반적인 리액트 데이터 흐름상 오직 [props](./components-and-props)를 통해서만 부모 컴포넌트와 자식 컴포넌트와 상호작을 할 수 있습니다. 자식 요소를 수정하기 위해서는 새로운 props 를 통해 다시 렌더링 시켜야 합니다. 그러나 there are a few cases where you need to imperatively modify a child outside of the typical dataflow. The child to be modified could be an `React.element`, or it could be a `Dom.element`. For both of these cases, React provides an escape hatch.
 
 `React.ref`의 정의는 다음과 같습니다.
 
@@ -20,14 +20,14 @@ type t<'value> = { mutable current: 'value }
 
 ## 언제 Refs를 사용하나요
 
-There are a few good use cases for refs:
+refs가 필요한 몇가지 괜찮은 케이스가 있습니다.
 
-- Managing state that _should not trigger_ any re-render.
-- Managing focus, text selection, or media playback.
-- Triggering imperative animations.
-- Integrating with third-party DOM libraries.
+- 어떠한 재 렌더링도 _발생시키지 않는_ 상태 관리
+- 포커스, 문자열 선택 또는 미디어 재생 관리
+- 명령형 애니메이션을 트리거 시킬 때
+- 서드 파티 DOM 라이브러리 통합
 
-Avoid using refs for anything that can be done declaratively.
+선언적으로 수행할 수 있는 모든 작업에는 refs 를 사용하지 마세요.
 
 ## Refs 생성하기
 
@@ -52,7 +52,7 @@ The example above defines a binding `clicks` of type `React.ref(int)`. Note how 
 
 ## Refs 접근하기
 
-When a ref is passed to an element during render, a reference to the node becomes accessible at the current attribute of the ref.
+ref가 요소가 렌더링중 전해질 때, When a ref is passed to an element during render, a reference to the node becomes accessible at the current attribute of the ref.
 
 ```reason
 let value = myRef.current
@@ -64,7 +64,7 @@ The value of the ref differs depending on the type of the node:
 - In case of interop, when the ref attribute is used on a custom class component (based on JS classes), the ref object receives the mounted instance of the component as its current (not discussed in this document).
 - **You may not use the ref attribute on component functions** because they don’t have instances (we don't expose JS classes in ReScript).
 
-Here are some examples:
+여기 몇가지 예제가 있습니다.
 
 ### DOM 요소에 Ref 추가하기
 
@@ -133,7 +133,7 @@ As the error message implies, If you want to allow people to take a ref to your 
 
 ## Exposing DOM Refs to Parent Components
 
-In rare cases, you might want to have access to a child’s DOM node from a parent component. This is generally not recommended because it breaks component encapsulation, but it can occasionally be useful for triggering focus or measuring the size or position of a child DOM node.
+자주 있는 경우는 아니지만 우리는 부모 컴포넌트로부터 자식의 DOM 노드에 접근하고 싶을 때가 있습니다. 이건 일반적으로 추천되지 않는 방법입니다. 왜냐면 이것은 컴포넌트 캡슐화를 망쳐버리기 때문입니다. 하지만 포커스를 트리거하거나 자식 DOM 노드의 크기 또는 위치를 측정하는 데 유용 할 수 있습니다.
 
 we recommend to use [ref forwarding](./forwarding-refs) for these cases. **Ref forwarding lets components opt into exposing any child component’s ref as their own**. You can find a detailed example of how to expose a child’s DOM node to a parent component in the ref forwarding documentation.
 
@@ -174,12 +174,12 @@ let make = () => {
 }
 ```
 
-React will call the ref callback with the DOM element when the component mounts, and call it with null when it unmounts.
+리액트는 컴포넌트가 마운트 될 때 DOM 요소로 ref 콜백을 호출하고 마운트 해제 될 때 null을 호출합니다.
 
-You can pass callback refs between components like you can with object refs that were created with `React.useRef()`.
+`React.useRef()`로 생성 된 객체 참조와 마찬가지로 컴포넌트 요소간에 콜백 참조를 전달할 수 있습니다.
 
 ```reason
-// Parent.res
+/* Parent.res */
 
 @bs.send external focus: Dom.element => unit = "focus"
 
@@ -201,4 +201,4 @@ let make = () => {
 }
 ```
 
-위 예시에서, `Parent`는 passes its ref callback as an `setInputRef` prop to the `CustomTextInput`, and the `CustomTextInput` passes the same function as a special ref attribute to the `<input>`. As a result, the `textInput` ref in Parent will be set to the DOM node corresponding to the `<input>` element in the `CustomTextInput`.
+위 예시에서, `Parent`는 ref 콜백을 `setInputRef` props 으로 `CustomTextInput`에 전달하고 `CustomTextInput`은 특별한  ref 속성과 동일한 함수를 `<input>`에 전달합니다. 결과적으로 Parent의 `textInput` ref는 `CustomTextInput`의 `<input`요소에 해당하는 DOM 노드로 설정됩니다.
