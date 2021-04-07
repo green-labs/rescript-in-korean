@@ -8,7 +8,7 @@ sourceUrl: 'https://rescript-lang.org/docs/react/latest/refs-and-the-dom'
 
 Refs는 컴포넌트 함수 `make`로 만들어진 DOM 노드나 리액트 요소에 접근하는 방법을 제공합니다.
 
-일반적인 리액트 데이터 흐름상 오직 [props](./components-and-props)를 통해서만 부모 컴포넌트와 자식 컴포넌트와 상호작을 할 수 있습니다. 자식 요소를 수정하기 위해서는 새로운 props 를 통해 다시 렌더링 시켜야 합니다. 그러나 there are a few cases where you need to imperatively modify a child outside of the typical dataflow. The child to be modified could be an `React.element`, or it could be a `Dom.element`. For both of these cases, React provides an escape hatch.
+일반적인 리액트 데이터 흐름상 오직 [props](./components-and-props)를 통해서만 부모 컴포넌트와 자식 컴포넌트와 상호작을 할 수 있습니다. 자식 요소를 수정하기 위해서는 새로운 props 를 통해 다시 렌더링 시켜야 합니다. 그러나 일반적인 리액트 데이터 흐름 외부에서 자식 요소를 강제로 수정해야하는 몇 가지 경우가 있습니다. 자식 요소가 수정되려면 `React.element`이거나 `Dom.element`여야 합니다. 이 둘의 경우에 대해 리액트는 이스케이프 해치를 제공합니다.
 
 `React.ref`의 정의는 다음과 같습니다.
 
@@ -31,7 +31,7 @@ refs가 필요한 몇가지 괜찮은 케이스가 있습니다.
 
 ## Refs 생성하기
 
-A React ref is represented as a `React.ref('value)` type, a container managing a mutable value of type `'value`. You can create this kind of ref with the [React.useRef](./hooks-ref) hook:
+리액트 ref는 `React.ref('value)` 타입을 통해 재현할 수 있습니다. `value` 타입의 변경 가능한 값을 관리하는 컨테이너인 [React.useRef](./hooks-ref) 훅을 사용하여 이런 종류의 참조를 만들 수 있습니다.
 
 ```reason
 @react.component
@@ -52,23 +52,23 @@ The example above defines a binding `clicks` of type `React.ref(int)`. Note how 
 
 ## Refs 접근하기
 
-ref가 요소가 렌더링중 전해질 때, When a ref is passed to an element during render, a reference to the node becomes accessible at the current attribute of the ref.
+ref가 엘레멘트 렌더링중 전해지면 현재 ref의 속성에 대한 참조에 접근할 수 있습니다.
 
 ```reason
 let value = myRef.current
 ```
 
-The value of the ref differs depending on the type of the node:
+ref의 값은 노드 유형에 따라 다릅니다.
 
 - When the ref attribute is used on an HTML element, the ref passed via `ReactDOM.Ref.domRef` receives the underlying DOM element as its current property (type of `React.ref<Js.Nullable.t<Dom.element>>`)
 - In case of interop, when the ref attribute is used on a custom class component (based on JS classes), the ref object receives the mounted instance of the component as its current (not discussed in this document).
-- **You may not use the ref attribute on component functions** because they don’t have instances (we don't expose JS classes in ReScript).
+- **여러분은 ref 속성을 컴포넌트 함수에 사용할 수 없습니다** 왜냐면 인스턴스가 없기 때문입니다. (리스크립트에서는 자바스크립트 클래스를 노출하지 않아요)
 
 여기 몇가지 예제가 있습니다.
 
 ### DOM 요소에 Ref 추가하기
 
-This code uses a `React.ref` to store a reference to an `input` DOM node to put focus on a text field when a button was clicked:
+이 코드는 `React.ref`를 사용해서, 버튼을 클릭했을 때 텍스트 필드에 포커스를 두기 위해 `input`에 대한 참조를 저장합니다.
 
 ```reason
 /* CustomTextInput.res */
@@ -94,13 +94,13 @@ let make = () => {
 }
 ```
 
-A few things happened here, so let's break them down:
+몇가지 작업을 진행했습니다. 어떻게 된 일인지 알아볼까요?
 
-- We initialize our `textInput` ref as a `Js.Nullable.null`
-- We register our `textInput` ref in our `<input>` element with `ReactDOM.Ref.domRef(textInput)`
-- In our `focusInput` function, we need to first verify that our DOM element is set, and then use the `focus` binding to set the focus
+- `textInput`을 `Js.Nullable.null` ref로 초기화합니다.
+- `textInput` ref를 `ReactDOM.Ref.domRef(textInput)`를 통해 `<input>` 요소의 속성으로 지정합니다
+- `focusInput` 함수는 먼저 DOM 요소가 존재하는지 확인한 다음 `focus` 바인딩을 사용해 포커스를 설정해야합니다.
 
-React will assign the `current` field with the DOM element when the component mounts, and assign it back to null when it unmounts.
+리액트는 컴포넌트가 마운트 될 때 `current` 필드에 DOM 요소를 할당합니다. 그리고 언마운트 될 때 null 값을 할당합니다.
 
 ### Refs와 컴포넌트 함수
 
@@ -129,23 +129,23 @@ let make = () => {
 
 위 예시는 컴파일 되지 않고 다음과 같은 에러를 뿜을 것입니다. `"Ref cannot be passed as a normal prop. Please use forwardRef API instead."`.
 
-As the error message implies, If you want to allow people to take a ref to your component function, you can use [ref forwarding](./forwarding-refs) (possibly in conjunction with useImperativeHandle) instead.
+오류 메시지에서 알 수 있듯이, 다른 사람이 당신의 컴포넌트 함수에서 ref 에 접근할 수 있게 하려면 [ref forwarding](./forwarding-refs)를 대신 사용할 수 있습니다. (아마도 [useImperativeHandle](https://ko.reactjs.org/docs/hooks-reference.html#useimperativehandle) 훅과 함께 사용해야 할 것입니다)
 
 ## Exposing DOM Refs to Parent Components
 
 자주 있는 경우는 아니지만 우리는 부모 컴포넌트로부터 자식의 DOM 노드에 접근하고 싶을 때가 있습니다. 이건 일반적으로 추천되지 않는 방법입니다. 왜냐면 이것은 컴포넌트 캡슐화를 망쳐버리기 때문입니다. 하지만 포커스를 트리거하거나 자식 DOM 노드의 크기 또는 위치를 측정하는 데 유용 할 수 있습니다.
 
-we recommend to use [ref forwarding](./forwarding-refs) for these cases. **Ref forwarding lets components opt into exposing any child component’s ref as their own**. You can find a detailed example of how to expose a child’s DOM node to a parent component in the ref forwarding documentation.
+우리는 이런 케이스에 [ref forwarding](./forwarding-refs)를 사용하길 추천합니다. **Ref 포워딩은 lets components opt into exposing any child component’s ref as their own**. You can find a detailed example of how to expose a child’s DOM node to a parent component in the ref forwarding documentation.
 
 ## 콜백 Refs
 
-React also supports another way to set refs called “callback refs” (`React.Ref.callbackDomRef`), which gives more fine-grain control over when refs are set and unset.
+리액트는 또한 “callback refs”(`React.Ref.callbackDomRef`)라고 불리우는 refs 지정하는 방법을 지원합니다. 이는 refs가 설정되고 설정되지 않을 때 더 세밀한 제어를 제공합니다.
 
-Instead of passing a ref value created by `React.useRef()`, you can pass in a callback function. The function receives the target `Dom.element` as its argument, which can be stored and accessed elsewhere.
+Instead of `React.useRef()`을 통해 생성된 ref 값을 전달하는 대신, 콜백 함수를 전달할 수 있습니다. 이 콜백 함수는 대상 `Dom.element`를 인수로 받으며 다른 곳에서 저장하고 접근이 가능합니다.
 
-**참고** Usually we'd use `React.Ref.domRef()` to pass a ref value, but for callback refs, we use `React.Ref.callbackDomRef()` instead.
+**참고** 주로 우리는 `React.Ref.domRef()`를 사용해 ref 값을 내려줍니다만 콜백 refs에 대해서는 `React.Ref.callbackDomRef()`를 사용합니다.
 
-The example below implements a common pattern: using the ref callback to store a reference to a DOM node in an instance property.
+아래 예제는 일반적인 패턴을 구현합니다. ref 콜백을 사용하여 인스턴트 속성에 DOM 노드에 대한 참조를 저장합니다.
 
 ```reason
 /* CustomTextInput.re */
