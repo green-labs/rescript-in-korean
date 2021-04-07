@@ -16,7 +16,7 @@ Refs는 컴포넌트 함수 `make`로 만들어진 DOM 노드나 리액트 요�
 type t<'value> = { mutable current: 'value }
 ```
 
-> _Note that the `Ref.ref` should not to be confused with the builtin [ref type](/docs/manual/latest/mutation), the language feature that enables mutation._
+> _`Ref.ref`와 뮤테이션을 가능하게 하는 랭귀지 기능인 빌트인 [ref type](/docs/manual/latest/mutation) 를 혼동하지 마세요._
 
 ## 언제 Refs를 사용하나요
 
@@ -48,7 +48,7 @@ let make = () => {
 }
 ```
 
-The example above defines a binding `clicks` of type `React.ref(int)`. Note how changing the value `clicks.current` doesn't trigger any re-rendering of the component.
+위 예시에서 `React.ref(int)` 타입의 바인딩 된 `clicks`를 정의합니다. `clicks.current` 값을 변경해도 컴포넌트가 다시 렌더링되지 않습니다.
 
 ## Refs 접근하기
 
@@ -60,8 +60,8 @@ let value = myRef.current
 
 ref의 값은 노드 유형에 따라 다릅니다.
 
-- When the ref attribute is used on an HTML element, the ref passed via `ReactDOM.Ref.domRef` receives the underlying DOM element as its current property (type of `React.ref<Js.Nullable.t<Dom.element>>`)
-- In case of interop, when the ref attribute is used on a custom class component (based on JS classes), the ref object receives the mounted instance of the component as its current (not discussed in this document).
+- ref 속성이 HTML 엘레멘트에 사용되면, `ReactDOM.Ref.domRef` 통해 전달 된 ref는 기본 DOM 엘레멘트를 current 속성으로 받습니다. (`React.ref<Js.Nullable.t<Dom.element>>` 타입)
+- 인터롭의 경우 사용자 정의 클래스 컴포넌트(자바스크립트 클래스 기반)에서 ref 속성이 사용되면 ref 객체는 해당 컴포넌트의 마운트 된 인스턴스를 current 값으로 받습니다. (이 문서에서 설명하지는 않겠습니다)
 - **여러분은 ref 속성을 컴포넌트 함수에 사용할 수 없습니다** 왜냐면 인스턴스가 없기 때문입니다. (리스크립트에서는 자바스크립트 클래스를 노출하지 않아요)
 
 여기 몇가지 예제가 있습니다.
@@ -131,17 +131,17 @@ let make = () => {
 
 오류 메시지에서 알 수 있듯이, 다른 사람이 당신의 컴포넌트 함수에서 ref 에 접근할 수 있게 하려면 [ref forwarding](./forwarding-refs)를 대신 사용할 수 있습니다. (아마도 [useImperativeHandle](https://ko.reactjs.org/docs/hooks-reference.html#useimperativehandle) 훅과 함께 사용해야 할 것입니다)
 
-## Exposing DOM Refs to Parent Components
+## DOM Refs를 부모 컴포넌트로 노출하기
 
 자주 있는 경우는 아니지만 우리는 부모 컴포넌트로부터 자식의 DOM 노드에 접근하고 싶을 때가 있습니다. 이건 일반적으로 추천되지 않는 방법입니다. 왜냐면 이것은 컴포넌트 캡슐화를 망쳐버리기 때문입니다. 하지만 포커스를 트리거하거나 자식 DOM 노드의 크기 또는 위치를 측정하는 데 유용 할 수 있습니다.
 
-우리는 이런 케이스에 [ref forwarding](./forwarding-refs)를 사용하길 추천합니다. **Ref 포워딩은 lets components opt into exposing any child component’s ref as their own**. You can find a detailed example of how to expose a child’s DOM node to a parent component in the ref forwarding documentation.
+우리는 이런 케이스에 [ref forwarding](./forwarding-refs)를 사용하길 추천합니다. **Ref 포워딩은 컴포넌트가 자식 컴포넌트의 ref를 자신의 것으로 노출하도록 선택할 수 있습니다** 자식 컴포넌트의 DOM 노드를 부모 컴포넌트로 노출하는 자세한 예시는 ref 포워딩 문서에서 찾을 수 있습니다.
 
 ## 콜백 Refs
 
 리액트는 또한 “callback refs”(`React.Ref.callbackDomRef`)라고 불리우는 refs 지정하는 방법을 지원합니다. 이는 refs가 설정되고 설정되지 않을 때 더 세밀한 제어를 제공합니다.
 
-Instead of `React.useRef()`을 통해 생성된 ref 값을 전달하는 대신, 콜백 함수를 전달할 수 있습니다. 이 콜백 함수는 대상 `Dom.element`를 인수로 받으며 다른 곳에서 저장하고 접근이 가능합니다.
+`React.useRef()`을 통해 생성된 ref 값을 전달하는 대신, 콜백 함수를 전달할 수 있습니다. 이 콜백 함수는 대상 `Dom.element`를 인수로 받으며 다른 곳에서 저장하고 접근이 가능합니다.
 
 **참고** 주로 우리는 `React.Ref.domRef()`를 사용해 ref 값을 내려줍니다만 콜백 refs에 대해서는 `React.Ref.callbackDomRef()`를 사용합니다.
 
