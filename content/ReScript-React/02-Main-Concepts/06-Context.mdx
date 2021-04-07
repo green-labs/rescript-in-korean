@@ -1,25 +1,25 @@
 ---
 title: 컨텍스트
 metaTitle: 06-컨텍스트(Context)
-metaDescription: 'Details about Context in ReScript and React'
+metaDescription: '리스크립트와 리액트에서 컨텍스트에 대해 자세히 다뤄봅니다'
 canonical: 'https://rescript-lang.org/docs/react/latest/context'
 sourceUrl: 'https://rescript-lang.org/docs/react/latest/context'
 ---
 
-Context provides a way to pass data through the component tree without having to pass props down manually at every level.
+컨텍스트는 레벨에서 수동으로 Props 를 전달하지 않고 컴포넌트 트리를 통해 데이터를 전달할 수 있는 방법을 제공합니다.
 
-## Why Context?
+## 왜 컨텍스트를 쓰나요?
 
-In a typical React application, data is passed top-down (parent to child) via props, but this can be cumbersome for certain types of props (e.g. locale preference, UI theme) that are required by many components within an application. Context provides a way to share values like these between components without having to explicitly pass a prop through every level of the tree.
+보편적인 리액트 애플리케이션에서, 데이터는 Props를 통해 탑-다운(부모에서 자식으로) 형식으로 전달됩니다. 그러나 이 방식은 로케일 설정이나 UI 테마 등, 애플리케이션의 많은 컴포넌트에 전달해야하는 Props일 때 번거로울 수 있는 방법입니다. 컨텍스트는 트리의 모든 레벨을 통해 명시적으로 Props를 전달할 필요없이 컴포넌트 간에 서로 같은 값을 공유하는 방법을 제공합니다.
 
-**참고** In ReScript, passing down props is way simpler than in TS / JS due to its [JSX prop punning](/docs/manual/latest/jsx#punning) feature and strong type inference, so it's often preferrable to keep it simple and just do props passing. Less magic means more transparency!
+**참고** 리스크립트에서, Props를 내려주는 것은 [JSX prop punning](/docs/manual/latest/jsx#punning) 기능과 강력한 타입 추론을 바탕으로 타입스크립트 / 자바스크립트보다 훨씬 간단하므로 단순하게 Props 드릴링이 선호되는 경우가 더 많습니다. 꼼수보다는 투명한 것이 좋죠!(원문: Less magic means more transparency!)
 
-## When to Use Context
+## 언제 컨텍스트를 씁니까?
 
-Context is designed to share data that can be considered “global” for a tree of React components, such as the current authenticated user, theme, or preferred language. For example, in the code below we manually thread through a “theme” prop in order to style the Button component:
+컨텍스트는 사용자 인증 정보, UI 테마, 또는 로케일 설정 등 리액트 컴포넌트 트리에 대해 “전역”적으로 적용될 수 있는 데이터를 공유하도록 설게됐습니다. 예를 들어 아래 코드에서 Button 컴포넌트의 스타일을 지정하기 위해 “theme” Props를 수동으로 생성해 내려줍니다.
 
 ```reason
-// src/App.res
+/* src/App.res */
 type theme = Light | Dark;
 
 module Button = {
@@ -51,55 +51,16 @@ module Toolbar = {
 
 @react.component
 let make = () => {
-  // We define the theme in the
-  // toplevel App component and
-  // pass it down
+  /* 가장 상위 컴포넌트에서 테마를 정의해 자식 컴포넌트로 내려줍니다 */
   <Toolbar theme=Dark/>
 }
 ```
 
-```js
-function Button(Props) {
-  var theme = Props.theme;
-  var className = theme ? 'theme-black' : 'theme-light';
-  return React.createElement(
-    'button',
-    {
-      className: className,
-    },
-    'Click me'
-  );
-}
+컨텍스트를 사용하면 중간 단계를 거치며 Props를 내려주는 것을 피할 수 있습니다.
 
-function ThemedButton(Props) {
-  var theme = Props.theme;
-  return React.createElement(Button, {
-    theme: theme,
-  });
-}
-
-function Toolbar(Props) {
-  var theme = Props.theme;
-  return React.createElement(
-    'div',
-    undefined,
-    React.createElement(ThemedButton, {
-      theme: theme,
-    })
-  );
-}
-
-function Playground(Props) {
-  return React.createElement(Toolbar, {
-    theme: /* Dark */ 1,
-  });
-}
-```
-
-Using context, we can avoid passing props through intermediate elements:
 
 ```reason
-// src/App.res
+/* src/App.res */
 
 module ThemeContext = {
   type theme = Light | Dark;
@@ -147,62 +108,5 @@ let make = () => {
   <ThemeContext.Provider value=ThemeContext.Dark>
     <div> <Toolbar /> </div>
   </ThemeContext.Provider>
-}
-```
-
-```js
-var context = React.createContext(/* Light */ 0);
-
-var provider = context.Provider;
-
-function ThemeContext$Provider(Props) {
-  var value = Props.value;
-  var children = Props.children;
-  return React.createElement(provider, {
-    value: value,
-    children: children,
-  });
-}
-
-function Button(Props) {
-  var theme = Props.theme;
-  var className = theme ? 'theme-black' : 'theme-light';
-  return React.createElement(
-    'button',
-    {
-      className: className,
-    },
-    'Click me'
-  );
-}
-
-var Button = {
-  make: Button,
-};
-
-function ThemedButton(Props) {
-  var theme = React.useContext(context);
-  return React.createElement(Button, {
-    theme: theme,
-  });
-}
-
-var ThemedButton = {
-  make: ThemedButton,
-};
-
-function Toolbar(Props) {
-  return React.createElement('div', undefined, React.createElement(ThemedButton, {}));
-}
-
-var Toolbar = {
-  make: Toolbar,
-};
-
-function Playground(Props) {
-  return React.createElement(ThemeContext$Provider, {
-    value: /* Dark */ 1,
-    children: React.createElement('div', undefined, React.createElement(Toolbar, {})),
-  });
 }
 ```
