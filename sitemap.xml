@@ -69,14 +69,14 @@
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/ReScript-React/01-Overview/01-Introduction</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/ReScript-React/01-Overview/02-Installation</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/ReScript-React/02-Main-Concepts/01-Elements-and-JSX</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/JavaScript-Interop/03-External-Bind-to-Any-JS-Library</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/JavaScript-Interop/02-Shared-Data-Types</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/JavaScript-Interop/01-Embed-Raw-JavaScript</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/ReScript-React/02-Main-Concepts/02-Rendering-Elements</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/ReScript-React/02-Main-Concepts/03-Components-and-Props</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/ReScript-React/02-Main-Concepts/04-Arrays-and-Keys</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/ReScript-React/02-Main-Concepts/05-Refs-and-the-DOM</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/ReScript-React/02-Main-Concepts/06-Context</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/JavaScript-Interop/03-External-Bind-to-Any-JS-Library</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/JavaScript-Interop/02-Shared-Data-Types</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/JavaScript-Interop/01-Embed-Raw-JavaScript</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/ReScript-React/03-Hooks-and-State-Management/01-Hooks-and-State-Management-Overview</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/ReScript-React/03-Hooks-and-State-Management/02-useEffect</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/ReScript-React/03-Hooks-and-State-Management/03-useState</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
