@@ -4,7 +4,7 @@
 
 현재 목표는 https://rescript-lang.org/docs/latest 의 `Language Manual` 쪽을 번역하는 것입니다.
 
-> 사이트는 [gaysby-gitbook-start](https://github.com/hasura/gatsby-gitbook-starter)를 기반으로 만들어졌습니다. 이 스타터 킷에는 약간의 버그가 있고 수정이 필요합니다.
+> 사이트는 [gatsby-gitbook-start](https://github.com/hasura/gatsby-gitbook-starter)를 기반으로 만들어졌습니다. 이 스타터 킷에는 약간의 버그가 있고 수정이 필요합니다.
 
 ## 번역시 참고사항
 
