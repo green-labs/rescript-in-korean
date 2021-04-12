@@ -1,44 +1,44 @@
 ---
 title: useEffect
 metaTitle: 02-useEffect Hook
-metaDescription: 'Details about the useEffect React hook in ReScript'
+metaDescription: '리스크립트에서의 useEffect 훅'
 canonical: 'https://rescript-lang.org/docs/react/latest/hooks-effect'
 sourceUrl: 'https://rescript-lang.org/docs/react/latest/hooks-effect'
 ---
 
-The _Effect_ Hook lets you perform side effects in function components.
+_Effect_ 훅은 함수 컴포넌트에서 사이드 이펙트를 다룰 수 있게 해줍니다.
 
-## What are Effects?
+## 이펙트는 무엇인가요?
 
-Common examples for (side) effects are data fetching, setting up a subscription, and manually changing the DOM in React components.
+이펙트(Side-Effect)의 일반적인 예는 데이터 페칭이나 서브스크립션 설정 그리고 리액트 컴포넌트에서 DOM을 수동으로 변경하는 것입니다.
 
-There are two common kinds of side effects in React components: those that don’t require cleanup, and those that do. We'll look into the distinction later on in our examples, but first let's see how the interface looks like.
+리액트 컴포넌트에는 두가지 종류의 사이드 이펙트가 있습니다. 클린업 과정이 필요하지 않은 것과, 클린업이 필요한 것. 나중에 예제를 보며 차이점을 살펴보겠지만 우선 인터페이스가 어떻게 생겼는지 살펴봅시다.
 
 ## 기본 사용법
 
 ```reason
-// Runs after every completed render
+/* 렌더링이 완료될 때마다 실행 */
 React.useEffect(() => {
-  // Run effects
-  None // or Some(() => {})
+  /* 이펙트 실행 */
+  None /* 또는 Some(() => {}) */
 })
 
 
-// Runs only once right after mounting the component
+/* 컴포넌트가 마운트 된 후 단 한번만 실행 */
 React.useEffect0(() => {
-  // Run effects
-  None // or Some(() => {})
+  /* 이펙트 실행 */
+  None // 또는 Some(() => {})
 })
 
-// Runs everytime `prop1` has changed
+/* `prop1`이 변경될 때마다 실행 */
 React.useEffect1(() => {
-  // Run effects based on prop1
+  /* prop1에 값에 기반한 이펙트 실행 */
   None
 }, [prop1])
 
-// Runs everytime `prop1` or `prop2` has changed
+/* `prop1` 또는 `prop2` 가 변경될 때마다 실행 */
 React.useEffect2(() => {
-  // Run effects based on prop1 / prop2
+  /* prop1 / prop2 값을 기반으로 이펙트 실행 */
   None
 }, (prop1, prop2))
 
@@ -46,37 +46,29 @@ React.useEffect3(() => {
   None
 }, (prop1, prop2, prop3));
 
-// useEffect4...7 with according dependency
-// tuple just like useEffect3
+/* 의존성개 따라 useEffect4에서 useEffect7 까지 사용할 수 있습니다. */
+/* useEffect3처럼 튜플로 인자를 받습니다. */
 
 ```
 
-```js
-React.useEffect(function() {});
-React.useEffect(function() {}, []);
-React.useEffect(function() {}, [prop1]);
-React.useEffect(function() {}, [prop1, prop2]);
-React.useEffect(function() {}, [prop1, prop2, prop3]);
-```
+`React.useEffect`는 사이드 이펙트성이 강한 명령형 코드를 포함하고 `option<unit => unit>` 를 값으로 반환합니다. 반환하는 값은 잠재적인 클린업 함수입니다.
 
-`React.useEffect` receives a function that contains imperative, possibly effectful code, and returns a value `option<unit => unit>` as a potential cleanup function.
+`useEffect` 호출은 추가적인 의존성 배열을 인자로 받습니다. (`React.useEffect1` / `React.useEffect2...7` 함수를 보세요). effect 함수는 제공되는 의존성중 하나가 변경될 때마다 실행됩니다. 이것이 왜 유용한지 자세한 부분은 [여기](#이펙트의존성)서 다룰게요.
 
-A `useEffect` call may receive an additional array of dependencies (see `React.useEffect1` / `React.useEffect2...7`). The effect function will run whenever one of the provided dependencies has changed. More details on why this is useful [down below](#effect-dependencies).
+**참고** 의존성 리스트에 `React.useEffect1`는 `배열`을 받고 `useEffect2`와 다른 것들(useEffect3~7)은 왜 `튜플` (Ex `(prop1, prop2)`) 을 받는지 궁금하실 수 있습니다. 그 이유는 튜플은 여러 값에 서로 다른 타입이 가능하기 때문입니다. 반면에 `배열`은 오직 같은 타입의 값믄 받습니다. `useEffect2`는 doing `React.useEffect1(fn, [1, 2])`로 대체될 수 있지만 `React.useEffect1(fn, [1, "two"])` 이렇게 서로 다른 타입을 요소는 허용되지 않습니다.
 
-**참고** You probably wonder why `React.useEffect1` receives an `array`, and `useEffect2` etc require a `tuple` (e.g. `(prop1, prop2)`) for the dependency list. That's because a tuple can receive multiple values of different types, whereas an `array` only accepts values of identical types. It's possible to replicate `useEffect2` by doing `React.useEffect1(fn, [1, 2])`, on other hand the type checker wouldn't allow `React.useEffect1(fn, [1, "two"])`.
+`React.useEffect`는 렌더링이 완료될 때마다 실행되는 반면 `React.useEffect0`는 첫번째 렌더링 이후에만 실행됩니다. (컴포넌트가 마운트 됐을 때)
 
-`React.useEffect` will run its function after every completed render, while `React.useEffect0` will only run the effect on the first render (when the component has mounted).
+## 예제
 
-## Examples
+### 클린업 없는 이펙트
 
-### Effects without Cleanup
+때때로, 우리는 리액트가 DOM을 업데이트한 이후 어떤 코드가 실행되길 원합니다. 예를 들어 네트워크 요청이나 수동 DOM 변형, 그리고 로깅 작업은 클린업이 필요하지 않은 이펙트의 몇가지 예시입니다. 우리는 이런 이펙트들을 즉시 실행하고 그 이후를 기억하지 않아도 됩니다.
 
-Sometimes, we want to run some additional code after React has updated the DOM. Network requests, manual DOM mutations, and logging are common examples of effects that don’t require a cleanup. We say that because we can run them and immediately forget about them.
-
-As an example, let's write a counter component that updates `document.title` on every render:
+다음 예시처럼, `document.title`를 매 렌더마다 업데이트 하는 카운터 컴포넌트를 작성해봅시다.
 
 ```reason
-// Counter.re
+/* Counter.re */
 module Document = {
   type t;
   @bs.val external document: t = "document";
@@ -106,38 +98,7 @@ let make = () => {
 }
 ```
 
-```js
-function Counter(Props) {
-  var match = React.useState(function() {
-    return 0;
-  });
-  var setCount = match[1];
-  var count = match[0];
-  React.useEffect(function() {
-    document.title = 'You clicked ' + String(count) + ' times!';
-  });
-  var onClick = function(_evt) {
-    return Curry._1(setCount, function(prev) {
-      return (prev + 1) | 0;
-    });
-  };
-  var msg = 'You clicked' + String(count) + 'times';
-  return React.createElement(
-    'div',
-    undefined,
-    React.createElement('p', undefined, msg),
-    React.createElement(
-      'button',
-      {
-        onClick: onClick,
-      },
-      'Click me'
-    )
-  );
-}
-```
-
-In case we want to make the effects dependent on `count`, we can just use following `useEffect` call instead:
+이펙트에 `count`를 의존적으로 만들려면 다음처럼 `useEffect`를 사용합니다.
 
 ```reason
  React.useEffect1(() => {
@@ -147,19 +108,19 @@ In case we want to make the effects dependent on `count`, we can just use follow
   }, [count]);
 ```
 
-Now instead of running an effect on every render, it will only run when `count` has a different value than in the render before.
+이제 렌더링 될 때마다 이펙트를 실행하지 않고 `count`가 이전 렌더링과 값이 다를 때문 이펙트가 실행됩니다.
 
-### Effects with Cleanup
+### 클린업과 이펙트
 
-Earlier, we looked at how to express side effects that don’t require any cleanup. However, some effects do. For example, we might want to set up a subscription to some external data source. In that case, it is important to clean up so that we don’t introduce a memory leak!
+우리는 앞에서 클린업이 필요없는 사이드이펙트를 표현하는 방법을 알아봤습니다. 그러나 어떤 이펙트들은 클린업이 필요합니다. 예를 들어, 우리는 외부 데이터 소스를 구독하고 싶을 수 있습니다. 이런 경우, 메모리 누수를 발생시키지 않기 위해 꼭 클린업이 필요합니다!
 
-Let's look at an example that gracefully subscribes, and later on unsubscribes from some subscription API:
+정상적으로 구독하고 나중에 구독을 우아하게 취소하는 구독 API 예제를 보겠습니다.
 
 ```reason
-// FriendStatus.res
+/* FriendStatus.res */
 
 module ChatAPI = {
-  // Imaginary globally available ChatAPI for demo purposes
+  /* Imaginary globally available ChatAPI for demo purposes */
   type status = { isOnline: bool };
   @bs.val external subscribeToFriendStatus: (string, status => unit) => unit = "subscribeToFriendStatus";
   @bs.val external unsubscribeFromFriendStatus: (string, status => unit) => unit = "unsubscribeFromFriendStatus";
@@ -200,53 +161,12 @@ let make = (~friendId: string) => {
 }
 ```
 
-```js
-function FriendStatus(Props) {
-  var friendId = Props.friendId;
-  var match = React.useState(function() {
-    return /* Offline */ 0;
-  });
-  var setState = match[1];
-  React.useEffect(function() {
-    var handleStatusChange = function(status) {
-      return Curry._1(setState, function(param) {
-        if (status.isOnline) {
-          return /* Online */ 2;
-        } else {
-          return /* Offline */ 0;
-        }
-      });
-    };
-    subscribeToFriendStatus(friendId, handleStatusChange);
-    Curry._1(setState, function(param) {
-      return /* Loading */ 1;
-    });
-    return function(param) {
-      unsubscribeFromFriendStatus(friendId, handleStatusChange);
-    };
-  });
-  var text;
-  switch (match[0]) {
-    case /* Offline */ 0:
-      text = friendId + ' is offline';
-      break;
-    case /* Loading */ 1:
-      text = 'loading...';
-      break;
-    case /* Online */ 2:
-      text = friendId + ' is online';
-      break;
-  }
-  return React.createElement('div', undefined, text);
-}
-```
+## 이펙트 의존성
 
-## Effect Dependencies
-
-In some cases, cleaning up or applying the effect after every render might create a performance problem. Let's look at a concrete example to see what `useEffect` does:
+몇몇 경우에서 클린업 또는 모든 렌더 이후 적용되는 이펙트 때문에 성능 문제가 생길 수 있습니다. `useEffect`가 하는 작업을 확인하기 위해 구체적인 예를 보겠습니다.
 
 ```reason
-// from a previous example above
+/* from a previous example above */
 React.useEffect1(() => {
   open Document
   document->setTitle(`You clicked ${Belt.Int.toString(count)} times!`)
@@ -254,14 +174,14 @@ React.useEffect1(() => {
 }, [count]);
 ```
 
-Here, we pass `[count]` to `useEffect1` as a dependency. What does this mean? If the `count` is 5, and then our component re-renders with count still equal to 5, React will compare `[5]` from the previous render and `[5]` from the next render. Because all items within the array are the same (5 === 5), React would skip the effect. That’s our optimization.
+여기 우리는 `[count]`를 `useEffect1`의 의존성으로 넣었습니다. 무엇을 의미하는 것일까요? 만약 `count`의 값이 5이고 우리 컴포넌트가 여전히 5로 리렌더링 되었다면 리액트는 이전에 렌더링했던 값인 `[5]`와 다음에 렌더링할 `[5]`를 비교합니다. 배열 내의 모든 항목의 값이 같기 때문에 (5 === 5), 리액트는 이펙트를 건너 뜁니다. 이것이 우리의 최적화입니다.
 
-When we render with count updated to 6, React will compare the items in the `[5]` array from the previous render to items in the `[6]` array from the next render. This time, React will re-apply the effect because `5 !== 6`. If there are multiple items in the array, React will re-run the effect even if just one of them is different.
+카운트가 6으로 업데이트 되고 렌더가 될 때 리액트는 이전 배열 값인 `[5]`를 다음 렌더링할 때 새로운 배열인 `[6]`과 비교합니다. 이번에는 리액트는 `5 !== 6` 이기 때문에 이펙트를 실행합니다. 만약 여러 아이템이 배열에 있다면 리액트는 그중 하나라도 값이 달라졌을 경우 이펙트를 재실행 합니다.
 
-This also works for effects that have a cleanup phase:
+이것은 클린업 단계가 있는 이펙트에도 마찬가지로 적용됩니다.
 
 ```reason
-// from a previous example above
+/* from a previous example above */
 React.useEffect1(() => {
   let handleStatusChange = (status) => {
     setState(_ => {
@@ -277,11 +197,11 @@ React.useEffect1(() => {
   }
 
   Some(cleanup)
-}, [friendId]) // Only re-subscribe if friendId changes
+}, [friendId]) /* 만일 friendId 가 변화할 경우에만 다시 구독합니다 */
 ```
 
-**중요** If you use this optimization, make sure the array includes all values from the component scope (such as props and state) that change over time and that are used by the effect. Otherwise, your code will reference stale values from previous renders
+**중요** 이런 최적화를 사용하려면, 컴포넌트 스코프의 모든 값을 의존 배열에 넣어야 합니다. (props 또는 state 모두) 그렇지 않으면 당신의 코드는 이전 렌더링의 오래된 값을 참조할 수도 있습니다.
 
-If you want to run an effect and clean it up only once (on mount and unmount), use `React.useEffect0`.
+만약 이펙트와 클린업을 단 한 번만 실행시키고 싶다면(마운트될 때와 언마운트될때) `React.useEffect0`을 사용하세요.
 
-If you are interested in more performance optmization related topics, have a look at the ReactJS [Performance Optimization Docs](https://reactjs.org/docs/hooks-faq.html#performance-optimizations) for more detailed infos.
+만약 최적화 관련 주제에 대해 더 관심이 있으시다면 ReactJS의 [Performance Optimization Docs](https://reactjs.org/docs/hooks-faq.html#performance-optimizations) 문서에 더 많은 정보가 있습니다.
