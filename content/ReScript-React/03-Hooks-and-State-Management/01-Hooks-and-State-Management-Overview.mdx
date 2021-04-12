@@ -1,29 +1,29 @@
 ---
 title: 리액트 훅과 상태 관리 개요
 metaTitle: 01-리액트 훅과 상태 관리 개요(Hooks & State Management Overview)
-metaDescription: 'Overview state management and hooks in ReScript and React'
+metaDescription: '리스크립트와 리액트에서 훅과 상태 관리 개요'
 canonical: 'https://rescript-lang.org/docs/react/latest/hooks-overview'
 sourceUrl: 'https://rescript-lang.org/docs/react/latest/hooks-overview'
 ---
 
 # 리액트 훅 개요
 
-Hooks are an essential mechanism to introduce and manage state and effects in React components.
+훅은 리액트 컴포넌트에서 상태와 이펙트를 도입하고 관리하는 효과적인 매커니즘입니다.
 
 ## 훅이 뭡니까?
 
-In the previous chapters we learned how React components are just a simple function representing UI based on specific prop values. For an application to be useful we still need a way to manipulate those props interactively either via user input or via requests loading in data from a server.
+이전 문서에서 우리는 어떻게 리액트 컴포넌트가 간단한 배웠습니다. 훅은 특정 Props 값을 기반으로 UI를 나타내는 간단한 함수입니다. 애플리케이션이 유용하지려면 우리는 사용자 입력이나 네트워크 리퀘스트를 서버에 요청을 통해 이러한 Props를 대화식으로 조작하는 방법이 여전히 필요합니다.
 
-That's were Hooks come in. A Hook is a function that allows us to introduce component state and trigger side-effects for different tasks, such as HTTP requests, direct HTML DOM access, querying window sizes, etc.
+훅은 HTTP 요청, 직접적인 DOM 조작, window 사이즈 쿼리 등 다양한 작업에 대해 컴포넌트 상태를 도입하고 사이드 이펙트를 트리거할 수 있는 함수입니다.
 
-In other words: **It allows us to "hook into" React features.**
+다시 말하자면, **훅은 리액트 기능에 연결(hook into)할 수 있게 해줍니다**
 
-### Example: The useState Hook
+### useState 훅 예제
 
-Just for a quick look, here is an example of a `Counter` component that allows a user to click a button and increment an `count` value that will immediately be rendered on each button click:
+어디 간단한 예제를 살펴볼까요. 여기 간단한 `Counter` 예제가 있습니다. `Counter` 컴포넌트는 사용자가 버튼을 클릭해 각 버튼 클릭할 때 즉시 렌더링되는 `count` 값을 증가시킬 수 있습니다.
 
 ```reason
-// Counter.re
+/* Counter.re */
 @react.component
 let make = () => {
   let (count, setCount) = React.useState(_ => 0);
@@ -41,71 +41,44 @@ let make = () => {
 }
 ```
 
-```js
-function Counter(Props) {
-  var match = React.useState(function() {
-    return 0;
-  });
-  var setCount = match[1];
-  var onClick = function(_evt) {
-    return Curry._1(setCount, function(prev) {
-      return (prev + 1) | 0;
-    });
-  };
-  var msg = 'You clicked' + String(match[0]) + 'times';
-  return React.createElement(
-    'div',
-    undefined,
-    React.createElement('p', undefined, msg),
-    React.createElement(
-      'button',
-      {
-        onClick: onClick,
-      },
-      'Click me'
-    )
-  );
-}
-```
+여기서 우린 `React.useState` 훅을 사용했습니다. 우리는 컴포넌트 함수 내에서 훅을 호출하여 로컬 상태를 하나 추가했습니다. 리액트는 컴포넌트를 렌더링하거나 다시 렌더링 하는 도중에 이 상태를 보존합니다. `React.useState`는 튜플을 반환합니다. 현재 상태 값과 (`count`) 그 상태를 업데이트 할 수 있는 함수(`setCount`)를 반환합니다. 우리는 이 함수를 이벤트 핸들러에서 호출하거나 다른 컴포넌트로 전달하여 호출할 수 있습니다.
 
-Here we are using the `React.useState` Hook. We call it inside a component function to add some local state to it. React will preserve this state between re-renders. `React.useState` returns a tuple: the current state value (`count`) and a function that lets you update it (`setCount`). You can call this function from an event handler or pass it down to other components to call the function.
+`React.useState`의 유일한 인자는 초기 상태를 반환하는 함수입니다. (`_ => 0`) 위 예제에서 0은 우리가 초기값을 0으로 시작했기 때문에 0입니다. 상태는 어떠한 타입도 될 수 있습니다. `리스크립트`는 타입을 추론합니다. (타입과 일치하는 초기 상태를 반환해야합니다) 초기 상태는 첫번째 렌더링에서만 사용됩니다.
 
-The only argument to `React.useState` is a function that returns the initial state (`_ => 0`). In the example above, it is 0 because our counter starts from zero. Note that your state can be any type you want and `ReScript` will make sure to infer the types for you (only make sure to return an initial state that matches your type). The initial state argument is only used during the first render.
+이건 우리의 첫 훅 사용에 대한 간단한 예제입니다. 더 자세한 부분은 [useState](./hooks-state) 섹션에서 다룰 예정입니다.
 
-This was just a quick example on our first hook usage. We will go into more detail in a dedicated [useState](./hooks-state) section.
+## 사용 가능한 훅
 
-## Available Hooks
+**참고** 모든 훅은 `React` 모듈의 일부분입니다. (예를들어 `React.useState` 처럼)
 
-**참고** All hooks are part of the `React` module (e.g. `React.useState`).
+### 기본 훅:
 
-### Basic Hooks:
+- [useState](./hooks-state): 컴포넌트에 지역 상태를 추가합니다.
+- [useEffect](./hooks-effect): 컴포넌트 안에서 사이드 이펙트를 발생시키는 부분을 실행합니다.
+- [useContext](./hooks-context): 컴포넌트에 리액트 컨텍스트 값을 제공합니다.
 
-- [useState](./hooks-state): Adds local state to your component
-- [useEffect](./hooks-effect): Runs side-effectual code within your component
-- [useContext](./hooks-context): Gives your component to a React Context value
+### 추가적인 훅:
 
-### Additional Hooks:
-
-- [useReducer](./hooks-reducer): An alternative to `useState`. Uses the state / action / reduce pattern.
+- [useReducer](./hooks-reducer): `useState`의 변형입니다. 상태 / 액션 / 리듀스 패턴을 사용할 수 있습니다.
   <!-- - [useCallback](./hooks-callback): Returns a memoized callback -->
   <!-- - [useMemo](./hooks-memo): Returns a memoized value -->
-- [useRef](./hooks-ref): Returns a mutable React-Ref value
+- [useRef](./hooks-ref): 변형 가능(mutable)한 리액트-Ref 값을 반환합니다.
   <!-- - [useImperativeHandle](./hooks-imperative-handle): Customizes the instance value that is exposed to parent components when using `ref` -->
   <!-- - [useLayoutEffect](./hooks-layout-effect): Identical to useEffect, but it fires synchronously after all DOM mutations. -->
 
-## Rules of Hooks
+## 훅 규칙
 
-Hooks are just simple functions, but you need to follow _two rules_ when using them. ReScript doesn't enforce those rules within the compiler, so if you really want to enforce correct hooks conventions, you can use an [eslint-plugin](https://www.npmjs.com/package/eslint-plugin-react-hooks) to check your compiled JS output.
+훅은 그저 함수입니다. 그러나 훅을 사용할 때는 *두가지 규칙*을 따라야 합니다. 리스크립트는 컴파일러에서 이 규칙을 강제하지는 않습니다. 때문에 만약 훅 컨벤션 룰을 강제하고 싶다면 자바스크립트로 변환된 결과물에 [eslint-plugin](https://www.npmjs.com/package/eslint-plugin-react-hooks)를 적용할 수 있습니다.
 
-### Rule 1) Only Call Hooks at the Top Level
+### 규칙 1) 가장 상위(at the top level)에서만 훅을 호출해야 합니다.
 
-**Don’t call Hooks inside loops, conditions, or nested functions.** Instead, always use Hooks at the top level of your React function. By following this rule, you ensure that Hooks are called in the same order each time a component renders. That’s what allows React to correctly preserve the state of Hooks between multiple `useState` and `useEffect` calls. (If you’re curious, you can check out the in depth explanation in the [ReactJS Hooks docs](https://reactjs.org/docs/hooks-rules.html#explanation))
+**반복문, 조건문, 중첩된 함수 내에서 훅을 호출하지 마세요** 대신 리액트 함수 가장 상위 레벨에서 훅을 사용해야 합니다. 이 규칙을 따르면 컴포넌트가 렌더링 될 때마다 동일한 순서로 훅이 호출됩니다. 이 때문에 리액트가 여러 `useState`, `useEffect` 의 호출 사이에서 훅 상태를 올바르게 보존할 수 있게 합니다. (이 부분이 더 궁금하다면, 자세한 설명은 [ReactJS Hooks docs](https://reactjs.org/docs/hooks-rules.html#explanation) 문서를 읽어보세요)
 
-### Rule 2) Only Call Hooks from React Functions
+### 규칙 2) 리액트 함수에서만 훅을 호출할 수 있습니다.
 
-**Don't call Hooks from regular functions.** Instead, you can:
+**리액트 함수가 아닌 일반 함수에서 훅을 호출하지 마세요**
 
-- ✅ Call Hooks from React function components.
-- ✅ Call Hooks from custom Hooks (we’ll learn about them in our [custom hooks](./hooks-custom) section).
+- ✅ 리액트 함수 컴포넌트에서 훅 호출
+- ✅ 커스텀 훅에서 훅 호출 ([custom hooks](./hooks-custom) 섹션에서 더 자세히 다룰 것입니다).
 
-By following this rule, you ensure that all stateful logic in a component is clearly visible from its source code.
+이 규칙을 따르면, 컴포넌트 내부 상태에 대한 모든 로직이 명확하게 소스 코드 레벨에서 확인 가능합니다.
