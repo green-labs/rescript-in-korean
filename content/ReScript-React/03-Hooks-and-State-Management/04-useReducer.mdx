@@ -78,7 +78,7 @@ function Counter(Props) {
     React.createElement(
       'button',
       {
-        onClick: function(param) {
+        onClick: function (param) {
           return Curry._1(dispatch, /* Dec */ 1);
         },
       },
@@ -87,7 +87,7 @@ function Counter(Props) {
     React.createElement(
       'button',
       {
-        onClick: function(param) {
+        onClick: function (param) {
           return Curry._1(dispatch, /* Inc */ 0);
         },
       },
@@ -99,12 +99,12 @@ function Counter(Props) {
 
 > React guarantees that dispatch function identity is stable and won’t change on re-renders. This is why it’s safe to omit from the useEffect or useCallback dependency list.
 
-### 더 복잡한 액션이 포함 된 할일 목록 앱
+### 더 복잡한 액션이 포함 된 Todo List 앱
 
 You can leverage the full power of variants to express actions with data payloads to parametrize your state transitions:
 
 ```reason
-// TodoApp.res
+/* TodoApp.res */
 
 type todo = {
   id: int,
@@ -174,102 +174,6 @@ let make = () => {
 }
 ```
 
-```js
-function reducer(state, action) {
-  switch (action.TAG | 0) {
-    case /* AddTodo */ 0:
-      var todos = state.todos.concat([
-        {
-          id: state.nextId,
-          content: action._0,
-          completed: false,
-        },
-      ]);
-      return {
-        todos: todos,
-        nextId: (state.nextId + 1) | 0,
-      };
-    case /* RemoveTodo */ 1:
-      var id = action._0;
-      var todos$1 = state.todos.filter(function(todo) {
-        return todo.id !== id;
-      });
-      return {
-        todos: todos$1,
-        nextId: state.nextId,
-      };
-    case /* ToggleTodo */ 2:
-      var id$1 = action._0;
-      var todos$2 = Belt_Array.map(state.todos, function(todo) {
-        if (todo.id === id$1) {
-          return {
-            id: todo.id,
-            content: todo.content,
-            completed: !todo.completed,
-          };
-        } else {
-          return todo;
-        }
-      });
-      return {
-        todos: todos$2,
-        nextId: state.nextId,
-      };
-  }
-}
-
-var initialTodos = [
-  {
-    id: 1,
-    content: 'Try ReScript & React',
-    completed: false,
-  },
-];
-
-function TodoApp(Props) {
-  var match = React.useReducer(reducer, {
-    todos: initialTodos,
-    nextId: 2,
-  });
-  var dispatch = match[1];
-  var todos = Belt_Array.map(match[0].todos, function(todo) {
-    return React.createElement(
-      'li',
-      undefined,
-      todo.content,
-      React.createElement(
-        'button',
-        {
-          onClick: function(param) {
-            return Curry._1(dispatch, {
-              TAG: /* RemoveTodo */ 1,
-              _0: todo.id,
-            });
-          },
-        },
-        'Remove'
-      ),
-      React.createElement('input', {
-        checked: todo.completed,
-        type: 'checkbox',
-        onChange: function(param) {
-          return Curry._1(dispatch, {
-            TAG: /* ToggleTodo */ 2,
-            _0: todo.id,
-          });
-        },
-      })
-    );
-  });
-  return React.createElement(
-    React.Fragment,
-    undefined,
-    React.createElement('h1', undefined, 'Todo List:'),
-    React.createElement('ul', undefined, todos)
-  );
-}
-```
-
 ## 지연 초기화
 
 ```reason
@@ -277,16 +181,12 @@ let (state, dispatch) =
   React.useReducerWithMapState(reducer, initialState, initial)
 ```
 
-```js
-var match = React.useReducer(reducer, initialState, init);
-```
-
 You can also create the `initialState` lazily. To do this, you can use `React.useReducerWithMapState` and pass an `init` function as the third argument. The initial state will be set to `init(initialState)`.
 
 It lets you extract the logic for calculating the initial state outside the reducer. This is also handy for resetting the state later in response to an action:
 
 ```reason
-// Counter.res
+/* Counter.res */
 
 type action = Inc | Dec | Reset(int)
 type state = {count: int}
@@ -316,60 +216,5 @@ let make = (~initialCount: int) => {
     <button onClick={_ => dispatch(Dec)}> {React.string("-")} </button>
     <button onClick={_ => dispatch(Inc)}> {React.string("+")} </button>
   </>
-}
-```
-
-```js
-function init(initialCount) {
-  return {
-    count: initialCount,
-  };
-}
-
-function reducer(state, action) {
-  if (typeof action === 'number') {
-    if (action !== 0) {
-      return {
-        count: (state.count - 1) | 0,
-      };
-    } else {
-      return {
-        count: (state.count + 1) | 0,
-      };
-    }
-  } else {
-    return {
-      count: action._0,
-    };
-  }
-}
-
-function Counter(Props) {
-  var initialCount = Props.initialCount;
-  var match = React.useReducer(reducer, initialCount, init);
-  var dispatch = match[1];
-  return React.createElement(
-    React.Fragment,
-    undefined,
-    'Count:' + String(match[0].count),
-    React.createElement(
-      'button',
-      {
-        onClick: function(param) {
-          return Curry._1(dispatch, /* Dec */ 1);
-        },
-      },
-      '-'
-    ),
-    React.createElement(
-      'button',
-      {
-        onClick: function(param) {
-          return Curry._1(dispatch, /* Inc */ 0);
-        },
-      },
-      '+'
-    )
-  );
 }
 ```
