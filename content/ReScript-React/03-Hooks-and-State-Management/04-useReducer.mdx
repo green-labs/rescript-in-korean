@@ -1,12 +1,12 @@
 ---
 title: useReducer
 metaTitle: 04-useReducer Hook
-metaDescription: 'Details about the useReducer React hook in ReScript'
+metaDescription: '리스크립트에서 useReducer 훅'
 canonical: 'https://rescript-lang.org/docs/react/latest/hooks-reducer'
 sourceUrl: 'https://rescript-lang.org/docs/react/latest/hooks-reducer'
 ---
 
-`React.useReducer` helps you express your state in an action / reducer pattern.
+`React.useReducer`는 액션/리듀서 패턴으로 상태를 표현하는데 도움을 줍니다.
 
 ## 사용법
 
@@ -14,22 +14,18 @@ sourceUrl: 'https://rescript-lang.org/docs/react/latest/hooks-reducer'
 let (state, dispatch) = React.useReducer(reducer, initialState)
 ```
 
-```js
-var match = React.useReducer(reducer, initialState);
-```
+[useState](./hooks-state)의 대안입니다. `(state, action) => newState` 타입의 리듀서를 인자로 받고 `(action) => unit` 타입인 `dispatch` 함수와 쌍을 이루는 현재 `state`를 반환합니다.
 
-An alternative to [useState](./hooks-state). Accepts a reducer of type `(state, action) => newState`, and returns the current `state` paired with a `dispatch` function `(action) => unit`.
+`React.useReducer`는 여러 하위 값을 포함하는 복잡한 상태 관련 로직이 있거나 다음 상태가 이전 상태에 의존하는 경우 일반적으로 `useState` 훅보다 선호됩니다. `useReducer`를 사용하면 콜백 대신 디스패치를 전달할 수 있으므로 깊은 상태 구조 업데이트를 발생시키는 컴포넌트의 성능을 최적화 할 수 있습니다.
 
-`React.useReducer` is usually preferable to `useState` when you have complex state logic that involves multiple sub-values or when the next state depends on the previous one. `useReducer` also lets you optimize performance for components that trigger deep updates because you can pass dispatch down instead of callbacks.
-
-**참고** You will notice that the action / reducer pattern works especially well in ReScript due to its [immutable records](/docs/manual/latest/record), [variants](/docs/manual/latest/variant) and [pattern matching](/docs/manual/latest/pattern-matching-destructuring) features for easy expression of your action and state transitions.
+**참고** 액션 / 리듀서 패턴은 리스크립트의 [불변 레코드](/docs/manual/latest/record), [배리언트](/docs/manual/latest/variant) 그리고 [패턴 매칭](/docs/manual/latest/pattern-matching-destructuring) 기능을 사용하여 작업 및 상태 변경을 쉽게 표현할 수 있습니다.
 
 ## 예제
 
 ### React.useReducer를 사용한 카운터 예제
 
 ```reason
-// Counter.res
+/* Counter.res */
 
 type action = Inc | Dec
 type state = {count: int}
@@ -53,55 +49,11 @@ let make = () => {
 }
 ```
 
-```js
-function reducer(state, action) {
-  if (action) {
-    return {
-      count: (state.count - 1) | 0,
-    };
-  } else {
-    return {
-      count: (state.count + 1) | 0,
-    };
-  }
-}
-
-function Counter(Props) {
-  var match = React.useReducer(reducer, {
-    count: 0,
-  });
-  var dispatch = match[1];
-  return React.createElement(
-    React.Fragment,
-    undefined,
-    'Count:' + String(match[0].count),
-    React.createElement(
-      'button',
-      {
-        onClick: function (param) {
-          return Curry._1(dispatch, /* Dec */ 1);
-        },
-      },
-      '-'
-    ),
-    React.createElement(
-      'button',
-      {
-        onClick: function (param) {
-          return Curry._1(dispatch, /* Inc */ 0);
-        },
-      },
-      '+'
-    )
-  );
-}
-```
-
-> React guarantees that dispatch function identity is stable and won’t change on re-renders. This is why it’s safe to omit from the useEffect or useCallback dependency list.
+> 리액트는 디스패치 함수 ID(identity)가 안정적이며 다시 렌더링할 때 변경되지 않음을 보장합니다. 이것이 디스패치(dispatch)를 useEffect 또는 useCallback 종속성 목록(Deps)에서 생략해도 안전한 이유입니다.
 
 ### 더 복잡한 액션이 포함 된 Todo List 앱
 
-You can leverage the full power of variants to express actions with data payloads to parametrize your state transitions:
+여러분은 배리언트의 모든 기능(full power)를 활용하여 액션과 데이터 페이로드를 표현해 상태 전환을 매개변수화 할 수 있습니다.
 
 ```reason
 /* TodoApp.res */
@@ -181,9 +133,9 @@ let (state, dispatch) =
   React.useReducerWithMapState(reducer, initialState, initial)
 ```
 
-You can also create the `initialState` lazily. To do this, you can use `React.useReducerWithMapState` and pass an `init` function as the third argument. The initial state will be set to `init(initialState)`.
+`initialState` 초기 상태를 늦게 생성할 수 있습니다. 이 방법을 사용하려면 `React.useReducerWithMapState` 훅을 사용하고 `init` 함수를 세 번째 인수르 전달할 수 있습니다. 초기 상태는 `init(initialState)`로 설정됩니다.
 
-It lets you extract the logic for calculating the initial state outside the reducer. This is also handy for resetting the state later in response to an action:
+이 함수는 리듀서 외부의 초기 상태를 만들기 위한 로직을 추출할 수 있게 합니다. 또한 액션에 대한 응답을 가지고 나중에 상태를 재설정하는 데도 좋습니다.
 
 ```reason
 /* Counter.res */
