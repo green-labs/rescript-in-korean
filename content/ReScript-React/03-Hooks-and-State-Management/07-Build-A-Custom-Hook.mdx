@@ -1,27 +1,27 @@
 ---
 title: 커스텀 훅 만들기
 metaTitle: 07-커스텀 훅 만들기(Build A Custom Hook)
-metaDescription: 'How to build your own hooks in ReScript & React'
+metaDescription: '리스크립트와 리액트에서 여러분 자신만의 훅을 만드는 방법'
 canonical: 'https://rescript-lang.org/docs/react/latest/hooks-custom'
 sourceUrl: 'https://rescript-lang.org/docs/react/latest/hooks-custom'
 ---
 
-React comes with a few fundamental hooks out-of-the-box, such as `React.useState` or `React.useEffect`. Here you will learn how to build your own, higher-level hooks for your React use-cases.
+리액트에는 즉시 사용 가능한 `React.useState` 또는 `React.useEffect`같은 몇가지 훅이 기본적으로 제공됩니다. 여기선 리액트 사용 사례에 대한 고차 수준의 훅을 만들고 사용하는법을 배웁니다.
 
 ## 왜 커스텀 훅을 쓰죠?
 
-Custom hooks let you extract existing component logic into reusable, separate functions.
+커스텀 훅을 사용하면 기존 컴포넌트 로직을 재사용할 수 있도록 별도의 함수로 추출할 수 있습니다.
 
-Let's go back to a previous example from our [React.useEffect section](./hooks-effect) where we built a component for a chat application that displays a message, indicating whether a friend is online or offline:
+[React.useEffect section](./hooks-effect) 문서에서 사용된 예제로 돌아가보죠. 여기서 우리는 친구가 온라인인지 오프라인인지를 나타내는 메시지를 표시하는 채팅 애플리케이션용 컴포넌트를 만들었습니다.
 
 ```reason {16-31}
-// FriendStatus.res
+/* FriendStatus.res */
 
 module ChatAPI = {
-  // Imaginary globally available ChatAPI for demo purposes
+  /* Imaginary globally available ChatAPI for demo purposes */
   type status = { isOnline: bool };
-  @bs.val external subscribeToFriendStatus: (string, status => unit) => unit = "subscribeToFriendStatus";
-  @bs.val external unsubscribeFromFriendStatus: (string, status => unit) => unit = "unsubscribeFromFriendStatus";
+  @val external subscribeToFriendStatus: (string, status => unit) => unit = "subscribeToFriendStatus";
+  @val external unsubscribeFromFriendStatus: (string, status => unit) => unit = "unsubscribeFromFriendStatus";
 }
 
 type state = Offline | Loading | Online;
@@ -60,54 +60,13 @@ let make = (~friendId: string) => {
 
 ```
 
-```js
-function FriendStatus(Props) {
-  var friendId = Props.friendId;
-  var match = React.useState(function() {
-    return /* Offline */ 0;
-  });
-  var setState = match[1];
-  React.useEffect(function() {
-    var handleStatusChange = function(status) {
-      return Curry._1(setState, function(param) {
-        if (status.isOnline) {
-          return /* Online */ 2;
-        } else {
-          return /* Offline */ 0;
-        }
-      });
-    };
-    subscribeToFriendStatus(friendId, handleStatusChange);
-    Curry._1(setState, function(param) {
-      return /* Loading */ 1;
-    });
-    return function(param) {
-      unsubscribeFromFriendStatus(friendId, handleStatusChange);
-    };
-  });
-  var text;
-  switch (match[0]) {
-    case /* Offline */ 0:
-      text = friendId + ' is offline';
-      break;
-    case /* Loading */ 1:
-      text = 'loading...';
-      break;
-    case /* Online */ 2:
-      text = friendId + ' is online';
-      break;
-  }
-  return React.createElement('div', undefined, text);
-}
-```
-
-Now let’s say that our chat application also has a contact list, and we want to render names of online users with a green color. We could copy and paste similar logic above into our `FriendListItem` component but it wouldn’t be ideal:
+이제 우리의 채팅 애플리케이션은 연락처 목록을 가지고 있습니다. 그리고 우리는 온라인 유저의 이름을 녹색으로 렌더링하고 싶습니다. 우리는 복사 & 붙여넣기로 위와 비슷한 로직으로 `FriendListItem` 컴포넌트를 만들었습니다. 그러나 중복이 대부분이라 그다지 이상적이지 못하네요
 
 ```reason {15-30}
-// FriendListItem.res
+/* FriendListItem.res */
 type state = Offline | Loading | Online;
 
-// module ChatAPI = {...}
+/* module ChatAPI = {...} */
 
 type friend = {
   id: string,
@@ -147,69 +106,20 @@ let make = (~friend: friend) => {
 }
 ```
 
-```js
-function FriendListItem(Props) {
-  var friend = Props.friend;
-  var match = React.useState(function() {
-    return /* Offline */ 0;
-  });
-  var setState = match[1];
-  React.useEffect(function() {
-    var handleStatusChange = function(status) {
-      return Curry._1(setState, function(param) {
-        if (status.isOnline) {
-          return /* Online */ 2;
-        } else {
-          return /* Offline */ 0;
-        }
-      });
-    };
-    subscribeToFriendStatus(friend.id, handleStatusChange);
-    Curry._1(setState, function(param) {
-      return /* Loading */ 1;
-    });
-    return function(param) {
-      unsubscribeFromFriendStatus(friend.id, handleStatusChange);
-    };
-  });
-  var color;
-  switch (match[0]) {
-    case /* Offline */ 0:
-      color = 'red';
-      break;
-    case /* Loading */ 1:
-      color = 'grey';
-      break;
-    case /* Online */ 2:
-      color = 'green';
-      break;
-  }
-  return React.createElement(
-    'li',
-    {
-      style: {
-        color: color,
-      },
-    },
-    friend.name
-  );
-}
-```
+우리는 `FriendStatus` 와 `FriendListItem` 컴포넌트에서 같은 로직을 공유하고싶습니다.
 
-Instead, we’d like to share this logic between `FriendStatus` and `FriendListItem`.
+우리는 리액트에서 컴포넌트 간 상태를 가진 로직을 공유하는 두가지 인기있는 전통적인 방법을 알고 있습니다. 그 두가지 방법은 Render-Props 와 Higher-order Components(HoC) 입니다. 우리는 이제 훅으로 같은 문제를 추가적인 컴포넌트 트리를 작성하지 않고 해결하는 방법을 알아보겠습니다.
 
-Traditionally in React, we’ve had two popular ways to share stateful logic between components: render props and higher-order components. We will now look at how Hooks solve many of the same problems without forcing you to add more components to the tree.
+## 커스텀 훅으로 추출하기
 
-## Extracting a Custom Hook
+일반적으로 두 함수간에 로직을 공유하려면, 세번째 함수를 만들어 공통된 부분을 추출하는 방법이 있습니다. 두 컴포넌트도 함수 훅도 함수이기 때문에 이 방법도 잘 작동합니다.
 
-Usually when we want to share logic between two functions, we extract it to a third function. Both components and Hooks are functions, so this works for them too!
-
-**A custom Hook is a function whose name starts with ”use” and that may call other Hooks.** For example, `useFriendStatus` below is our first custom Hook (we create a new file `FriendStatusHook.res` to encapsulate the `state` type as well):
+**커스텀 훅은 이름이 ”use”로 시작하고 다른 훅을 호출할 수 있는 함수입니다** 예를 들어, 아래의 `useFriendStatus`는 우리의 첫 커스텀 훅입니다. (`state` 타입도 캡슐화하기 위해 새 파일 `FriendStatusHook.res`를 만듭니다)
 
 ```reason
-// FriendStatusHook.res
+/* FriendStatusHook.res */
 
-// module ChatAPI {...}
+/* module ChatAPI {...} */
 
 type state = Offline | Loading | Online
 
@@ -237,60 +147,32 @@ let useFriendStatus = (friendId: string): state => {
 }
 ```
 
-```js
-function useFriendStatus(friendId) {
-  var match = React.useState(function() {
-    return /* Offline */ 0;
-  });
-  var setState = match[1];
-  React.useEffect(function() {
-    var handleStatusChange = function(status) {
-      return Curry._1(setState, function(param) {
-        if (status.isOnline) {
-          return /* Online */ 2;
-        } else {
-          return /* Offline */ 0;
-        }
-      });
-    };
-    subscribeToFriendStatus(friendId, handleStatusChange);
-    Curry._1(setState, function(param) {
-      return /* Loading */ 1;
-    });
-    return function(param) {
-      unsubscribeFromFriendStatus(friendId, handleStatusChange);
-    };
-  });
-  return match[0];
-}
-```
+내부적으로 딱히 새로운 것은 없어요. 로직은 위에 작성된 컴포넌트로부터 복사된 것입니다. 컴포넌트에서와 마찬가지로 커스텀 훅의 가장 상위 레벨에서 다른 훅을 호출해야합니다.
 
-There’s nothing new inside of it — the logic is copied from the components above. Just like in a component, make sure to only call other Hooks unconditionally at the top level of your custom Hook.
+리액트 컴포넌트와 다르게 커스텀 훅에서는 `@react.component`와 같은 특정 시그니쳐가 필요하지 않습니다. 우리는 훅이 무엇을 인수로 받고 무엇을 반환하는지 결정할 수 있습니다. 즉, 이건 일반적인 함수와 같습니다. 훅 규칙이 적용된다는 것을 한눈에 알 수 있도록 이름은 항상 `use`로 시작해야합니다.
 
-Unlike a React component, a custom Hook doesn’t need to have a specific signature. We can decide what it takes as arguments, and what, if anything, it should return. In other words, it’s just like a normal function. Its name should always start with use so that you can tell at a glance that the rules of Hooks apply to it.
-
-The purpose of our `useFriendStatus` Hook is to subscribe us to a friend’s status. This is why it takes `friendId` as an argument, and returns the online state like `Online`, `Offline` or `Loading`:
+`useFriendStatus`훅의 목적은 Friend의 상태를 구독하는 것입니다. 이것이 바로 `friendId`를 인수로 받고 `Online`, `Offline` 또는 `Loading`과 같은 상태를 반환하는 이유입니다.
 
 ```reason
 let useFriendStatus = (friendId: string): status {
   let (state, setState) = React.useState(_ => Offline);
 
-  // ...
+  /* ... */
 
   state
 }
 ```
 
-Now let’s use our custom Hook.
+이제 우리의 커스텀 훅을 만들어보죠.
 
 ## 커스텀 훅 사용하기
 
-In the beginning, our stated goal was to remove the duplicated logic from the `FriendStatus` and `FriendListItem` components. Both of them want to know the online state of a friend.
+우리의 첫 목표는 `FriendStatus` 그리고 `FriendListItem` 컴포넌트에서 중복 로직을 제거하는 것이었습니다. 두 컴포넌트 모두 Friend의 온라인 상태를 알고싶어합니다.
 
-Now that we’ve extracted this logic to a useFriendStatus hook, we can just use it:
+이제 이 로직을 `useFriendStatus` 훅으로 추출했으니 사용할 수 있습니다.
 
 ```reason {6}
-// FriendStatus.res
+/* FriendStatus.res */
 type friend = { id: string };
 
 @react.component
@@ -307,36 +189,8 @@ let make = (~friend: friend) => {
 }
 ```
 
-```js
-function FriendStatus(Props) {
-  var friend = Props.friend;
-  var onlineState = useFriendStatus(friend.id);
-  var color;
-  switch (onlineState) {
-    case /* Offline */ 0:
-      color = 'red';
-      break;
-    case /* Loading */ 1:
-      color = 'grey';
-      break;
-    case /* Online */ 2:
-      color = 'green';
-      break;
-  }
-  return React.createElement(
-    'li',
-    {
-      style: {
-        color: color,
-      },
-    },
-    friend.name
-  );
-}
-```
-
 ```reason {4}
-// FriendListItem.res
+/* FriendListItem.res */
 @react.component
 let make = (~friend: friend) => {
   let onlineState = FriendStatusHook.useFriendStatus(friend.id);
@@ -353,47 +207,19 @@ let make = (~friend: friend) => {
 }
 ```
 
-```js
-function FriendListItem(Props) {
-  var friend = Props.friend;
-  var onlineState = useFriendStatus(friend.id);
-  var color;
-  switch (onlineState) {
-    case /* Offline */ 0:
-      color = 'red';
-      break;
-    case /* Loading */ 1:
-      color = 'grey';
-      break;
-    case /* Online */ 2:
-      color = 'green';
-      break;
-  }
-  return React.createElement(
-    'li',
-    {
-      style: {
-        color: color,
-      },
-    },
-    friend.name
-  );
-}
-```
+**이 코드는 원래의 예제와 동일합니까?** 그렇습니다. 이것은 정확히 동일한 방식으로 작동합니다. 자세히 살펴보면, 우리가 동작을 변경하지 않은것을 알 수 있습니다. 우리가 한 것은 두 함수 사이의 공통 코드를 별도의 함수로 추출하는 것 뿐이었습니다. 커스텀 훅은 리액트 기능이 아니라 훅 디자인에서 자연스럽게 따르는 규칙입니다.
 
-**Is this code equivalent to the original examples?** Yes, it works in exactly the same way. If you look closely, you’ll notice we didn’t make any changes to the behavior. All we did was to extract some common code between two functions into a separate function. Custom Hooks are a convention that naturally follows from the design of Hooks, rather than a React feature.
+**제 커스텀 훅의 이름은 항상 “use”로 시작해야할까요?** 부탁이에요 그렇게 해주세요. 이 규칙은 매우 중요하거든요. 그것 없이는 특정 함수가 내부에 훅에 대한 호출을 포함하는지 아닌지 알 수 없습니다. 때문에 우리는 훅의 규칙(Rules of Hooks) 위반을 자동으로 확인할 수 없습니다.
 
-**Do I have to name my custom Hooks starting with “use”?** Please do. This convention is very important. Without it, we wouldn’t be able to automatically check for violations of rules of Hooks because we couldn’t tell if a certain function contains calls to Hooks inside of it.
+**동일한 훅을 사용하는 두 컴포넌트가 상태를 공유하나요?** 아닙니다. 커스텀 훅은 상태 저장 로직을 재사용하는 메커니즘(Ex. 구독 설정 및 현재 값 기억)이지만 커스텀 훅을 사용할 때마다 내부의 모든 상태와 이펙트가 완전히 격리됩니다.
 
-**Do two components using the same Hook share state?** No. Custom Hooks are a mechanism to reuse stateful logic (such as setting up a subscription and remembering the current value), but every time you use a custom Hook, all state and effects inside of it are fully isolated.
-
-**How does a custom Hook get isolated state?** Each call to a Hook gets isolated state. Because we call useFriendStatus directly, from React’s point of view our component just calls useState and useEffect. And as we learned earlier, we can call useState and useEffect many times in one component, and they will be completely independent.
+**커스텀 휵은 어떻게 격리 된 상태가 되나요?** 훅에 대한 각각의 호출은 격리 된 상태를 만듭니다. 왜냐하면 우리가 useFriendStatus 훅을 직접 호출하기 때문에 리액트 관점에서 컴포넌트는 useState와 useEffect만 호출합니다. 그리고 앞서 배운 것처럼 하나의 컴포넌트에서 useState와 useEffect를 여러 번 호출할 수 있으며 그것은 완전히 독립적입니다..
 
 ### 팁: 훅끼리 정보 넘기기
 
-Since Hooks are functions, we can pass information between them.
+훅은 함수이기 때문에 우리는 훅 사이에 정보를 전달할 수 있습니다.
 
-To illustrate this, we’ll use another component from our hypothetical chat example. This is a chat message recipient picker that displays whether the currently selected friend is online:
+이를 설명하기 위해 우리는 가상 채팅 예제의 다른 컴포넌트를 사용할 것입니다. 현재 선택한 친구가 온라인 상태인지 여부를 표시하는 채팅 메시지 셀렉터입니다.
 
 ```reason {11,12,14-18,22}
 type friend = {id: string, name: string}
@@ -435,85 +261,19 @@ let make = () => {
 }
 ```
 
-```js
-var friendList = [
-  {
-    id: '1',
-    name: 'Phoebe',
-  },
-  {
-    id: '2',
-    name: 'Rachel',
-  },
-  {
-    id: '3',
-    name: 'Ross',
-  },
-];
+현재 선택된 친구 ID를 `recipientId` 상태 변수로 놓고 사용자가 `<select>` UI에서 다른 친구를 선택하면 상태를 업데이트 합니다.
 
-function Playground(Props) {
-  var match = React.useState(function() {
-    return '1';
-  });
-  var setRecipientId = match[1];
-  var recipientId = match[0];
-  var recipientOnlineState = useFriendStatus(recipientId);
-  var color;
-  switch (recipientOnlineState) {
-    case /* Offline */ 0:
-      color = /* Red */ 0;
-      break;
-    case /* Loading */ 1:
-      color = /* Grey */ 2;
-      break;
-    case /* Online */ 2:
-      color = /* Green */ 1;
-      break;
-  }
-  var onChange = function(evt) {
-    return Curry._1(setRecipientId, evt.target.value);
-  };
-  var friends = Belt_Array.map(friendList, function(friend) {
-    return React.createElement(
-      'option',
-      {
-        key: friend.id,
-        value: friend.id,
-      },
-      friend.name
-    );
-  });
-  return React.createElement(
-    React.Fragment,
-    undefined,
-    React.createElement(Playground$Circle, {
-      color: color,
-    }),
-    React.createElement(
-      'select',
-      {
-        value: recipientId,
-        onChange: onChange,
-      },
-      friends
-    )
-  );
-}
-```
-
-We keep the currently chosen friend ID in the `recipientId` state variable, and update it if the user chooses a different friend in the `<select>` picker.
-
-Because the useState Hook call gives us the latest value of the `recipientId` state variable, we can pass it to our custom `FriendStatusHook.useFriendStatus` Hook as an argument:
+useState 훅 호출은 `recipientId` 상태 변수의 최신 값을 제공하므로 이를 커스텀 훅인 `FriendStatusHook.useFriendStatus`에 인자로 전달할 수 있습니다.
 
 ```reason
 let (recipientId, setRecipientId) = React.useState(_ => "1")
 let recipientOnlineState = FriendStatusHook.useFriendStatus(recipientId)
 ```
 
-This lets us know whether the currently selected friend is online. If we pick a different friend and update the `recipientId` state variable, our `FriendStatus.useFriendStatus` Hook will unsubscribe from the previously selected friend, and subscribe to the status of the newly selected one.
+이를 통해 현재 선택된 친구가 온라인 상태인지 여부를 알 수 있습니다. 다른 친구를 선택하고 `recipientId` 상태 변수를 업데이트하면 우리가 만든 `FriendStatus.useFriendStatus` 훅이 이전에 선택한 친구의 구독을 취소하고 새로 선택한 친구의 상태를 구독합니다.
 
-## 상상력을 발휘 해보세요
+## 상상력을 발휘해보세요
 
-Custom Hooks offer the flexibility of sharing logic. You can write custom Hooks that cover a wide range of use cases like form handling, animation, declarative subscriptions, timers, and probably many more we haven’t considered. What’s more, you can build Hooks that are just as easy to use as React’s built-in features.
+커스텀 훅은 로직 공유의 유연성을 제공합니다. Form 처리, 애니메이션, 선언적 서브스크립션, 타이머 등 일반적인 사용사례와 이를 포함하지 않은 더 많은 사용 사례에 적용 가능한 커스텀 훅을 작성할 수 있습니다. 또한 리액트의 내장 기능만큼 사용하기 쉬운 훅을 만들 수 있습니다.
 
-Try to resist adding abstraction too early. It's pretty common that components grow pretty big when there is enough stateful logic handling involved. This is normal — don’t feel like you have to immediately split it into Hooks. But we also encourage you to start spotting cases where a custom Hook could hide complex logic behind a simple interface, or help untangle a messy component.
+너무 일찍 추상화하지 않도록 하세요. 충분한 상태 저장 로직 처리가 관련되어 있을 때 컴포넌트가 상당히 커지는 것은 매우 일반적입니다. 이것은 정상적인 현상입니다. 바로 훅을 만들어 분할할 필요는 없습니다. 그러나 커스텀 훅이 간단한 인터페이스 뒤에 복잡한 논리를 숨기거나 복잡한 컴포넌트를 풀어볼 수 있는 케이스를 발견하는 것도 좋습니다.
