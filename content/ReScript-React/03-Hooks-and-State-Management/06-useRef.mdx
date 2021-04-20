@@ -1,12 +1,12 @@
 ---
 title: useRef
 metaTitle: 06-useRef Hook
-metaDescription: 'Details about the useRef React hook in ReScript'
+metaDescription: '리스크립트에서의 useRef 훅에 대해 상세히 다룹니다'
 canonical: 'https://rescript-lang.org/docs/react/latest/hooks-ref'
 sourceUrl: 'https://rescript-lang.org/docs/react/latest/hooks-ref'
 ---
 
-The `useRef` hooks creates and manages mutable containers inside your React component.
+`useRef` 훅은 리액트 컴포넌트 내부에서 뮤터블 컨테이너를 생성하고 관리합니다.
 
 ## 사용법
 
@@ -14,33 +14,28 @@ The `useRef` hooks creates and manages mutable containers inside your React comp
 let refContainer = React.useRef(initialValue);
 ```
 
-```js
-var button = React.useRef(null);
-React.useRef(0);
-```
+`React.useRef`는 `initialValue` 로 초기화 된 `.current` 레코드 필드를 포함한 참조 객체를 반환합니다. 이 객체는 변강 가능(mutable)합니다. 또한 컴포넌트의 수명(lifetime)동안 영속적입니다.
 
-`React.useRef` returns a mutable ref object whose `.current` record field is initialized to the passed argument (`initialValue`). The returned object will persist for the full lifetime of the component.
+본질적으로, `React.ref`는 `.current` 레코드 필드에 변경 가능한 값을 저장할 수 있는 상자와 같습니다.
 
-Essentially, a `React.ref` is like a "box" that can hold a mutable value in its `.current` record field.
+주로 DOM에 접근하는 방법으로 refs를 사용하는 편입니다. 만일 ref 객체를 `<div ref={ReactDOM.Ref.domRef(myRef)} />`로 리액트에 전달하면 리액트는 해당 노드가 변경될 때마다 해당 DOM 노드에 `.current` 필드 속성을 설정합니다.
 
-You might be familiar with refs primarily as a way to access the DOM. If you pass a ref object to React with `<div ref={ReactDOM.Ref.domRef(myRef)} />`, React will set its `.current` property to the corresponding DOM node whenever that node changes.
+그러나 `useRef()`는 ref 속성보다 더 유용합니다. `useRef()`는 클래스 인스턴스의 필드를 사용하는 것과 유사하게 뮤터블한 값을 유지하는데 편리합니다.
 
-However, `useRef()` is useful for more than the ref attribute. It's handy for keeping any mutable value around similar to how you’d use instance fields in classes.
+이렇게 동작하는 이유는 `useRef()`가 일반적인 자바스크립트 객체를 생성하기 때문입니다. `useRef()`와 `{current: ...}` 객체를 직접 만드는 것의 유일한 차이점은 useRef가 모든 렌더링에서 동일한 ref 객체를 제공한다는 것입니다.
 
-This works because `useRef()` creates a plain JavaScript object. The only difference between `useRef()` and creating a `{current: ...}` object yourself is that useRef will give you the same ref object on every render.
+`useRef`는 컨텐츠가 변경될 때 어떤한 것도 우리에게 알리지 않는다는 것을 알아두세요. `.current` 레코드 필드를 변형하는 것은 재 렌더링을 유발시키지 않습니다. 리액트가 DOM 노드에 ref를 연결하거나 떼어낼 때 (attaches or detaches) 어떤 코드를 실행하려면 여러분은 대신에 [callback ref](./refs-and-the-dom#callback-refs)를 사용할 수 있습니다.
 
-Keep in mind that `useRef` doesn’t notify you when its content changes. Mutating the `.current` record field doesn’t cause a re-render. If you want to run some code when React attaches or detaches a ref to a DOM node, you may want to use a [callback ref](./refs-and-the-dom#callback-refs) instead.
-
-More infos on direct DOM manipulation can be found in the [Refs and the DOM](./refs-and-the-dom) section.
+직접적인 DOM 조작에 대한 자세한 정보는 [Refs and the DOM](./refs-and-the-dom) 페이지에서 찾을 수 있습니다.
 
 ## 예제
 
 ### Text 인풋의 포커스 관리
 
 ```reason
-// TextInputWithFocusButton.re
+/* TextInputWithFocusButton.re */
 
-@bs.send external focus: Dom.element => unit = "focus"
+@send external focus: Dom.element => unit = "focus"
 
 @react.component
 let make = () => {
@@ -59,40 +54,14 @@ let make = () => {
 }
 ```
 
-```js
-function TextInputWithFocusButton(Props) {
-  var inputEl = React.useRef(null);
-  var onClick = function(param) {
-    return Belt_Option.forEach(Caml_option.nullable_to_opt(inputEl.current), function(input) {
-      input.focus();
-    });
-  };
-  return React.createElement(
-    React.Fragment,
-    undefined,
-    React.createElement('input', {
-      ref: inputEl,
-      type: 'text',
-    }),
-    React.createElement(
-      'button',
-      {
-        onClick: onClick,
-      },
-      'Focus the input'
-    )
-  );
-}
-```
-
 ### 콜백 Ref의 사용
 
-Reusing the example from our [Refs and the DOM](./refs-and-the-dom#callback-refs) section:
+[Refs and the DOM](./refs-and-the-dom#callback-refs) 섹션의 예제를 재사용합니다.
 
 ```reason
-// CustomTextInput.re
+/* CustomTextInput.re */
 
-@bs.send external focus: Dom.element => unit = "focus"
+@send external focus: Dom.element => unit = "focus"
 
 @react.component
 let make = () => {
@@ -113,32 +82,5 @@ let make = () => {
       type_="button" value="Focus the text input" onClick={focusTextInput}
     />
   </div>
-}
-```
-
-```js
-function CustomTextInput(Props) {
-  var textInput = React.useRef(null);
-  var setTextInputRef = function(element) {
-    textInput.current = element;
-  };
-  var focusTextInput = function(param) {
-    return Belt_Option.forEach(Caml_option.nullable_to_opt(textInput.current), function(input) {
-      input.focus();
-    });
-  };
-  return React.createElement(
-    'div',
-    undefined,
-    React.createElement('input', {
-      ref: setTextInputRef,
-      type: 'text',
-    }),
-    React.createElement('input', {
-      type: 'button',
-      value: 'Focus the text input',
-      onClick: focusTextInput,
-    })
-  );
 }
 ```

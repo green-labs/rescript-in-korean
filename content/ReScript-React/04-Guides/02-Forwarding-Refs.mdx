@@ -1,19 +1,19 @@
 ---
 title: Ref 포워딩하기
 metaTitle: 02-Ref 포워딩하기(Forwarding Refs)
-metaDescription: 'Forwarding Ref values in ReScript and React'
+metaDescription: '리스크립트와 리액트에서 Forwarding Ref 값'
 canonical: 'https://rescript-lang.org/docs/react/latest/forwarding-refs'
 sourceUrl: 'https://rescript-lang.org/docs/react/latest/forwarding-refs'
 ---
 
-Ref forwarding is a technique for automatically passing a [React.ref](./refs-and-the-dom) through a component to one of its children. This is typically not necessary for most components in the application. However, it can be useful for some kinds of components, especially in reusable component libraries. The most common scenarios are described below.
+Ref 포워딩은 컴포넌트를 통해 다식 중 하나에 [React.ref](./refs-and-the-dom)를 자동으로 전달하는 테크닉입니다. 이는 일반적인 애플리케이션의 대부분의 컴포넌트에서 필요하지 않습니다. 그러나 일부 컴포넌트, 특히 재사용 가능한 컴포넌트 라이브러리에는 유용할 수 있습니다. 가장 일반적인 시나리오는 아래에 설명되어있습니다.
 
 ## 왜 Ref를 포워딩해야 하나요?
 
-Consider a FancyButton component that renders the native button DOM element:
+네이티브 버튼 DOM 요소를 렌더링하는 FancyButton을 한 번 봅시다.
 
 ```reason
-// FancyButton.res
+/* FancyButton.res */
 
 @react.component
 let make = (~children) => {
@@ -23,21 +23,21 @@ let make = (~children) => {
 }
 ```
 
-React components hide their implementation details, including their rendered output. Other components using FancyButton **usually will not need** to obtain a ref to the inner button DOM element. This is good because it prevents components from relying on each other’s DOM structure too much.
+리엑트 컴포넌트는 렌더링 된 출력을 포함하여 구현 세부 정보를 숨깁니다. FancyButton을 사용하는 다른 컴포넌트는 **보통** 내부 버튼(<button/>) DOM 요소에 대한 참조를 가져올 필요가 없습니다. 이는 컴포넌트가 서로의 DOM 구조에 강하게 결합되는 것을 방지하기 때문에 좋고 권장됩니다.
 
-Although such encapsulation is desirable for application-level components like `FeedStory` or `Comment`, it can be inconvenient for highly reusable “leaf” components like `FancyButton` or `MyTextInput`. These components tend to be used throughout the application in a similar manner as a regular DOM button and input, and accessing their DOM nodes may be unavoidable for managing focus, selection, or animations.
+이러한 캡슐화는 `FeedStory` 또는 `Comment`와 같은 애플리케이션 레벨 컴포넌트에 잘 어울리지만 `FancyButton` 또는 `MyTextInpput`처럼 재사용성이 높은 단말(leaf) 컴포넌트에는 불편할 수 있습니다. 이러한 컴포넌트는 일반 DOM button과 input과 유사한 방식으로 애플리케이션 전체에 사용되는 경향이 있으며, 포커스, 셀렉트 또는 애니메이션을 관리하기 위해서는 해당 DOM 노드에 불가피하기 액세스해야합니다.
 
-There are currently two strategies on forwarding refs through a component. In ReScript and React we strongly recommend **passing your ref as a prop**, but there is also a dedicated API called `React.forwardRef`.
+컴포넌트를 통해 참조를 포워딩하는 방법에는 두가지 전략이 있습니다. 리스크립트와 리액트에서는 **ref를 prop으로 넘기기**를 강력하게 추천합니다만 `React.forwardRef`라는 전용 API도 있습니다.
 
-We will discuss both methods in this document.
+우리는 이 두가지 방법에 대해 설명합니다.
 
 ## Props를 통한 Ref 포워드
 
-A `React.ref` can be passed down like any other prop. The component will take care of forwarding the ref to the right DOM element.
+`React.ref`는 다른 prop처럼 전달할 수 있습니다. 컴포넌트는 참조를 올바른 DOM 요소로 포워딩합니다.
 
-**No new concepts to learn!**
+**여기서는 다른 새로 배울 것이 없어요! 이미 봤거든요!**
 
-In the example below, `FancyInput` defines a prop `inputRef` that will be forwarded to its `input` element:
+아래 예시에서 `FancyInput` `input` 요소로 전달 될 `inputRef` prop을 정의합니다.
 
 ```reason
 // App.res
@@ -48,7 +48,7 @@ module FancyInput = {
     <div> <input type_="text" ref=inputRef /> children </div>
 }
 
-@bs.send external focus: Dom.element => unit = "focus"
+@send external focus: Dom.element => unit = "focus"
 
 @react.component
 let make = () => {
@@ -69,18 +69,18 @@ let make = () => {
 }
 ```
 
-We use the `ReactDOM.domRef` type to represent our `inputRef`. We pass our ref in the exact same manner as we'd do a DOM `ref` attribute (`<input ref={ReactDOM.Ref.domRef(myRef)} />`).
+우리는 `inputRef`를 나타내기 위해 `ReactDOM.domRef` 타입을 사용합니다. DOM `ref` 속성 (`<input ref={ReactDOM.Ref.domRef(myRef)} />`)과 똑같은 방식으로 ref를 포워딩합니다.
 
-## (Discouraged) React.forwardRef
+## (비추) React.forwardRef
 
-**참고** We discourage this method since it [will likely go away](https://twitter.com/dan_abramov/status/1173372190395445251) at some point, and doesn't yield any obvious advantages over the previously mentioned ref prop passing.
+**참고** 이 방법은 어느 시점에서 [사라질 가능성이 높으며](https://twitter.com/dan_abramov/status/1173372190395445251) 이전에 나온 ref prop 전달에 비해 확실한 이점을 제공하지 않으므로 권장하지 않습니다.
 
-`React.forwardRef` offers a way to "emulate a `ref` prop" within custom components. Internally the component will forward the passed `ref` value to the target DOM element instead.
+`React.forwardRef` 는 커스텀 컴포넌트 내부에서 "`ref` prop을 에뮬레이션"하는 방법을 제공합니다. 내부적으로 컴포넌트는 전달 된 `ref`값을 대상 DOM 요소로 대신 전달합니다.
 
-This is how the previous example would look like with the `React.forwardRef` approach:
+다음은 이전 예제에 `React.forwardRef` 접근 방식을 사용한 모습입니다.
 
 ```reason
-// App.res
+/* App.res */
 
 module FancyInput = {
   @react.component
@@ -98,7 +98,7 @@ module FancyInput = {
   )
 }
 
-@bs.send external focus: Dom.element => unit = "focus"
+@send external focus: Dom.element => unit = "focus"
 
 @react.component
 let make = () => {
@@ -119,62 +119,10 @@ let make = () => {
 }
 ```
 
-```js
-var React = require('react');
-var Belt_Option = require('./stdlib/belt_Option.js');
-var Caml_option = require('./stdlib/caml_option.js');
+**참고** `@react.component` 데코레이터는 기존 `make` 함수와 동일한 방식으로 `React.forwardRef`함수 내에서 레이블이 지정된 인수(labeled arguments) props 를 변환합니다.
 
-var make = React.forwardRef(function(Props, ref_) {
-  var className = Props.className;
-  var children = Props.children;
-  var tmp = {
-    type: 'text',
-  };
-  var tmp$1 = Belt_Option.map(ref_ == null ? undefined : Caml_option.some(ref_), function(prim) {
-    return prim;
-  });
-  if (tmp$1 !== undefined) {
-    tmp.ref = Caml_option.valFromOption(tmp$1);
-  }
-  if (className !== undefined) {
-    tmp.className = Caml_option.valFromOption(className);
-  }
-  return React.createElement('div', undefined, React.createElement('input', tmp), children);
-});
-
-var FancyInput = {
-  make: make,
-};
-
-function App(Props) {
-  var input = React.useRef(null);
-  var onClick = function(param) {
-    return Belt_Option.forEach(Caml_option.nullable_to_opt(input.current), function(input) {
-      input.focus();
-    });
-  };
-  return React.createElement(
-    'div',
-    undefined,
-    React.createElement(make, {
-      className: 'fancy',
-      children: React.createElement(
-        'button',
-        {
-          onClick: onClick,
-        },
-        'Click to focus'
-      ),
-      ref: input,
-    })
-  );
-}
-```
-
-**참고** Our `@react.component` decorator transforms our labeled argument props within our `React.forwardRef` function in the same manner as our classic `make` function.
-
-This way, components using `FancyInput` can get a ref to the underlying `input` DOM node and access it if necessary—just like if they used a DOM `input` directly.
+이렇게 하면 `FancyInput`을 사용하는 컴포넌트가 기본 `input` DOM 노드에 대한 참조를 가져와 필요한 경우 액세스 할 수 있습니다. 마치 DOM `input`을 직접 사용한 것처럼요.
 
 ## 컴포넌트 라이브러리 관리자를 위한 참고사항
 
-**When you start using ref forwarding in a component library, you should treat it as a breaking change and release a new major version of your library**. This is because your library likely has an observably different behavior (such as what refs get assigned to, and what types are exported), and this can break apps and other libraries that depend on the old behavior.
+**컴포넌트 라이브러리에서 ref 포워딩을 사용하기 시작하면 주요 변경사항(Breaking Change)으로 취급하고 라이브러리의 메이저 버전을 새로 릴리즈 해야합니다** 이는 라이브러리에 눈에 띄가 다른 동작(Ex. ref가 할당되는 항목 및 Export 되는 경우)이 있을 가능성이 높고 이로 인해 이전 동작에 의존하는 앱 및 기타 라이브러리가 손상될 수 있기 때문입니다.
