@@ -52,7 +52,7 @@ let make = () => {
 
 ## Refs 접근하기
 
-ref가 엘레멘트 렌더링중 전해지면 현재 ref의 속성에 대한 참조에 접근할 수 있습니다.
+ref가 엘리먼트 렌더링중 전해지면 현재 ref의 속성에 대한 참조에 접근할 수 있습니다.
 
 ```reason
 let value = myRef.current
@@ -60,7 +60,7 @@ let value = myRef.current
 
 ref의 값은 노드 유형에 따라 다릅니다.
 
-- ref 속성이 HTML 엘레멘트에 사용되면, `ReactDOM.Ref.domRef` 통해 전달 된 ref는 기본 DOM 엘레멘트를 current 속성으로 받습니다. (`React.ref<Js.Nullable.t<Dom.element>>` 타입)
+- ref 속성이 HTML 엘리먼트에 사용되면, `ReactDOM.Ref.domRef` 통해 전달 된 ref는 기본 DOM 엘리먼트를 current 속성으로 받습니다. (`React.ref<Js.Nullable.t<Dom.element>>` 타입)
 - 인터롭의 경우 사용자 정의 클래스 컴포넌트(자바스크립트 클래스 기반)에서 ref 속성이 사용되면 ref 객체는 해당 컴포넌트의 마운트 된 인스턴스를 current 값으로 받습니다. (이 문서에서 설명하지는 않겠습니다)
 - **여러분은 ref 속성을 컴포넌트 함수에 사용할 수 없습니다** 왜냐면 인스턴스가 없기 때문입니다. (리스크립트에서는 자바스크립트 클래스를 노출하지 않아요)
 

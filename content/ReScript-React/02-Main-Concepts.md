@@ -4,9 +4,9 @@ metaTitle: 'Main Concepts'
 metaDescription: 'ReScript in Korean - Main Concepts'
 ---
 
-**[엘레멘트와 JSX](/ReScript-React/02-Main-Concepts/01-Elements-and-JSX)**
+**[엘리먼트와 JSX](/ReScript-React/02-Main-Concepts/01-Elements-and-JSX)**
 
-**[엘레멘트 렌더링하기](/ReScript-React/02-Main-Concepts/02-Rendering-Elements)**
+**[엘리먼트 렌더링하기](/ReScript-React/02-Main-Concepts/02-Rendering-Elements)**
 
 **[컴포넌트와 Props](/ReScript-React/02-Main-Concepts/03-Components-and-Props)**
 

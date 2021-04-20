@@ -1,12 +1,12 @@
 ---
-title: 엘레멘트 렌더링하기
-metaTitle: 02-엘레멘트 렌더링하기(Rendering Elements)
-metaDescription: '리액트 엘레멘트를 DOM에 렌더링하는 방법'
+title: 엘리먼트 렌더링하기
+metaTitle: 02-엘리먼트 렌더링하기(Rendering Elements)
+metaDescription: '리액트 엘리먼트를 DOM에 렌더링하는 방법'
 canonical: 'https://rescript-lang.org/docs/react/latest/rendering-elements'
 sourceUrl: 'https://rescript-lang.org/docs/react/latest/rendering-elements'
 ---
 
-이전 섹션인 [엘레멘트와 JSX](./elements-and-jsx)에서 우리는 리액트 엘레멘트를 어떻게 만들고 관리하는지 배웠습니다. 이번 섹션에서 우리는 우리가 만든 엘레멘트를 DOM 에 렌더링하는 방법을 배울것입니다.
+이전 섹션인 [엘리먼트와 JSX](./elements-and-jsx)에서 우리는 리액트 엘리먼트를 어떻게 만들고 관리하는지 배웠습니다. 이번 섹션에서 우리는 우리가 만든 엘리먼트를 DOM 에 렌더링하는 방법을 배울것입니다.
 
 우리가 전에 이야기한것처럼 `React.element` 에는 우리가 화면에서 볼 내용이 작성되어 있습니다.
 
@@ -14,9 +14,9 @@ sourceUrl: 'https://rescript-lang.org/docs/react/latest/rendering-elements'
 let element = <h1> {React.string("Hello World")} </h1>
 ```
 
-브라우저 DOM 엘레멘트와 달리 리액트 엘레멘트는 일반 객체이며 생성 비용이 저렴합니다. React DOM은 React 엘레멘트와 일치하도록 DOM을 업데이트 합니다.
+브라우저 DOM 엘리먼트와 달리 리액트 엘리먼트는 일반 객체이며 생성 비용이 저렴합니다. React DOM은 React 엘리먼트와 일치하도록 DOM을 업데이트 합니다.
 
-## DOM에 엘레멘트 렌더링하기
+## DOM에 엘리먼트 렌더링하기
 
 다음과 같은 `div`를 포함하는 HTML 파일이 있다고 가정 해보겠습니다.
 
@@ -31,7 +31,7 @@ let element = <h1> {React.string("Hello World")} </h1>
 우리의 리액트 애플리케이션을 `root` div 에 렌더링하기 위해서는 다음 두 스텝을 거치면 됩니다.
 
 - `ReactDOM.querySelector`를 사용하여 DOM 노드 찾기
-- 쿼리로 찾은 `Dom.element`를 `ReactDOM.render` 함수를 이용해 리액트 엘레멘트 렌더링하기 
+- 쿼리로 찾은 `Dom.element`를 `ReactDOM.render` 함수를 이용해 리액트 엘리먼트 렌더링하기
 
 여기 `root` div 우리 애플리케이션을 렌더링하는 예제가 있습니다.
 
@@ -44,8 +44,8 @@ switch(ReactDOM.querySelector("#root")){
 }
 ```
 
-리액트 엘레멘트는 불변적입니다. 한 번 엘레멘트를 만들면, 여러분은 그 엘레멘트의 자식 요소나 속성을 변경시킬 수 없습니다. 엘레멘트는 영화의 단일 프레임과 같습니다. 엘레멘트는 특정 시점의 UI를 나타냅니다.
+리액트 엘리먼트는 불변적입니다. 한 번 엘리먼트를 만들면, 여러분은 그 엘리먼트의 자식 요소나 속성을 변경시킬 수 없습니다. 엘리먼트는 영화의 단일 프레임과 같습니다. 엘리먼트는 특정 시점의 UI를 나타냅니다.
 
-`ReactDOM.render`로 초기 렌더링 된 요소를 이후에 업데이트 하려면 리액트 컴포넌트와 상태관리 같은 몇 가지 개념을 더 이해해야합니다. 우선은 리액트 애플리케이션을 단지 엘레멘트 트리구조로 상상해보고 몇몇 엘레멘트가 애플리케이션의 수명주기동안 교체될 수 있다는 점을 알아두세요.
+`ReactDOM.render`로 초기 렌더링 된 요소를 이후에 업데이트 하려면 리액트 컴포넌트와 상태관리 같은 몇 가지 개념을 더 이해해야합니다. 우선은 리액트 애플리케이션을 단지 엘리먼트 트리구조로 상상해보고 몇몇 엘리먼트가 애플리케이션의 수명주기동안 교체될 수 있다는 점을 알아두세요.
 
-리액트는 엘레멘트 변경을 자동으로 인식하고 새 엘레멘트 트리로 가져오는 데에 꼭 필요한 DOM만 업데이트를 적용합니다.
+리액트는 엘리먼트 변경을 자동으로 인식하고 새 엘리먼트 트리로 가져오는 데에 꼭 필요한 DOM만 업데이트를 적용합니다.

@@ -95,7 +95,7 @@ let name = Some("Andrea")
 
 ## Children Props
 
-리액트에서 `props.children` 속성은 부모 엘레멘트와 관계된 계층 구조를 표현하는 특별한 속성입니다.
+리액트에서 `props.children` 속성은 부모 엘리먼트와 관계된 계층 구조를 표현하는 특별한 속성입니다.
 
 ```reason
 let element = <div> child1 child2 </div>
@@ -119,7 +119,7 @@ module MyList = {
 </MyList>
 ```
 
-흥미롭게도 단 하나의 엘레멘트를 보내든 여러 엘레멘트를 보내든, 리액트는 늘 단 하나의 `React.element` 타입으로 `children`을 만들어 보냅니다.
+흥미롭게도 단 하나의 엘리먼트를 보내든 여러 엘리먼트를 보내든, 리액트는 늘 단 하나의 `React.element` 타입으로 `children`을 만들어 보냅니다.
 
 `children` 타입을 재정의하는것도 가능합니다. 여기 예시가 있습니다.
 
@@ -178,9 +178,9 @@ module NoChildren = {
 <NoChildren> <div/> </NoChildren>
 ```
 
-Children props는 계층구조를 모델링하기위해 악용되는(abused) 편입니다. 예를들면 `<List> <ListHeader/> <Item/> </List>` (이 구조에서 `List`는 오직 `Item` 또는 `ListHeader` 엘레멘트를 받고싶습니다), 그러나 이런 종류의 제약 조건은 모든 컴포넌트가 `React.element`이기 때문에 적용하기 어렵습니다. 따라서 모든 Children Props가 실제로 `Item` 또는 `ListHeader` 타입인지 확인하기 위해서 악명높은 런타임 타입 검사가 필요합니다.
+Children props는 계층구조를 모델링하기위해 악용되는(abused) 편입니다. 예를들면 `<List> <ListHeader/> <Item/> </List>` (이 구조에서 `List`는 오직 `Item` 또는 `ListHeader` 엘리먼트를 받고싶습니다), 그러나 이런 종류의 제약 조건은 모든 컴포넌트가 `React.element`이기 때문에 적용하기 어렵습니다. 따라서 모든 Children Props가 실제로 `Item` 또는 `ListHeader` 타입인지 확인하기 위해서 악명높은 런타임 타입 검사가 필요합니다.
 
-이 경우 가장 좋은 접근은 Children 대신 Props를 사용하는 것입니다. 예를 들어 `<List header="..." items=[{id: "...", text: "..."}]/>` 처럼 Props를 사용하는 것이죠. 이 방법은 제약 조건을 입력하기 쉽고 컴포넌트 엘레멘트를 실제 사용하는 곳에서 컴포넌트 Props 제약 조건을 기억하고있지 않아도 됩니다.
+이 경우 가장 좋은 접근은 Children 대신 Props를 사용하는 것입니다. 예를 들어 `<List header="..." items=[{id: "...", text: "..."}]/>` 처럼 Props를 사용하는 것이죠. 이 방법은 제약 조건을 입력하기 쉽고 컴포넌트 엘리먼트를 실제 사용하는 곳에서 컴포넌트 Props 제약 조건을 기억하고있지 않아도 됩니다.
 
 **`children`의 가장 좋은 사용 사례는 의미적 순서나 구현의 상세를 제외하고 `React.element`를 전달하는 것입니다!**
 
@@ -221,7 +221,7 @@ let make = () => {
 }
 ```
 
-**참고** 리액트 컴포넌트는 대문자로 시작합니다. 원시 DOM 엘레멘트는 `div` 또는 `button` 처럼 소문자로 시작합니다. JSX 스펙과 코드 변환에 대한 정보는 [JSX language manual section](/docs/manual/latest/jsx#capitalized-tag) 여기서 더 찾을 수 있습니다.
+**참고** 리액트 컴포넌트는 대문자로 시작합니다. 원시 DOM 엘리먼트는 `div` 또는 `button` 처럼 소문자로 시작합니다. JSX 스펙과 코드 변환에 대한 정보는 [JSX language manual section](/docs/manual/latest/jsx#capitalized-tag) 여기서 더 찾을 수 있습니다.
 
 ### 컴포넌트 직접 작성하기
 
