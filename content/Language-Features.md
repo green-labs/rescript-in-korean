@@ -6,7 +6,7 @@ metaDescription: 'ReScript in Korean - Language Features'
 
 **[개요](/Language-Features/01-Overview)**
 
-**[Let Binding](/Language-Features/02-Let-Binding)**
+**[Let 바인딩](/Language-Features/02-Let-Binding)**
 
 **[타입](/Language-Features/03-Type)**
 
