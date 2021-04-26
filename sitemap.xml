@@ -20,8 +20,8 @@
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/Guides/02-Libraries</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/JavaScript-Interop/04-Bind-to-JS-Object</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/JavaScript-Interop/05-Bind-to-JS-Function</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/JavaScript-Interop/07-Bind-to-Global-JS-Values</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/JavaScript-Interop/06-Import-from-Export-to-JS</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/JavaScript-Interop/07-Bind-to-Global-JS-Values</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/JavaScript-Interop/08-JSON</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/JavaScript-Interop/09-Inlining-Constants</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://green-labs.github.io/rescript-in-korean/rescript-in-korean/JavaScript-Interop/10-Use-Illegal-Identifier-Names</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
