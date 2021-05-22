@@ -28,16 +28,11 @@ canonical: 'https://rescript-lang.org/docs/manual/latest/migrate-from-bucklescri
 
 ### 폴더 전체를 업그레이드하기
 
-전체 코드를 한번에 마이그레이션 하는 것은 주의해서 진행해야합니다.
-정확한 마이그레이션을 하기 위해 코드의 작은 부분부터 시작하는 것이 더 좋습니다.
-작은 코드베이스나 버전관리가 되고있는 안전한 작은 폴더에서 다음처럼 시작해볼 수 있습니다.
+전체 코드를 한번에 마이그레이션 하는 것에 확신이 있다면 다음 명령어를 사용하세요.
 
 ```console
-for f in your-folder/**/*.re; do; node_modules/.bin/bsc -format $f > ${f%.re}.res && rm $f; done;
+npx rescript convert -all
 ```
-
-이 명령은 `your-folder`에서 `.re` 파일을 순회해 `.res` 확장자로 변환하고 이전 파일을 제거할 것인지 묻습니다.
-만일 마이그레이션이 이상없이 잘 될 거라 생각한다면 `rm` 명령에 `-f` 옵션을 추가해 폴더안의 전체 파일을 파일 제거 확인없이 `.re` 파일을 지우고 `.res`로 변환되게 할 수 있습니다.
 
 ## 이전 Reason과의 차이점
 
