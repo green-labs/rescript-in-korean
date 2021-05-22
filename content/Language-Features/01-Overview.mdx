@@ -1,29 +1,29 @@
 ---
 title: '개요'
 metaTitle: '언어 특징 개요'
-metaDescription: '리스트립트의 문법 개요 빠르게 훑어보기'
+metaDescription: '리스크립트의 문법 개요 빠르게 훑어보기'
 sourceUrl: 'https://rescript-lang.org/docs/manual/latest/overview'
 canonical: 'https://rescript-lang.org/docs/manual/latest/overview'
 ---
 
-## 자바스트립트와 비교
+## 자바스크립트와 비교
 
 ### 세미콜론(Semicolon)
 
-| 자바스크립트             | 리스트립트              |
+| 자바스크립트             | 리스크립트              |
 | ------------------------ | ----------------------- |
 | 린터나 포매터에서 강제함 | 세미콜론 필요하지 않음! |
 
 ### 주석(Comments)
 
-| 자바스크립트      | 리스트립트 |
+| 자바스크립트      | 리스크립트 |
 | ----------------- | ---------- |
 | `/* Comment */`   | 같음       |
 | `// Line comment` | 같음       |
 
 ### 변수(Variable)
 
-| 자바스크립트            | 리스트립트                            |
+| 자바스크립트            | 리스크립트                            |
 | ----------------------- | ------------------------------------- |
 | `const x = 5;`          | `let x = 5`                           |
 | `var x = y;`            | 없음 (감사하게도)                     |
@@ -31,7 +31,7 @@ canonical: 'https://rescript-lang.org/docs/manual/latest/overview'
 
 ### 문자열 & 캐릭터(String & Character)
 
-| 자바스크립트             | 리스트립트               |
+| 자바스크립트             | 리스크립트               |
 | ------------------------ | ------------------------ |
 | `"Hello world!"`         | 같음                     |
 | `'Hello world!'`         | 문자열은 `"`만 사용  |
@@ -40,7 +40,7 @@ canonical: 'https://rescript-lang.org/docs/manual/latest/overview'
 
 ### 불리언(Boolean)
 
-| 자바스크립트                                          | 리스트립트                                        |
+| 자바스크립트                                          | 리스크립트                                        |
 | ----------------------------------------------------- | ------------------------------------------------- |
 | `true`, `false`                                       | 같음                                              |
 | `!true`                                               | 같음                                              |
@@ -51,7 +51,7 @@ canonical: 'https://rescript-lang.org/docs/manual/latest/overview'
 
 ### 숫자(Number)
 
-| 자바스크립트 | 리스트립트   |
+| 자바스크립트 | 리스크립트   |
 | ------------ | ------------ |
 | `3`          | 같음 \*      |
 | `3.1415`     | 같음         |
@@ -59,11 +59,11 @@ canonical: 'https://rescript-lang.org/docs/manual/latest/overview'
 | `3.0 + 4.5`  | `3.0 +. 4.5` |
 | `5 % 3`      | `mod(5, 3)`  |
 
-\* 자바스트립트는 integer와 float 간에 차이가 없다.
+\* 자바스크립트는 integer와 float 간에 차이가 없다.
 
 ### 객체/레코드(Object/Record)
 
-| 자바스크립트        | 리스트립트                              |
+| 자바스크립트        | 리스크립트                              |
 | ------------------- | --------------------------------------- |
 | 타입 없음           | `type point = {x: int, mutable y: int}` |
 | `{x: 30, y: 20}`    | 같음                                    |
@@ -73,7 +73,7 @@ canonical: 'https://rescript-lang.org/docs/manual/latest/overview'
 
 ### 배열(Array)
 
-| 자바스크립트       | 리스트립트            |
+| 자바스크립트       | 리스크립트            |
 | ------------------ | --------------------- |
 | `[1, 2, 3]`        | 같음                  |
 | `myArray[1] = 10`  | 같음                  |
@@ -83,7 +83,7 @@ canonical: 'https://rescript-lang.org/docs/manual/latest/overview'
 
 ### Null
 
-| 자바스크립트        | 리스트립트 |
+| 자바스크립트        | 리스크립트 |
 | ------------------- | ---------- |
 | `null`, `undefined` | `None` \*  |
 
@@ -91,7 +91,7 @@ canonical: 'https://rescript-lang.org/docs/manual/latest/overview'
 
 ### 함수(Function)
 
-| 자바스크립트                    | 리스트립트                   |
+| 자바스크립트                    | 리스크립트                   |
 | ------------------------------- | ---------------------------- |
 | `arg => retVal`                 | 같음                         |
 | `function named(arg) {...}`     | `let named = (arg) => {...}` |
@@ -104,7 +104,7 @@ canonical: 'https://rescript-lang.org/docs/manual/latest/overview'
   <thead>
     <tr>
       <th>자바스크립트</th>
-      <th>리스트립트 </th>
+      <th>리스크립트 </th>
     </tr>
   </thead>
   <tbody>
@@ -133,7 +133,7 @@ canonical: 'https://rescript-lang.org/docs/manual/latest/overview'
 
 ### If-else
 
-| 자바스크립트          | 리스트립트                                                                        |
+| 자바스크립트          | 리스크립트                                                                        |
 | --------------------- | --------------------------------------------------------------------------------- |
 | `if (a) {b} else {c}` | `if a {b} else {c}` \*                                                            |
 | `a ? b : c`           | 같음                                                                              |
@@ -143,7 +143,7 @@ canonical: 'https://rescript-lang.org/docs/manual/latest/overview'
 
 ### 구조 분해 할당(Destructuring)
 
-| 자바스크립트                  | 리스트립트                        |
+| 자바스크립트                  | 리스크립트                        |
 | ----------------------------- | --------------------------------- |
 | `const {a, b} = data`         | `let {a, b} = data`               |
 | `const [a, b] = data`         | <code>let [a, b] = data</code> \* |
@@ -153,7 +153,7 @@ canonical: 'https://rescript-lang.org/docs/manual/latest/overview'
 
 ### 루프(Loop)
 
-| 자바스크립트                          | 리스트립트                   |
+| 자바스크립트                          | 리스크립트                   |
 | ------------------------------------- | ---------------------------- |
 | `for (let i = 0; i <= 10; i++) {...}` | `for i in 0 to 10 {...}`     |
 | `for (let i = 10; i >= 0; i--) {...}` | `for i in 10 downto 0 {...}` |
@@ -161,7 +161,7 @@ canonical: 'https://rescript-lang.org/docs/manual/latest/overview'
 
 ### JSX
 
-| 자바스크립트                              | 리스트립트                 |
+| 자바스크립트                              | 리스크립트                 |
 | ----------------------------------------- | -------------------------- |
 | `<Comp message="hi" onClick={handler} />` | 같음                       |
 | `<Comp message={message} />`              | `<Comp message />` \*      |
@@ -172,7 +172,7 @@ canonical: 'https://rescript-lang.org/docs/manual/latest/overview'
 
 ### 예외 처리(Exception)
 
-| 자바스크립트                              | 리스트립트                                       |
+| 자바스크립트                              | 리스크립트                                       |
 | ----------------------------------------- | ------------------------------------------------ |
 | `throw new SomeError(...)`                | `raise(SomeError(...))`                          |
 | `try {a} catch (Err) {...} finally {...}` | <code>try a catch { &#124; Err => ...}</code> \* |
@@ -187,7 +187,7 @@ canonical: 'https://rescript-lang.org/docs/manual/latest/overview'
   <thead>
     <tr>
       <th>자바스크립트</th>
-      <th>리스트립트</th>
+      <th>리스크립트</th>
     </tr>
   </thead>
   <tbody>
