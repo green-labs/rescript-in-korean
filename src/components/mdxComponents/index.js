@@ -9,16 +9,56 @@ const StyledPre = styled('pre')`
   background: ${props => props.theme.colors.preFormattedText};
 `;
 
+const makeTitle = (children) => {
+  // MUTABLE!
+  let title = ""
+  children.forEach(child => {
+    if(typeof child === "string") {
+      title = title.concat(child)
+    } else {
+      
+      title = title.concat(child.props.children)
+    }
+  })
+  return title
+}
+
 export default {
   h1: props => (
     <h1 className="heading1" id={props.children.replace(/\s+/g, '').toLowerCase()} {...props} />
   ),
-  h2: props => (
-    <h2 className="heading2" id={props.children.replace(/\s+/g, '').toLowerCase()} {...props} />
-  ),
-  h3: props => (
-    <h3 className="heading3" id={props.children.replace(/\s+/g, '').toLowerCase()} {...props} />
-  ),
+  h2: props => {
+    try {
+      if (Array.isArray(props.children)) {
+        return (
+          <h2 className="heading3" id={makeTitle(props.children).replace(/\s+/g, '').toLowerCase()} {...props} />
+        )
+      } else {
+        return (
+          <h2 className="heading3" id={props.children.replace(/\s+/g, '').toLowerCase()} {...props} />
+        )
+      }
+    } catch(err) {
+      console.log(err)
+      console.log(props.children)
+    }
+  },
+  h3: props => {
+    try {
+      if (Array.isArray(props.children)) {
+        return (
+          <h3 className="heading3" id={makeTitle(props.children).replace(/\s+/g, '').toLowerCase()} {...props} />
+        )
+      } else {
+        return (
+          <h3 className="heading3" id={props.children.replace(/\s+/g, '').toLowerCase()} {...props} />
+        )
+      }
+    } catch(err) {
+      console.log(err)
+      console.log(props.children)
+    }
+  },
   h4: props => (
     <h4 className="heading4" id={props.children.replace(/\s+/g, '').toLowerCase()} {...props} />
   ),
