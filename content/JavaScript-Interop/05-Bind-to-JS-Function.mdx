@@ -1,15 +1,15 @@
 ---
-title: 'Bind to JS Function'
-metaTitle: 'Bind to JS Function'
-metaDescription: 'JS interop with functions in ReScript'
+title: '자바스크립트 함수에 바인딩하기'
+metaTitle: '자바스크립트 함수에 바인딩하기'
+metaDescription: 'ReScript의 자바스크립트 함수 인터롭'
 sourceUrl: 'https://rescript-lang.org/docs/manual/latest/bind-to-js-function'
 canonical: 'https://rescript-lang.org/docs/manual/latest/bind-to-js-function'
 ---
 
-Binding a JS function is like binding any other value:
+자바스크립트 함수를 바인딩 하는 것은 다른 어떤 값을 바인딩하는 것과 같습니다:
 
 ```reason
-/* Import nodejs' path.dirname */
+/* nodejs의 path.dirname 을 가져옵니다. */
 @bs.module("path") external dirname: string => string = "dirname"
 let root = dirname("/User/github") // returns "User"
 ```
@@ -19,26 +19,26 @@ var Path = require('path');
 var root = Path.dirname('/User/github');
 ```
 
-We also expose a few special features, described below.
+아래에 특별한 다른 기능을 공개합니다.
 
-## Labeled Arguments
+## 이름이 있는 인자
 
-ReScript has [labeled arguments](function.md#labeled-arguments) (that can also be optional). These work on an `external` too! You'd use them to _fix_ a JS function's unclear usage. Assuming we're modeling this:
+ReScript는 [이름이 있는 인자](function.md#labeled-arguments) (물론 옵셔널입니다) 를 가지고 있습니다. `external` 에서도 동작합니다! 자바스크립트 함수의 명확하지 않은 사용법을 _수정하는데_ 사용됩니다. 아래 내용을 모델링한다고 가정해봅시다:
 
 ```js
 // MyGame.js
 
 function draw(x, y, border) {
-  // suppose `border` is optional and defaults to false
+  // `border` 는 옵셔널이고 기본값은 false 라고 가정합니다.
 }
 draw(10, 20);
 draw(20, 20, true);
 ```
 
-It'd be nice if on ReScript's side, we can bind & call `draw` while labeling things a bit:
+ReScript 코드에서에서 `draw` 에 이름을 지정하고 호출할 수 있다면 좋을 것입니다.
 
 ```reason
-@bs.module("MyGame")
+@module("MyGame")
 external draw: (~x: int, ~y: int, ~border: bool=?, unit) => unit = "draw"
 
 draw(~x=10, ~y=20, ~border=true, ())
@@ -52,11 +52,11 @@ MyGame.draw(10, 20, true);
 MyGame.draw(10, 20, undefined);
 ```
 
-We've compiled to the same function, but now the usage is much clearer on the ReScript side thanks to labels!
+같은 함수로 컴파일 되었지만, ReScript 코드에서는 인자에 이름을 넣었기 때문에 더욱 명확해졌습니다!
 
-**Note**: in this particular case, you need a unit, `()` after `border`, since `border` is an [optional argument at the last position](function.md#optional-labeled-arguments). Not having a unit to indicate you've finished applying the function would generate a warning.
+**참고**: [마지막 인자가 옵셔널인](function.md#optional-labeled-arguments) `border` 와 같은 특수한 경우에는 바로 뒤에 유닛(unit) `()` 이 필요합니다. 함수가 완료되었음을 알려주는 유닛이 없다면 경고를 냅니다.
 
-Note that you can change the order of labeled arguments on the ReScript side and BuckleScript will ensure that they appear the right way in the JavaScript output:
+ReScript 코드에서 이름이 있는 인수는 순서를 자유롭게 변경할 수 있습니다. 자바스크립트 결과는 항상 올바른 순서로 표시됩니다.
 
 ```reason
 @bs.module("MyGame")
@@ -73,14 +73,14 @@ MyGame.draw(10, 20, undefined);
 MyGame.draw(10, 20, undefined);
 ```
 
-## Object Method
+## 객체 메소드
 
-Functions attached to a JS objects (other than JS modules) require a special way of binding to them, using `bs.send`:
+자바스크립트 모듈을 제외한 자바스크립트 객체는 `send` 를 사용하는 특별한 바인딩 방법이 필요합니다.
 
 ```reason
-type document // abstract type for a document object
-@bs.send external getElementById: (document, string) => Dom.element = "getElementById"
-@bs.val external doc: document = "document"
+type document // document 객체를 위한 추상 타입
+@send external getElementById: (document, string) => Dom.element = "getElementById"
+@val external doc: document = "document"
 
 let el = getElementById(doc, "myId")
 ```
@@ -89,18 +89,19 @@ let el = getElementById(doc, "myId")
 var el = document.getElementById('myId');
 ```
 
-In a `bs.send`, the object is always the first argument. Actual arguments of the method follow (this is a bit what modern OOP objects are really).
+`send`를 사용하는 경우 객체는 언제나 첫번째 인자입니다. 메소드의 실제 인자는 다음과 같습니다. (this is a bit what modern OOP objects are really)
 
-### Chaining
+### 체이닝
 
-Ever used `foo().bar().baz()` chaining ("fluent api") in JS OOP? We can model that in BuckleScript too, through the [pipe operator](pipe.md).
+자바스크립트 OOP 에서 `foo().bar().baz()` 와 같은 체이닝 ("흐름을 가지는 API") 를 써본적 있나요? ReScript 도 물론 [파이프 오퍼레이터](pipe.md)를 이용해서 똑같이 할 수 있습니다.
 
-## Variadic Function Arguments
+## 가변 함수 인자
 
-You might have JS functions that take an arbitrary amount of arguments. BuckleScript supports modeling those, under the condition that the arbitrary arguments part is homogenous (aka of the same type). If so, add `bs.variadic` to your `external`.
+
+임의의 한개 이상의 인자를 가진 자바스크립트 함수가 있다고 가정할 수 있습니다. ReScript는 임의의 인자들 모두가 같은 타입이라는 전제하에 이러한 모델링을 지원합니다. 필요한 경우에 `variadic` 키워드를 `external` 에 추가하세요.
 
 ```reason
-@bs.module("path") @bs.variadic
+@module("path") @variadic
 external join: array<string> => string = "join"
 
 let v = join(["a", "b"])
@@ -111,31 +112,32 @@ var Path = require('path');
 var v = Path.join('a', 'b');
 ```
 
-`bs.module` will be explained in [Import from/Export to JS](import-from-export-to-js.md).
+`module`은 [Import from/Export to JS](import-from-export-to-js.md) 에서 다루겠습니다.
 
-## Modeling Polymorphic Function
+## 폴리모픽 함수 모델링
 
-Apart from the above special-case, JS function in general are often arbitrary overloaded in terms of argument types and number. How would you bind to those?
+위의 특수한 경우를 제외하고, 자바스크립트 함수의 인자는 일반적으로 인자의 갯수나 타입이 임의로 오버로드 되는 경우가 많습니다. 그러면 어떻게 바인딩 수 있을까요?
 
-### Trick 1: Multiple externals
+### 트릭 1: 여러개의 external 을 사용하세요
 
-If you can exhaustively enumerate the many forms an overloaded JS function can take, simply bind to each differently:
+오버로드된 자바스크립트 함수가 취할 수 있는 많은 경우의 수를 철저히 열거할 수 있다면, 간단한 방법으로는 모두 각각 다르게 바인딩하세요:
 
 ```reason
-@bs.module("MyGame") external drawCat: unit => unit = "draw"
-@bs.module("MyGame") external drawDog: (~giveName: string) => unit = "draw"
-@bs.module("MyGame") external draw: (string, ~useRandomAnimal: bool) => unit = "draw"
+@module("MyGame") external drawCat: unit => unit = "draw"
+@module("MyGame") external drawDog: (~giveName: string) => unit = "draw"
+@module("MyGame") external draw: (string, ~useRandomAnimal: bool) => unit = "draw"
 ```
 
 ```js
 // Empty output
 ```
 
-Note how all three externals bind to the same JS function, `draw`.
+세가지 external 이 모두 같은 자바스크립트 함수 `draw` 에 어떻게 바인딩 되었는지 확인하세요.
 
-### Trick 2: Polymorphic Variant + bs.unwrap
 
-If you have the irresistible urge of saying "if only this JS function argument was a variant instead of informally being either `string` or `int`", then good news: we do provide such `external` features through annotating a parameter as a polymorphic variant! Assuming you have the following JS function you'd like to bind to:
+### 트릭 2: 폴리모픽 배리언트 + `unwrap` 을 사용하세요
+
+"만약 자바스크립트의 함수 인자가 비공식적으로 `string` 또는 `int` 가 아닌 배리언트였다면" 이라고 말하고 싶은 충동이 들었다면, 좋은 소식이 있습니다. 우리는 인자에 주석을 달아 이러한 `external` 기능을 제공합니다. 폴리모픽 배리언트라고 합니다! 바인딩하려는 다음 자바스크립트 함수가 있다고 가정해봅시다:
 
 ```js
 function padLeft(value, padding) {
@@ -149,13 +151,13 @@ function padLeft(value, padding) {
 }
 ```
 
-Here, `padding` is really conceptually a variant. Let's model it as such.
+이제 `padding` 은 실제로 개념적으로 배리언트가 되었습니다. 이렇게 모델링 해봅시다.
 
 ```reason
-@bs.val
+@val
 external padLeft: (
   string,
-  @bs.unwrap [
+  @unwrap [
     | #Str(string)
     | #Int(int)
   ])
@@ -169,19 +171,20 @@ padLeft('Hello World', 4);
 padLeft('Hello World', 'Message from ReScript: ');
 ```
 
-Obviously, the JS side couldn't have an argument that's a polymorphic variant! But here, we're just piggy backing on poly variants' type checking and syntax. The secret is the `@bs.unwrap` annotation on the type. It strips the variant constructors and compile to just the payload's value. See the output.
+명백하게, 자바스크립트는 폴리모픽 배리언트를 가질 수 없습니다! 우리는 이제 폴리모픽 배리언트의 타입 체크와 문법을 얻었습니다. 이것의 비밀은 `@unwrap` 어노테이션 때문입니다. 컴파일 타임에 배리언트 생성자를 제거하고 페이로드의 값만 출력합니다. 자바스크립트 결과를 확인하세요
 
-## Constrain Arguments Better
+## 더 나은 인자 제한 방법
 
-Consider the Node `fs.readFileSync`'s second argument. It can take a string, but really only a defined set: `"ascii"`, `"utf8"`, etc. You can still bind it as a string, but we can use poly variants + `bs.string` to ensure that our usage's more correct:
+Node의 `fs.readFileSync` 의 두번째 인자를 생각해보세요. 문자열을 인자로 사용할 것입니다. 그러나 실제로는 `"ascii"` 그리고 `"utf8"` 두가지의 정의된 집합을 사용합니다. 물론 문자열로 바인딩 할 수 있지만 폴리모픽 배리언트 + `string` 을 통해 우리의 사용법을 조금 더 정확하게 만들 수 있습니다:
+
 
 ```reason
-@bs.module("fs")
+@module("fs")
 external readFileSync: (
   ~name: string,
-  @bs.string [
+  @string [
     | #utf8
-    | @bs.as("ascii") #useAscii
+    | @as("ascii") #useAscii
   ],
 ) => string = "readFileSync"
 
@@ -193,19 +196,19 @@ var Fs = require('fs');
 Fs.readFileSync('xx.txt', 'ascii');
 ```
 
-- Attaching `@bs.string` to the whole poly variant type makes its constructor compile to a string of the same name.
-- Attaching a `@bs.as("bla")` to a constructor lets you customize the final string.
+- 전체 폴리모픽 배리언트 타입에 `@string` 을 추가하면 생성자에서 같은 이름의 문자열로 컴파일합니다.
+- `@as("bla")` 를 생성자에 추가하면 최종 문자열을 사용자 정의할 수 있습니다.
 
-And now, passing something like `"myOwnUnicode"` or other variant constructor names to `readFileSync` would correctly error.
+이제 `"myOwnUnicode"` 또는 기타 배리언트 생성자 이름을 `readFileSync` 에 전달하면 오류가 발생합니다.
 
-Aside from string, you can also compile an argument to an int, using `bs.int` instead of `bs.string` in a similar way:
+문자열 외에도 비슷한 방식으로 `string` 대신에 `int` 를 사용하여 인자를 int로 컴파일할 수 있습니다.
 
 ```reason
-@bs.val
+@val
 external testIntType: (
-  @bs.int [
+  @int [
     | #onClosed
-    | @bs.as(20) #onOpen
+    | @as(20) #onOpen
     | #inBinary
   ])
   => int = "testIntType"
@@ -216,19 +219,20 @@ testIntType(#inBinary)
 testIntType(21);
 ```
 
-`onClosed` compiles to `0`, `onOpen` to `20` and `inBinary` to **`21`**.
+`onClosed`는 `0` 으로 컴파일되고, `onOpen` 은 `20` 으로, 그리고 `inBinary` 는 **`21`** 로 컴파일 됩니다.
 
-## Special-case: Event Listeners
+## 특수한 경우: 이벤트 리스너
 
-One last trick with polymorphic variants:
+
+폴리모픽 배리언트의 마지막 트릭입니다:
 
 ```reason
 type readline
 
-@bs.send
+@send
 external on: (
     readline,
-    @bs.string [
+    @string [
       | #close(unit => unit)
       | #line(string => unit)
     ]
@@ -244,8 +248,8 @@ let register = rl =>
 ```js
 function register(rl) {
   return rl
-    .on('close', function($$event) {})
-    .on('line', function(line) {
+    .on("close", function($$event) {})
+    .on("line", function(line) {
       console.log(line);
     });
 }
@@ -253,14 +257,14 @@ function register(rl) {
 
 <!-- TODO: GADT phantom type -->
 
-## Fixed Arguments
+## 고정된 인자
 
-Sometimes it's convenient to bind to a function using an `external`, while passing predetermined argument values to the JS function:
+때때로 인자의 기본값을 자바스크립트 함수에 전달하면서 `external` 을 사용하면 편리합니다.
 
 ```reason
-@bs.val
+@val
 external processOnExit: (
-  @bs.as("exit") _,
+  @as("exit") _,
   int => unit
 ) => unit = "process.on"
 
@@ -275,13 +279,13 @@ process.on('exit', function(exitCode) {
 });
 ```
 
-The `@bs.as("exit")` and the placeholder `_` argument together indicates that you want the first argument to compile to the string `"exit"`. You can also use any JSON literal with `bs.as`: `` @bs.as(json`true`) ``, `` @bs.as(json`{"name": "John"}`) ``, etc.
+`@as("exit")` 그리고 플레이스홀더 `_` 인자는 첫번째 인자가 컴파일되면 `"exist"` 로 컴파일 되기를 원한다는 것을 나타냅니다. 그리고 `bs.as`: `` @bs.as(json`true`) ``, `` @bs.as(json`{"name": "John"}`) ``, 등 과 같은 모든 JSON 리터럴을 사용할 수 있습니다.
 
-## Curry & Uncurry
+## 커리 & 언커리
 
-Curry is a delicious Indian dish. More importantly, in the context of ReScript (and functional programming in general), currying means that function taking multiple arguments can be applied a few arguments at time, until all the arguments are applied.
+커리는 맛있는 인도 음식입니다. 더 중요한 것은 ReScript의 컨텍스트안에서 (그리고 일반적인 함수형 프로그래밍에서) 커리는 여러 인자를 취하는 함수가 모든 인자가 적용될 때 까지 한번에 여러개의 인자를 취할 수 있는 것을 말합니다.
 
-See the `addFive` intermediate function? `add` takes in 3 arguments but received only 1. It's interpreted as "currying" the argument `5` and waiting for the next 2 arguments to be applied later on. Type signatures:
+중간에 있는 `addFive` 함수가 보이시나요? `add` 는 3개의 인자를 받을 수 있지만 단 한개만 받습니다. 인자 `5` 를 "커링" 하고 나중에 적용될 다음 두개의 인자를 기다리는 것으로 해석할 수 있습니다.
 
 ```res sig
 let add: (int, int, int) => int
@@ -289,31 +293,31 @@ let addFive: (int, int) => int
 let twelve: int
 ```
 
-(In a dynamic language such as JS, currying would be dangerous, since accidentally forgetting to pass an argument doesn't error at compile time).
+(자바스크립트와 같은 동적 언어에서는 실수로 인자 전달을 하지 않더라도 오류가 발생하지 않기 때문에 커링을 사용하는 것이 위험할 수 있습니다.)
 
-### Drawback
+### 취약점
 
-Unfortunately, due to JS not having currying because of the aforementioned reason, it's hard for ReScript multi-argument functions to map cleanly to JS functions 100% of the time:
+불행하게도 자바스크립트에는 앞서 언급한 이유 때문에 커링이 없어 ReScript 다중 인자 함수가 자바스크립트 함수에 100% 깔끔하게 매핑되는 것은 어렵습니다.
 
-1. When all the arguments of a function are supplied (aka no currying), ReScript does its best to to compile e.g. a 3-arguments call into a plain JS call with 3 arguments.
+1. 함수의 모든 인자가 제공되면 (aka 커링이 아님) ReScript는 컴파일을 위해 최선을 다합니다. 예 : 3개의 인자가 있는 일반적인 자바스크립트 호출에대한 3개 인자를 호출.
 
-2. If it's too hard to detect whether a function application is complete\*, ReScript will use a runtime mechanism (the `Curry` module) to curry as many args as we can and check whether the result is fully applied.
+2. 함수 애플리케이션이 완전한 것\*을 판단하기 어렵다면 ReScript는 런타임 매커니즘(`Curry` 모듈)을 사용하여 가능한 한 많은 인자를 커리하고 결과가 완전히 적용되었는지 확인합니다.
 
-3. Some JS APIs like `throttle`, `debounce` and `promise` might mess with context, aka use the function `bind` mechanism, carry around `this`, etc. Such implementation clashes with the previous currying logic.
+3. `throttle`, `debounce` 그리고 `promise` 와 같은 일부 자바스크립트 API는 컨텍스트를 엉망으로 만들 가능성이 있습니다. `bind` 매커니즘이나 `this` 를 수행하는 등의 작업을 말합니다. 이러한 구현은 이전의 커리 로직과 충돌합니다.
 
-\* If the call site is typed as having 3 arguments, we sometimes don't know whether it's a function that's being curried, or if the original one indeed has only 3 arguments.
+\* 호출한 곳에서 3개의 인자를 가지고 있다면 커리되는 함수인지 아니면 원래 인자가 실제 3개뿐인지 알기 어려운 경우가 있습니다.
 
-ReScript tries to do #1 as much as it can. Even when it bails and uses #2's currying mechanism, it's usually harmless.
+ReScript는 가능한한 #1 번의 내용을 시도합니다. #2의 커리 매커니즘을 사용하여도 일반적으로 무방합니다.
 
-**However**, if you encounter #3, heuristics are not good enough: you need a guaranteed way of fully applying a function, without intermediate currying steps. We provide such guarantee through the use of the `@bs` "uncurrying" annotation on a function declaration & call site.
+**그러나** #3의 경우를 만난다면 휴리스틱은 충분히 좋지는 않습니다: 커리의 중간 단계 함수를 완전히 적용할 수 있는 확실한 방법이 필요합니다. 함수 선언 및 호출하는 곳에서 ["언커리드 함수"](/Language-Features/12-Function)를 이용해 이를 보장하는 방법을 제공하고 있습니다.
 
-### Solution: Use Guaranteed Uncurrying
+### 해결책: 보장된 언커링을 사용하세요
 
-[Uncurried function](function.md#uncurried-function) annotation also works on `external`:
+[언커리드 함수](/Language-Features/12-Function) 어노테이션은 `external` 을 사용하는 경우에서도 작동합니다:
 
 ```reason
 type timerId
-@bs.val external setTimeout: ((. unit) => unit, int) => timerId = "setTimeout"
+@val external setTimeout: ((. unit) => unit, int) => timerId = "setTimeout"
 
 let id = setTimeout((.) => Js.log("hello"), 1000)
 ```
@@ -324,20 +328,20 @@ var id = setTimeout(function() {
 }, 1000);
 ```
 
-#### Extra Solution
+#### 추가 해결책
 
-The above solution is safe, guaranteed, and performant, but sometimes visually a little burdensome. We provide an alternative solution if:
+위에서 제시한 해결책은 안전하고 보장되며 성능이 좋습니다. 그러나 때로는 시각적으로 부담스럽습니다. 다음과 같은 경우 대안을 제공합니다.
 
-- you're using `external`
-- the `external` function takes in an argument that's another function
-- you want the user **not** to need to annotate the call sites with the dot
+- `external` 을 사용하고 있습니다.
+- `external` 함수가 다른 함수를 인자로 받습니다.
+- 사용자가 호출하는 곳에서 점(dot)과 함께 호출하는 것을 **원하지 않습니다.**
 
 <!-- TODO: is this up-to-date info? -->
 
-Then try `@bs.uncurry`:
+그러면 `@uncurry` 를 사용해보세요:
 
 ```reason
-@bs.send external map: (array<'a>, @bs.uncurry ('a => 'b)) => array<'b> = "map"
+@send external map: (array<'a>, @uncurry ('a => 'b)) => array<'b> = "map"
 map([1, 2, 3], x => x + 1)
 ```
 
@@ -345,11 +349,12 @@ map([1, 2, 3], x => x + 1)
 // Empty output
 ```
 
-In general, `bs.uncurry` is recommended; the compiler will do lots of optimizations to resolve the currying to uncurrying at compile time. However, there are some cases the compiler can't optimize it. In these cases, it will be converted to a runtime check.
+일반적으로 `uncurry` 는 추천됩니다. 컴파일러는 컴파일 타임에 커링을 언커링으로 바꾸기 위한 많은 최적화를 합니다. 그러나 일부 경우에는 최적화를 할 수 없는 경우가 있습니다. 이러한 경우에는 런타임에 확인하는 방식으로 변경됩니다.
 
-## Modeling this-based Callbacks
+## `this` 기반 콜백 모델링
 
-Many JS libraries have callbacks which rely on this (the source), for example:
+많은 자바스크립트 라이브러리는 `this`에 의존하는 콜백이 있습니다. 예를 들면:
+
 
 ```js
 x.onload = function(v) {
@@ -357,14 +362,14 @@ x.onload = function(v) {
 };
 ```
 
-Here, `this` would point to `x` (actually, it depends on how `onload` is called, but we digress). It's not correct to declare `x.onload` of type `(. unit) -> unit`. Instead, we introduced a special attribute, `bs.this`, which allows us to type `x` as so:
+여기서 `this` 는 `x` 를 가리킵니다. (실제로 `onload` 가 어떻게 호출 되는지에 따르지만 우선은 넘어갑시다). `(. unit) -> unit` 타입인 `x.onload` 를 선언하는 것은 올바르지 않습니다. 대신, `x`를 다음과 같이 입력할 수 있는 특수한 속성인 `this` 를 도입했습니다.
 
 ```reason
 type x
-@bs.val external x: x = "x"
-@bs.set external setOnload: (x, @bs.this ((x, int) => unit)) => unit = "onload"
-@bs.get external resp: x => int = "response"
-setOnload(x, @bs.this ((o, v) => Js.log(resp(o) + v)))
+@val external x: x = "x"
+@set external setOnload: (x, @this ((x, int) => unit)) => unit = "onload"
+@get external resp: x => int = "response"
+setOnload(x, @this ((o, v) => Js.log(resp(o) + v)))
 ```
 
 ```js
@@ -376,15 +381,15 @@ x.onload = function(v) {
 
 `bs.this` has its first parameter is reserved for `this` and for arity of 0, there is no need for a redundant `unit` type.
 
-## Function Nullable Return Value Wrapping
+## 함수의 Nullable 반환 값 래핑
 
-For JS functions that return a value that can also be `undefined` or `null`, we provide `@bs.return(...)`. To automatically convert that value to an `option` type (recall that ReScript `option` type's `None` value only compiles to `undefined` and not `null`).
+`undefined` 또는 `null`을 반환하는 자바스크립트 함수를 위해 `@return(...)` 을 제공합니다. 해당 값을 `option` 타입으로 자동으로 변환하려면 (ReScript `option` 타입의 `None` 값은 `null`이 아닌 `undefined` 로만 컴파일됩니다.)
 
 ```reason
 type element
 type dom
 
-@bs.send @bs.return(nullable)
+@send @return(nullable)
 external getElementById: (dom, string) => option<element> = "getElementById"
 
 let test = dom => {
@@ -398,7 +403,7 @@ let test = dom => {
 
 ```js
 function test(dom) {
-  var elem = dom.getElementById('haha');
+  var elem = dom.getElementById("haha");
   if (elem == null) {
     return 1;
   } else {
@@ -408,10 +413,8 @@ function test(dom) {
 }
 ```
 
-`bs.return(nullable)` attribute will automatically convert `null` and `undefined` to `option` type.
+`return(nullable)` 속성은 자동으로 `null`과 `undefined`를 `option` 타입으로 바꾸어줍니다.
 
-Currently 4 directives are supported: `null_to_opt`, `undefined_to_opt`, `nullable` and `identity`.
+현재 4개의 지시문을 제공합니다. `null_to_opt`, `undefined_to_opt`, `nullable` 그리고 `identity`.
 
-<!-- When the return type is unit: the compiler will append its return value with an OCaml unit literal to make sure it does return unit. Its main purpose is to make the user consume FFI in idiomatic OCaml code, the cost is very very small and the compiler will do smart optimizations to remove it when the returned value is not used (mostly likely). -->
-
-`identity` will make sure that compiler will do nothing about the returned value. It is rarely used, but introduced here for debugging purpose.
+`identity`는 컴파일러가 반환된 값에 대해 아무것도 하지 않아도 되도록 합니다. 거의 사용하지는 않지만 디버깅 목적으로 소개합니다.
