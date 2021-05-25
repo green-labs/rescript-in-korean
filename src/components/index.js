@@ -1,5 +1,7 @@
-export * from './theme';
-export mdxComponents from './mdxComponents';
-export ThemeProvider from './theme/themeProvider';
-export Layout from './layout';
-export Link from './link';
+import theme from './theme';
+import mdxComponents from './mdxComponents';
+import ThemeProvider from './theme/themeProvider';
+import Layout from './layout';
+import Link from './link';
+
+export {Link, Layout, ThemeProvider, mdxComponents, theme}
