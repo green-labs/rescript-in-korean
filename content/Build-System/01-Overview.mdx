@@ -1,65 +1,71 @@
 ---
-title: 'Build System Overview'
-metaTitle: 'Build System Overview'
-metaDescription: 'Documentation about the ReScript build system and its toolchain'
+title: '빌드 시스템 개요'
+metaTitle: '빌드 시스템 개요'
+metaDescription: '리스크립트의 빌드 시스템과 툴체인을 소개합니다.'
 sourceUrl: 'https://rescript-lang.org/docs/manual/latest/build-overview'
 canonical: 'https://rescript-lang.org/docs/manual/latest/build-overview'
 ---
 
-ReScript comes with a build system, bsb, that's meant to be fast, lean and used as the authoritative build system of the community.
+리스크립트는 빌드시스템인 [`rescript`](https://www.npmjs.com/package/rescript)를 제공합니다. 빠르고 간결하며 커뮤니티의 권위있는 빌드 시스템으로 사용되고 있습니다.
 
-Bsb provides a few templates to quickly start a new project:
+모든 리스크립트 프로젝트는 빌드 설정 파일인 `bsconfig.json` 이 필요합니다.
 
-```sh
-bsb -init my-directory-name
+## 옵션
+
+`rescript -help` 명령어의 결과입니다:
+
+```
+❯ rescript -help
+Available flags
+-v, -version  display version number
+-h, -help     display help
+Subcommands:
+    build
+    clean
+    format
+    convert
+    help
+Run rescript subcommand -h for more details,
+For example:
+    rescript build -h
+    rescript format -h
+The default `rescript` is equivalent to `rescript build` subcommand
 ```
 
-Feel free to inspect the various files in the newly generated directory. To see all the templates available, do:
+## 프로젝트 빌드
+
+각 빌드는 프로젝트의 소스 파일로부터 빌드 아티팩트를 만듭니다.
+
+**프로젝트를 빌드하려면 (의존성과 고정된 의존성을 포함합니다)**, 다음 명령어를 실행하세요:
 
 ```sh
-bsb -themes
+rescript
 ```
 
-The build description file is called `bsconfig.json`. Every ReScript project needs one.
+이 명령어는 `rescript build` 의 별칭입니다.
 
-**To build a project**, run:
+변경사항을 감시하여 빌드하려면 다음과 같이 실행하세요:
 
 ```sh
-bsb -make-world
+rescript build -w
 ```
 
-Add `-w` to keep the built-in watcher running. Any new file change will be picked up and the build will re-run.
+새 파일의 변경을 찾아내고 빌드를 다시 실행합니다.
 
-**Note**: third-party libraries (in `node_modules`) aren't watched, as doing so may exceed the node.js watcher count limit. If you're doing quick and dirty modifications inside `node_modules`, you have to do `bsb -clean-world -make-world` to rebuild them.
+**참고**: 써드파티 라이브러리 (`node_modules` 또는 고정된 종속성 등)은 감시되지 않습니다. 감시하게 되면 node.js의 감시자 갯수를 초과할 수 있습니다.
 
-**Note 3**: If you are developing across multiple devices, you may find the `-ws` configuration useful in order to have live-reloading across the network. Possible configurations are:
+**참고 2**: 빌드 중 하위 패키지의 변경을 확인해야하는 자바스크립트 모노레포 방식(`npm` 또는 `yarn` 워크스페이스)으로 프로젝트를 설정하려는 경우 메인 프로젝트의 `bsconfig.json` 에 고정된 의존성을 정의해야합니다. 자세한 내용은 [여기](./build-pinned-dependencies)를 확인하세요.
 
-- `bsb -make-world -w -ws _` (default)
-- `bsb -make-world -w -ws 0.0.0.0:9999`
-- `bsb -make-world -w -ws 5000`
+## 프로젝트 초기화
 
-**To build only yourself**, use `bsb`.
-
-`bsb -help` to see all the available options.
-
-## Artifacts Cleaning
-
-If you ever get into a stable build for edge-case reasons, use:
+경계 조건(edge-case)로 인해 오래된 빌드에 들어가야하는 경우에는 다음 명령어를 사용하세요:
 
 ```sh
-bsb -clean-world
+rescript clean
 ```
 
-Or `bsb -clean` to clean only your own artifacts.
+이를 통해 프로젝트의 빌드 아티팩트가 초기화됩니다. 의존성의 아티팩트오 함께 정리하려면 다음 명령어를 실행하세요:
 
-## Editor Support
-
-Bsb generates a `.merlin` file, used by various [editor plugins](editor-plugins.md) under the hood to power e.g. autocomplete, type hint, diagnosis, etc.
-
-### Tips & Tricks
-
-A typical problem with traditional build systems is that they're not resilient against the user moving/deleting source files. Most don't clean up the old artifacts correctly after such user action\*. Bsb is unfortunately no different, **unless** you turn on `"suffix": ".bs.js"` in `bsconfig.json`, in which case we can track which JS artifact belongs to which source file correctly, even against source file moving/deletion.
-
-## Design Decisions
-
-\* One such build system that tracks these correctly & efficiently is [Tup](http://gittup.org/tup/). See the (rather accessible!) paper [here](http://gittup.org/tup/build_system_rules_and_algorithms.pdf). Unfortunately, Tup's implementation uses FUSE and other systems, which we can't safely use on every platform.
+```sh
+rescript clean -with-deps
+```
