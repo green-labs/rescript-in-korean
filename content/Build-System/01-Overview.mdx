@@ -1,12 +1,12 @@
 ---
-title: '빌드 시스템 개요'
+title: '개요'
 metaTitle: '빌드 시스템 개요'
 metaDescription: '리스크립트의 빌드 시스템과 툴체인을 소개합니다.'
 sourceUrl: 'https://rescript-lang.org/docs/manual/latest/build-overview'
 canonical: 'https://rescript-lang.org/docs/manual/latest/build-overview'
 ---
 
-리스크립트는 빌드시스템인 [`rescript`](https://www.npmjs.com/package/rescript)를 제공합니다. 빠르고 간결하며 커뮤니티의 권위있는 빌드 시스템으로 사용되고 있습니다.
+리스크립트는 빌드 시스템인 [`rescript`](https://www.npmjs.com/package/rescript)를 제공합니다. 빠르고 간결하며, 커뮤니티의 권위 있는 빌드 시스템으로 사용되고 있습니다.
 
 모든 리스크립트 프로젝트는 빌드 설정 파일인 `bsconfig.json` 이 필요합니다.
 
@@ -50,21 +50,21 @@ rescript
 rescript build -w
 ```
 
-새 파일의 변경을 찾아내고 빌드를 다시 실행합니다.
+파일의 새로운 변화를 찾고 빌드를 다시 실행합니다.
 
-**참고**: 써드파티 라이브러리 (`node_modules` 또는 고정된 종속성 등)은 감시되지 않습니다. 감시하게 되면 node.js의 감시자 갯수를 초과할 수 있습니다.
+**참고**: 써드파티 라이브러리 (`node_modules` 또는 고정 종속성 등)은 감시되지 않습니다. 만약 감시한다면 node.js의 감시자 갯수를 초과할 수 있습니다.
 
-**참고 2**: 빌드 중 하위 패키지의 변경을 확인해야하는 자바스크립트 모노레포 방식(`npm` 또는 `yarn` 워크스페이스)으로 프로젝트를 설정하려는 경우 메인 프로젝트의 `bsconfig.json` 에 고정된 의존성을 정의해야합니다. 자세한 내용은 [여기](./build-pinned-dependencies)를 확인하세요.
+**참고 2**: 빌드 중 하위 패키지의 변경을 확인 해야하는 자바스크립트 모노 레포 방식(`npm` 또는 `yarn` 워크스페이스)으로 프로젝트를 설정하려는 경우 메인 프로젝트의 `bsconfig.json` 에 고정된 의존성을 정의해야합니다. 자세한 내용은 [여기](./build-pinned-dependencies)를 확인하세요.
 
 ## 프로젝트 초기화
 
-경계 조건(edge-case)로 인해 오래된 빌드에 들어가야하는 경우에는 다음 명령어를 사용하세요:
+경계 조건(edge-case)로 인해 오래된 빌드에 들어가야 하는 경우에는 다음 명령어를 사용하세요:
 
 ```sh
 rescript clean
 ```
 
-이를 통해 프로젝트의 빌드 아티팩트가 초기화됩니다. 의존성의 아티팩트오 함께 정리하려면 다음 명령어를 실행하세요:
+이를 통해 프로젝트의 빌드 아티팩트가 초기화됩니다. 의존성의 아티팩트도 함께 정리하려면 다음 명령어를 실행하세요:
 
 ```sh
 rescript clean -with-deps

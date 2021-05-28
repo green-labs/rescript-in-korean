@@ -8,18 +8,18 @@ canonical: 'https://rescript-lang.org/docs/manual/latest/build-external-stdlib'
 
 **9.0 부터**
 
-리스크립트 프로젝트의 `bs-platform` (곧 `rescript` 로 변경될)를 [`devDependency`](https://docs.npmjs.com/specifying-dependencies-and-devdependencies-in-a-package-json-file)는 컴파일러, 빌드 시스템 및 `Belt` 와 같은 런타임을 포함하고 있습니다. 그러나 코드를 배포해야하는 경우 `package.json` 의 `dependency` 로 옮겨야합니다.
+리스크립트 프로젝트는 [`devDependency`](https://docs.npmjs.com/specifying-dependencies-and-devdependencies-in-a-package-json-file)인 `bs-platform` (곧 `rescript` 로 변경) 패키지에 의존합니다. 여기에는 컴파일러와 빌드 시스템 및 `Belt` 와 같은 런타임이 포함되어 있습니다. 그러나 코드를 배포해야하는 경우 `package.json` 의 `dependency` 로 옮겨야합니다.
 
-- 도커 또는 저용량 배포 장치를 사용하는 경우에
-- 사용되는 프로젝트에 `bs-platform` 을 설치하지 않을 순수한 자바스크립트 또는 타입스크립트 사용자를 위해
+- 도커 또는 저용량 배포 장치를 사용하는 경우
+- 현재 프로젝트에 `bs-platform` 을 설치하지 않을 순수한 자바스크립트 또는 타입스크립트 사용자의 경우
 
 
-이 경우 `Belt` 와 같은 꼭 필요한 런타임뿐만 아니라 컴파일러 및 빌드 시스템도 포함되므로 `bs-platform` 의 크기 그리고 존재만으로도 문제가 될 수 있습니다.
+위의 경우, `Belt` 와 같은 꼭 필요한 런타임뿐만 아니라 컴파일러 및 빌드 시스템도 포함되므로 `bs-platform` 의 크기 그리고 존재만으로도 문제가 될 수 있습니다.
 
 
 이 문제를 해결하기 위해, 런타임을 [`@rescript/std`](https://www.npmjs.com/package/@rescript/std)로 독립적인 패키지로 제공합니다. 해당 버전은 `bs-platform`의 버전과 같습니다. 그러면 `bs-platform`을 `devDependency` 로 유지하고 런타임에는 `dependency`로 `@rescript/std` 만 포함시킬 수 있습니다.
 
-**고급 기능입니다**. 앞에 언급했던 상황에서만 사용하세0요. 불필요한 코드를 제거하는 자바스크립트의 번들러를 사용하는 경우에 이 기능이 필요 없을 수 있습니다.
+**고급 기능입니다**. 앞에 언급된 상황에서만 사용하세요. 불필요한 코드를 제거하는 자바스크립트의 번들러를 사용하는 경우에 이 기능이 필요 없을 수 있습니다.
 
 ## 설정
 

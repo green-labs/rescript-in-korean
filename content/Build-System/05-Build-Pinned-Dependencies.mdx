@@ -17,10 +17,10 @@ canonical: 'https://rescript-lang.org/docs/manual/latest/build-pinned-dependenci
 자세히 살펴보기 전에, 먼저 빌드 시스템에서 인식하는 패키지 타입 전체를 살펴보겠습니다.
 
 - 최상위 (일반적으로 빌드하는 최종 앱을 말하며, 다른 패키지에 대한 의존성이 있습니다.)
-- 고정 의존성 (최상위 레벨을 빌드할 때 마다 항상 다시 빌드해야하는 패키지이며 `bs-dependencies`와 `pinned-dependencies`에 있어야합니다.)
+- 고정 의존성 (최상위 레벨을 빌드할 때 마다 항상 다시 빌드해야하는 패키지이며 `bs-dependencies`와 `pinned-dependencies`에 있어야 합니다.)
 - 일반 의존성 (npm에서 가져온 `bs-dependencies` 추가하는 패키지입니다.)
 
-패키지가 빌드 될 때 (`rescript build`) 빌드 시스템은 고정 의존성과 함께 최상위 패키지를 빌드합니다. 따라서 고정 의존성에서 변경된 내용은 최종 앱에 자동으로 반영됩니다.
+패키지를 빌드할 때 (`rescript build`) 빌드 시스템은 고정 의존성과 함께 최상위 패키지를 빌드합니다. 따라서 고정 의존성에서 변경된 내용은 최종 앱에 자동으로 반영됩니다.
 
 ## 빌드 시스템 패키지 규칙
 
@@ -32,7 +32,7 @@ canonical: 'https://rescript-lang.org/docs/manual/latest/build-pinned-dependenci
 - 개발용 의존성 빌드
 - 고정 의존성 빌드
 - 사용자 정의 규칙 실행
-- Package-specs like ES6/CommonJS overrides all its dependencies
+- ES6/CommonJS 와 같은 패키지 스펙은 모든 의존성을 오버라이드 합니다.
 
 **고정 의존성**
 - 경고 보고
@@ -47,7 +47,7 @@ canonical: 'https://rescript-lang.org/docs/manual/latest/build-pinned-dependenci
 - 고정 의존성 무시
 - 사용자 정의 생성 규칙 무시
 
-따라서 이를 기반으로 몇가지 구체적인 예제를 살펴보고 고정 의존성이 작동하는 것을 알아봅니다.
+위 규칙의 몇가지 구체적인 예제를 살펴보고 고정 의존성이 작동하는 방식을 알아봅니다.
 
 ## 예제
 
