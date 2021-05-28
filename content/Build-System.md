@@ -1,6 +1,6 @@
 ---
 title: '빌드 시스템'
-metaTitle: 'Build System'
+metaTitle: '빌드 시스템'
 metaDescription: 'ReScript in Korean - Build System'
 ---
 
@@ -12,7 +12,7 @@ metaDescription: 'ReScript in Korean - Build System'
 
 **[External Stdlib](/Build-System/04-External-Stdlib)**
 
-**[Pinned Dependencies](/Build-System/05-Pinned-Dependencies)**
+**[고정 의존성](/Build-System/05-Pinned-Dependencies)**
 
 **[자바스크립트 빌드 환경과의 인터롭](/Build-System/06-Interop-with-JS-Build-Systems)**
 
