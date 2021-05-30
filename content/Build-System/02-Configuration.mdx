@@ -1,47 +1,40 @@
 ---
-title: 'Configuration'
-metaTitle: 'Build System Configuration'
-metaDescription: 'Details about the configuration of the ReScript build system (bsconfig.json)'
+title: '설정'
+metaTitle: '빌드 시스템 설정'
+metaDescription: '리스크립트 빌드 시스템 설정의 상세 내용을 알아봅니다. (bsconfig.json)'
 sourceUrl: 'https://rescript-lang.org/docs/manual/latest/build-configuration'
 canonical: 'https://rescript-lang.org/docs/manual/latest/build-configuration'
 ---
 
-`bsconfig.json` is the single, mandatory build meta file needed for bsb.
+`bsconfig.json` 은 `rescript`에 필요한 한개의 필수 빌드 메타 파일입니다.
 
-**The complete configuration schema is [here](./build-configuration-schema)**. We'll _non-exhaustively_ highlight the important parts in prose below.
 
-## Tips & Tricks
-
-If you're using an editor like VSCode, put the following code as your first field in `bsconfig.json` to get schema autocompletion!
-
-```json
-"$schema": "https://raw.githubusercontent.com/rescript-lang/rescript-compiler/master/docs/docson/build-schema.json"
-```
+**전체 설정 스키마는 [여기](/Build-System/03-Configuration-Schema/)에 있습니다**. 중요한 부분을 _완전히 철저하게는_ 강조하지 않을 것 입니다.
 
 ## name, namespace
 
-`name` is the name of the library, used as its "namespace". You can activate namespacing through `"namespace": true` in your `bsconfig.json`. Namespacing is almost **mandatory**; we haven't turned it on by default yet to preserve backward-compatibility.
+`name` 은 라이브러리의 이름으로 `namespace` 로 사용됩니다. `bsconfig.json` 에서 `"namespace": true` 를 통해 네임스페이스를 활성화 할 수 있습니다. 네임스페이스는 거의 **필수적**입니다; 하위 호환을 위해 아직 기본값으로 설정하지는 않았습니다.
 
-**Explanation**: by default, your files, once used as a third-party dependency, are available globally to the consumer. E.g. if you have an `Util.re` and the consumer also has a file of the same name, they will clash. Turning on `namespace` avoids this by wrapping all your own project's files into an extra module layer; instead of a global `Util` module, the consumer will see you as `MyProject.Util`. **The namespacing affects your consumers, not yourself**.
+**설명**: 기본적으로 써드파티 의존성으로 사용된 파일은 전역에서 사용할 수 있습니다. 예를들어 `Util.re` 가 있고 라이브러리를 쓰는 사용자 또한 같은 파일 이름을 가지고 있다면 충돌합니다. `namespace` 를 켜면 모든 프로젝트 파일을 추가적인 모듈 레이어로 래핑하여 문제를 방지할 수 있습니다. 사용자는 전역 `Util` 모듈 대신 `MyProject.Util` 로 사용할 수 있습니다. **네임스페이스는 패키지 내부가 아닌 사용자에게 영향을 줍니다.**
 
-Aka, in Bsb, "namespace" is just a fancy term for an auto-generated module that wraps all your project's files (efficiently and correctly, of course!) for third-party consumption.
+리스크립트에서 "namespace" 는 써드파티에서 사용할 수 있도록 모든 프로젝트 파일(당연히 효율적이며 정확히)을 래핑하는 자등으로 만들어진 모듈을 말하는 단어일 뿐입니다.
 
-We don't do folder-level namespacing for your own project; all your own file names must be unique. This is a constraint that enables several features such as fast search and easier project reorganization.
+우리는 폴더 레벨 네임스페이싱을 하지 않습니다. 모든 파일 이름은 그 자체로 유일해야합니다. 이는 빠른 검색 및 쉬운 프로젝트 재구성과 같은 여러 기능을 위한 제약사항입니다.
 
-**Note**: the `bsconfig.json` `name` should be the same as the `package.json` `name`, to avoid confusing corner-cases. However, this means that you can't use a camelCased names such as `MyProject`, since `package.json` and npm forbid you to do so (some file systems are case-insensitive). To have the namespace/module as `MyProject`, write `"name": "my-project"`. Bsb will turn that into the camelCased name correctly.
+**참고**: `bsconfig.json`의 `name` 은 반드시 `package.json` 과 같아야합니다. 이말은 이름에 `MyProject`와 같은 camelCase를 사용할 수 없음을 말합니다. `package.json` 과 npm 이 금지하기 때문에 네임스페이스/모듈을 `MyProject`로 지정하려면 `"name": "my-project"` 라고 적으세요. 리스크립트는 이를 camelCase로 올바르게 바꾸어줍니다.
 
-**Note on custom namespacing**: if for some reason, you need a namespace that is different from what your `name` will produce, you can directly send a string to the `namespace` option. For example, if your package is a binding named `bs-some-thing`, you can use `"namespace": "some-thing"` to get `SomeThing` namespace instead of `BsSomeThing`.
+
+**사용자 정의 네임스페이스 참고**: 네임스페이스를 `name` 속성과 다르게 만들고 싶은 경우가 있을 수 있습니다. 이 때 `namespace` 옵션을 사용하여 직접 지정할 수 있습니다. 예를 들어, 패키지의 이름이 `bs-some-thing` 이라면 `SomeThing` 과 같이 쓰기 위해 `"namespace": "some-thing"` 으로 지정할 수 있습니다.
 
 ## sources
 
-Your source files need to be specified explicitly (we don't want to accidentally drill down into some unrelated directories). Examples:
+소스 파일을 명시적으로 지정해야합니다. (실수로 연관되지 않는 디렉터리를 파고들지 않기 위함입니다). 예:
 
 ```json
 {
   "sources": ["src", "examples"]
 }
 ```
-
 ```json
 {
   "sources": {
@@ -57,47 +50,59 @@ Your source files need to be specified explicitly (we don't want to accidentally
     "examples",
     {
       "dir": "src",
-      "subdirs": true // recursively builds every subdirectory
+      "subdirs": true // 모든 서브 디렉터리 재귀
     }
   ]
 }
 ```
 
-You can mark your directories as dev-only (for e.g. tests). These won't be built and exposed to third-parties, or even to other "dev" directories in the same project:
+디렉터리를 개발 전용으로 표시할 수 있습니다. (예: 테스트). 이는 빌드되지 않고, 외부 또는 같은 프로젝트의 다른 "dev" 디렉터리도 노출되지 않습니다.
 
 ```json
 {
-  "sources": {
-    "dir": "test",
-    "type": "dev"
+  "sources" : {
+    "dir" : "test",
+    "type" : "dev"
   }
 }
 ```
 
 ## bs-dependencies, bs-dev-dependencies
 
-List of ReScript dependencies. Just like `package.json`'s dependencies, they'll be searched in `node_modules`.
+리스크립트 의존성 목록입니다. `package.json` 의 의존성과 같고, `node_modules` 에서 찾습니다.
 
-Note that only sources marked with `"type":"dev"` will be able to resolve modules from `bs-dev-dependencies`.
+`"type":"dev"` 속성을 가진 소스만 `bs-dev-dependencies` 에서 모듈을 사용할 수 있습니다.
 
-## reason, refmt (old)
+## pinned-dependencies
 
-`reason` config is enabled by default. To turn on JSX for [ReasonReact](https://reasonml.github.io/reason-react/), specify:
+**8.4 이후**: 고정 의존성 목록입니다. 고정 의존성은 `rescript` 로 최상위 패키지(예: 메인 앱)을 빌드할 때마다 항상 다시 빌드됩니다.
+
+고정 의존성은 여러 독립된 리스크립트 패키지와 함께 사용하는데 유용합니다. 자세한 사용법은 [고정 의존성](./build-pinned-dependencies) 페이지에서 확인할 수 있습니다.
+
+## external-stdlib
+
+**9.0 이후**: 이 설정은 (로컬 빌드된 stdlib 대신) 외부에서 빌드된 stdlib 패키지에 따라 허용됩니다. 리스크립트 툴체인에 대한 의존성 없이 자바스크립트 또는 타입스크립트에서만 사용하는 패키지를 만드는데 유용합니다.
+
+자세한 내용은 [external stdlib](./build-external-stdlib) 페이지에서 확인하세요.
+
+## reason, refmt (오래됨)
+
+`reason` 설정은 기본적으로 활성화 되어있습니다. [ReasonReact](https://reasonml.github.io/reason-react/)를 위해 JSX를 켜는데 사용하세요.
 
 ```json
 {
-  "reason": { "react-jsx": 3 },
+  "reason": {"react-jsx": 3},
   "refmt": 3
 }
 ```
 
-The `refmt` config **should be explicitly specified** as `3`.
+`refmt` 설정은 `3`으로 **명시적으로 지정되어야합니다.*
 
 ## js-post-build
 
-Hook that's invoked every time a file is recompiled. Good for JS build system interop, but please use it **sparingly**. Calling your custom command for every recompiled file slows down your build and worsens the building experience for even third-party users of your lib.
+파일이 다시 컴파일될 때마다 호출되는 훅입니다. 자바스크립트 빌드 시스텝 인터롭에 적합하지만, **조심해서** 사용하세요. 재 컴파일된 모든 파일에 대해 사용자정의 명령을 실행하면 빌드 속도가 느려지고 라이브러리를 사용하는 사용자의 빌드 경험도 악화시킵니다.
 
-Example:
+예:
 
 ```json
 {
@@ -107,18 +112,18 @@ Example:
 }
 ```
 
-Note that the path resolution for the command (`node` in this case) is done so:
+커맨드(여기서는 `node`)에 대한 경로 해석은 다음과 같습니다.
 
-- `/myCommand` is resolved into `/myCommand`
-- `package/myCommand` is resolved into `node_modules/package/myCommand`
-- `./myCommand` is resolved into `myProjectRoot/myCommand`
-- `myCommand` is just called as `myCommand`, aka a globally available executable. But note that Bsb doesn't read into your shell's environment, so if you put e.g. `node`, it won't find it unless you specify an absolute path. Alternatively, add `#!/usr/local/bin/node` to the top of your script to directly call it without prepending `node`.
+- `/myCommand` 는 `/myCommand`입니다.
+- `package/myCommand` 는 `node_modules/package/myCommand` 입니다.
+- `./myCommand` 는 `myProjectRoot/myCommand` 입니다.
+- `myCommand` 는 그대로 `myCommand` 입니다. 전역으로 실행될 수 있어야합니다. 그러나 리스크립트는 여러분의 쉘 환경을 읽지 않아 `node` 는 절대 경로로 설정하지 않으면 찾을 수 없습니다. 절대 경로의 대안으로, 스크립트 맨 위에 `#!/usr/local/bin/node` 를 추가하여 `node` 앞에 경로를 적지 않도록 할 수 있습니다.
 
-The command itself is called from inside `lib/bs`.
+이 커맨드 자체는 `lib/bs` 안에서 호출됩니다.
 
 ## package-specs
 
-Output to either CommonJS (the default) or ES6 modules. Example:
+CommonJS(기본값) 또는 ES6 모듈로 출력합니다. 예:
 
 ```json
 {
@@ -129,27 +134,27 @@ Output to either CommonJS (the default) or ES6 modules. Example:
 }
 ```
 
-- `"module": "es6-global"` resolves `node_modules` using relative paths. Good for development-time usage of ES6 in conjunction with browsers like Safari and Firefox that support ES6 modules today. **No more dev-time bundling**!
-- `"in-source": true` generates output alongside source files. If you omit it, it'll generate the artifacts into `lib/js`. The output directory is not configurable otherwise.
+- `"module": "es6-global"` 는 상대 경로를 통해 `node_modules` 를 해석합니다. 오늘날은 ES6 모듈을 지원하는 Safari, Firefox 와 같은 브라우저을 이용해 개발하는데 적합합니다. **더 이상 개발 중 번들링을 하지 않습니다**!
+- `"in-source": true` 소스 파일을 통해 결과를 만듭니다. 생략하면 `lib/js`에 아티팩트가 생성됩니다. 그렇지 않으면 출력 디렉터리를 구성할 수 없습니다.
 
-This configuration only applies to you, when you develop the project. When the project is used as a third-party library, the consumer's own `bsconfig.json` `package-specs` overrides the configuration here, logically.
+이 설정은 프로젝트 개발에만 적용됩니다. 프로젝트가 써드파티 라이브러리라면 사용자가 자신의 `bsconfig.json`의 `package-specs` 에서 재정의됩니다.
 
 ## suffix
 
-Either `".js"` or `".bs.js"`. Strongly prefer the latter.
+`".js"`, `".mjs"`, `".cjs"` 또는 `".bs.js"` 중 하나를 사용합니다. 현재는 `bs.js` 를 선호합니다.
 
-### Design Decisions
+### 디자인 결정
 
-Generating JS files with the `.bs.js` suffix means that, on the JS side, you can do `const myReScriptFile = require('./theFile.bs')`. The benefits:
+`.bs.js` 접미사를 사용하여 자바스크립트 파일을 만들면 자바스크립트 코드에서 `const myReScriptFile = require('./theFile.bs')` 로 사용할 수 있습니다. 장점으로는:
 
-- It's immediately clear that we're dealing with a generated JS file here.
-- It avoids clashes with a potential `theFile.js` file in the same folder.
-- It avoids the need of using a build system loader for ReScript files. This + in-source build means integrating a ReScript project into your pure JS codebase **basically doesn't touch anything in your build pipeline at all**.
-- The `.bs.js` suffix [lets bsb track JS artifacts much better](build-overview.md#tips-tricks).
+- 여기서 자바스크립트 파일을 사용하고 있다는 것이 즉시 분명해집니다.
+- 같은 디렉터리에 `theFile.js` 가 있어서 발생하는 충돌을 방지합니다.
+- 리스크립트 파일에 빌드 시스템 로더를 사용하지 않아도 됩니다. in-source 빌드는 리스크립트 프로젝트를 순수 자바스크립트 코드베이스에 통합하는 것을 의미합니다. **기본적으로 빌드 파이프라인의 어떤 것도 건드지 않습니다.**
+- [genType](/docs/gentype/latest/introduction)은 컴파일된 자바스크립트 아티팩트에 `bs.js`가 필요합니다. `genType` 을 사용하는 경우에 현재는 `bs.js` 를 사용해야합니다.
 
 ## warnings
 
-Selectively turn on/off certain warnings and/or turn them into hard errors. Example:
+특정 경고를 켜고 끄거나, 에러로 만들 수 있습니다. 예:
 
 ```json
 {
@@ -160,28 +165,24 @@ Selectively turn on/off certain warnings and/or turn them into hard errors. Exam
 }
 ```
 
-Turn off warning `44` and `102` (polymorphic comparison). Turn warning `5` (partial application whose result has function type and is ignored) into a hard error.
+`44` 및 `102` 경고 (다형성 비교)를 끕니다. 경고 `5` (결과에 함수 타입이 있고 이를 무시되는 부분 앱)를 에러로 전환합니다.
 
-The warning number are shown in the build output when they're triggered. The complete list is [here](https://caml.inria.fr/pub/docs/manual-ocaml/comp.html#sec281), a little bit below. `100` and up are ReScript-specific.
+경고 번호는 트리거 될 때 빌드 출력에 표시됩니다. 전체 목록은 [여기](https://caml.inria.fr/pub/docs/manual-ocaml/comp.html#sec281)이며, 약간 아래쪽에 있습니다. `100` 보다 큰 숫자는 리스크립트 전용입니다.
 
 ## bsc-flags
 
-Extra flags to pass to the underlying `bsc` call. Notably: `["-bs-super-errors"]` for turning on cleaner error output. No need to pass this flag for a new ReScript project; it's enabled by default.
+컴파일러에 전달하는 추가 플래그입니다. 고급 사용자를 위한 내용입니다.
 
-## Environment Variables
+## 환경 변수
 
-We heavily disrecommend the usage of environment variables, but for certain cases, they're justified.
+우리는 환경 변수 사용을 매우 권하지 않습니다. 하지만 몇몇 경우에는 가능합니다.
 
-### Error Output Coloring: NINJA_ANSI_FORCED
+### 에러 출력 색상적용: `NINJA_ANSI_FORCED`
 
-This is mostly for other programmatic usage of `bsb` where outputting colors is not desired.
+이는 주로 색상 출력이 바람직하지 않은 다른 프로그래밍 방식을 위한 것 입니다.
 
-When `NINJA_ANSI_FORCED` is set to `1`: `bsb` produces color.
-When `NINJA_ANSI_FORCED` is set to `0`: `bsb` doesn't produce color.
-When `NINJA_ANSI_FORCED` is not set: `bsb` might or might not produce color, depending on a smart detection of where it's outputted.
+`NINJA_ANSI_FORCED` 이 1이면 : `rescript` 는 색을 표현합니다.
+`NINJA_ANSI_FORCED` 이 0이면 : `rescript` 는 색을 표현하지 않습니다.
+`NINJA_ANSI_FORCED` 가 설정되지 않으면 `rescript` 는 색을 표현할수도 아닐수도 있습니다. 출력되는 위치를 똑똑하게 감지합니다.
 
-> Note that bsc, the barebone compiler, will always be passed `-color always`. See more details in [this issue](https://github.com/rescript-lang/rescript-compiler/issues/2984#issuecomment-410669163).
-
-### BS_VSCODE error output adapted for VSCODE
-
-If you run bsb under VSCODE task runner like [this](https://github.com/rescript-lang/rescript-compiler/blob/master/jscomp/bsb/templates/basic-reason/.vscode/tasks.json#L6), it is recommended to have BS_VSCODE set
+> 컴파일러는 기본적으로 `-color always`를 전달받습니다. [이 이슈](https://github.com/rescript-lang/rescript-compiler/issues/2984#issuecomment-410669163)에 자세한 내용이 있습니다.

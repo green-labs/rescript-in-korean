@@ -1,0 +1,111 @@
+---
+title: "고정 의존성"
+metaTitle: "고정 의존성"
+description: "고정 의존성을 가지는 한개 리스크립트 프로젝트의 여러 패키지 처리 방법"
+sourceUrl: 'https://rescript-lang.org/docs/manual/latest/build-pinned-dependencies'
+canonical: 'https://rescript-lang.org/docs/manual/latest/build-pinned-dependencies'
+---
+
+**8.4 이후**
+
+일반적으로 전체 코드베이스에서 한개의 `bsconfig.json` 파일로 리스크립트를 사용하는 싱글-코드베이스 스타일을 사용하는 것이 좋습니다.
+
+하지만 한개의 메인 프로젝트에 여러개의 독립적인 리스크립트 패키지를 연결하여 빌드하려는 상황("모노레포"와 같은 `npm` 워크스페이스)이 있을 수 있습니다. 이 때 고정 의존성 (`pinned-dependencies`)을 사용할 수 있습니다.
+
+## 패키지 타입
+
+자세히 살펴보기 전에, 먼저 빌드 시스템에서 인식하는 패키지 타입 전체를 살펴보겠습니다.
+
+- 최상위 (일반적으로 빌드하는 최종 앱을 말하며, 다른 패키지에 대한 의존성이 있습니다.)
+- 고정 의존성 (최상위 레벨을 빌드할 때 마다 항상 다시 빌드해야하는 패키지이며 `bs-dependencies`와 `pinned-dependencies`에 있어야 합니다.)
+- 일반 의존성 (npm에서 가져온 `bs-dependencies` 추가하는 패키지입니다.)
+
+패키지를 빌드할 때 (`rescript build`) 빌드 시스템은 고정 의존성과 함께 최상위 패키지를 빌드합니다. 따라서 고정 의존성에서 변경된 내용은 최종 앱에 자동으로 반영됩니다.
+
+## 빌드 시스템 패키지 규칙
+
+빌드 시스템은 각 패키지 타입에 따라 다음 규칙을 가집니다.
+
+**최상위**
+- 경고 보고
+- 오류 경고 존중(respected)
+- 개발용 의존성 빌드
+- 고정 의존성 빌드
+- 사용자 정의 규칙 실행
+- ES6/CommonJS 와 같은 패키지 스펙은 모든 의존성을 오버라이드 합니다.
+
+**고정 의존성**
+- 경고 보고
+- 오류 경고 존중(respected)
+- 고정 의존성 무시
+- 개발용 의존성 빌드
+- 사용자 정의 규칙 실행
+
+**일반 의존성**
+- 경고, 오류 알림 무시
+- dev 디렉터리 무시
+- 고정 의존성 무시
+- 사용자 정의 생성 규칙 무시
+
+위 규칙의 몇가지 구체적인 예제를 살펴보고 고정 의존성이 작동하는 방식을 알아봅니다.
+
+## 예제
+
+### Yarn 워크스페이스
+
+아래와 같은 코드베이스가 있다고 가정합니다:
+
+```
+myproject/
+  app/
+   - src/App.res
+   - bsconfig.json
+  common/
+   - src/Header.res
+   - bsconfig.json
+  myplugin/
+   - src/MyPlugin.res
+   - bsconfig.json
+  package.json
+```
+
+코드베이스 루트의 `package.json` 파일은 다음과 같습니다.
+
+```json
+{
+  "name": "myproject",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "app",
+      "common",
+      "myplugin"
+    ]
+  }
+}
+```
+
+
+`app` 폴더는 `common` 및 `myplugin` 패키지를 `pinned-dependencies` 로 사용하는 최상위 패키지입니다. `app/bsconfig.json` 의 내용은 다음과 같습니다.
+
+```json
+{
+  "name": "app",
+  "version": "1.0.0",
+  "sources": {
+    "dir" : "src",
+    "subdirs" : true
+  },
+  /* ... */
+  "bs-dependencies": [
+    "common",
+    "myplugin"
+  ],
+  "pinned-dependencies": ["common", "myplugin"],
+  /* ... */
+}
+```
+
+이제, `app` 패키지에서 `rescript build`를 실행할 때 마다 컴파일러는 항상 고정 의존성의 변경사항을 다시 빌드합니다.
+
+**중요:** 리스크립트는 감시 모드에서 `pinned-dependencies` 를 다시 빌드하지 않습니다! 이는 파일 감시의 복잡성 때문이므로 특정 파일 변경에 대해 `rescript build` 를 실행하는 고유한 파일 감시자 프로세스를 설정해야합니다.
