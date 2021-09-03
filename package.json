@@ -26,6 +26,7 @@
     "emotion": "^10.0.23",
     "emotion-server": "^10.0.17",
     "emotion-theming": "^10.0.19",
+    "event-source-polyfill": "^1.0.25",
     "gatsby": "^3.5.1",
     "gatsby-legacy-polyfills": "^1.5.0",
     "gatsby-link": "^3.5.0",
@@ -52,6 +53,7 @@
     "lodash.startcase": "^4.4.0",
     "mitt": "^2.1.0",
     "prop-types": "^15.7.2",
+    "query-string": "^7.0.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-feather": "^2.0.9",
@@ -65,8 +67,7 @@
     "regenerator-runtime": "^0.13.7",
     "shallow-compare": "^1.2.2",
     "styled-components": "^5.2.1",
-    "styled-icons": "^10.24.0",
-    "yarn": "^1.22.10"
+    "styled-icons": "^10.24.0"
   },
   "license": "MIT",
   "main": "n/a",
@@ -78,7 +79,9 @@
     "deploy": "yarn build && yarn gh-pages -d public"
   },
   "devDependencies": {
+    "anser": "^2.0.1",
     "babel-eslint": "^10.1.0",
+    "css.escape": "^1.5.1",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-import": "^2.20.1",
@@ -88,7 +91,9 @@
     "gatsby-plugin-google-gtag": "^2.7.0",
     "gatsby-plugin-remove-trailing-slashes": "^3.5.0",
     "gh-pages": "^3.1.0",
+    "platform": "^1.3.6",
     "prettier": "^1.19.1",
-    "prism-react-renderer": "^1.0.2"
+    "prism-react-renderer": "^1.0.2",
+    "stack-trace": "^1.0.0-pre1"
   }
 }
