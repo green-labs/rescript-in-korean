@@ -23,7 +23,7 @@ var root = Path.dirname('/User/github');
 
 ## 이름이 있는 인자
 
-ReScript는 [이름이 있는 인자](function.md#labeled-arguments) (물론 옵셔널입니다) 를 가지고 있습니다. `external` 에서도 동작합니다! 자바스크립트 함수의 명확하지 않은 사용법을 _수정하는데_ 사용됩니다. 아래 내용을 모델링한다고 가정해봅시다:
+ReScript는 [이름이 있는 인자](/Language-Features/12-Function/이름이있는인자) (물론 옵셔널입니다) 를 가지고 있습니다. `external` 에서도 동작합니다! 자바스크립트 함수의 명확하지 않은 사용법을 _수정하는데_ 사용됩니다. 아래 내용을 모델링한다고 가정해봅시다:
 
 ```js
 // MyGame.js
@@ -54,7 +54,7 @@ MyGame.draw(10, 20, undefined);
 
 같은 함수로 컴파일 되었지만, ReScript 코드에서는 인자에 이름을 넣었기 때문에 더욱 명확해졌습니다!
 
-**참고**: [마지막 인자가 옵셔널인](function.md#optional-labeled-arguments) `border` 와 같은 특수한 경우에는 바로 뒤에 유닛(unit) `()` 이 필요합니다. 함수가 완료되었음을 알려주는 유닛이 없다면 경고를 냅니다.
+**참고**: [마지막 인자가 옵셔널인](/Language-Features/12-Function#이름이있는선택인자) `border` 와 같은 특수한 경우에는 바로 뒤에 유닛(unit) `()` 이 필요합니다. 함수가 완료되었음을 알려주는 유닛이 없다면 경고를 냅니다.
 
 ReScript 코드에서 이름이 있는 인수는 순서를 자유롭게 변경할 수 있습니다. 자바스크립트 결과는 항상 올바른 순서로 표시됩니다.
 
@@ -112,7 +112,7 @@ var Path = require('path');
 var v = Path.join('a', 'b');
 ```
 
-`module`은 [Import from/Export to JS](import-from-export-to-js.md) 에서 다루겠습니다.
+`module`은 [Import from/Export to JS](06-Import-from-Export-to-JS) 에서 다루겠습니다.
 
 ## 폴리모픽 함수 모델링
 
@@ -313,7 +313,7 @@ ReScript는 가능한한 #1 번의 내용을 시도합니다. #2의 커리 매�
 
 ### 해결책: 보장된 언커링을 사용하세요
 
-[언커리드 함수](/Language-Features/12-Function) 어노테이션은 `external` 을 사용하는 경우에서도 작동합니다:
+[언커리드 함수](/Language-Features/12-Function#언커리드함수) 어노테이션은 `external` 을 사용하는 경우에서도 작동합니다:
 
 ```reason
 type timerId
