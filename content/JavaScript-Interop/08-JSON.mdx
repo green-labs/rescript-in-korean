@@ -6,15 +6,15 @@ sourceUrl: 'https://rescript-lang.org/docs/manual/latest/json'
 canonical: 'https://rescript-lang.org/docs/manual/latest/json'
 ---
 
-## Parse
+## 구문 분석 (Parse)
 
-Bind to JavaScript's `JSON.parse` and type the return value as the type you're expecting:
+JavaScript의 `JSON.parse` 에 바인딩하고 반환 값에 미리 선언했던 형태의 타입으로 입력합니다:
 
 ```reason
-/* declare the shape of the json you're binding to */
+/* 바인딩할 json의 형태를 선언합니다. */
 type data = {names: array<string>}
 
-/* bind to JS' JSON.parse */
+/* JS의 JSON.parse에 바인딩합니다. */
 @bs.scope("JSON") @bs.val
 external parseIntoMyData: string => data = "parse"
 
@@ -27,11 +27,11 @@ var result = JSON.parse('{"names": ["Luke", "Christine"]}');
 var name1 = result.names[0];
 ```
 
-Where `data` can be any type you assume the JSON is. As you can see, this compiles to a straightforward `JSON.parse` call. As with regular JS, this is convenient, but has no guarantee that e.g. the data is correctly shaped, or even syntactically valid. Slightly dangerous.
+여기서 `data` 는 JSON으로 추정될 수 있는 모든 타입들 입니다. 보시다시피 간단한 `JSON.parse` 호출로 컴파일됩니다. 일반적인 JS와 마찬가지로, 이 방법은 편리하지만 데이터가 올바른 형태이거나, 문법적으로 유효하다는 등의 보장은 없습니다.
 
-## Stringify
+## 문자열화 (Stringify)
 
-Use `Js.Json.stringify`:
+`Js.Json.stringify`를 사용합니다:
 
 ```reason
 Js.log(Js.Json.stringifyAny(["Amy", "Joe"]))
@@ -41,6 +41,6 @@ Js.log(Js.Json.stringifyAny(["Amy", "Joe"]))
 console.log(JSON.stringify(['Amy', 'Joe']));
 ```
 
-## Advanced
+## 고급
 
-The [Js.Json](api/js/json) module provides slightly safer, low-level building blocks for power users who want to parse JSON on a per-field basis. See the examples in the API docs.
+[Js.Json](https://rescript-lang.org/docs/manual/latest/api/js/json) 모듈은 각 필드별로 JSON을 파싱하고자하는 고급 사용자들을 위해 조금 더 안전하고, 낮은 레벨의 구성 요소들을 제공합니다. API 문서의 예시를 참조하세요.
