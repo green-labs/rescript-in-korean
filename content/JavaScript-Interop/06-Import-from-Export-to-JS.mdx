@@ -6,79 +6,108 @@ sourceUrl: 'https://rescript-lang.org/docs/manual/latest/import-from-export-to-j
 canonical: 'https://rescript-lang.org/docs/manual/latest/import-from-export-to-js'
 ---
 
-You've seen how ReScript's idiomatic [Import & Export](import-export.md) works. This section describes how we work with importing stuff from JavaScript and exporting stuff for JavaScript consumption.
+# JS에서 가져오기/JS로 내보내기
 
-## Import From JavaScript
+이전에 ReScript의 관용적인 [가져오기 및 내보내기](https://green-labs.github.io/rescript-in-korean/Language-Features/22-Import-Export)가 어떻게 작동 하는지 살펴보았습니다. 이 섹션에서는 JavaScript에서 항목을 가져오고 JavaScript 사용을 위해 항목을 내보내는 방법을 설명합니다.
 
-### Import a JavaScript Module's Content
+**참고** : JS 생태계의 모듈 호환성 문제로, **어느 때 보다** ReScript 파일의 컴파일된 JS 출력을 탭으로 열어두기를 조언합니다. Babel/Webpack/Jest/Node의 CommonJS<->ES6 호환성을 처리하는 것 외에도, 가져오기/내보내기를 통한 JS 모듈 코드의 미묘하게 잘못된 출력을 원하지 않는다면 말이죠!
 
-Use the `bs.module` [external](external.md):
+즉 : **직접 작성한 JS 코드의 출력 아래에 바인딩을 확인하세요**
 
-```reason
-/* Import nodejs' path.dirname */
-@bs.module("path") external dirname: string => string = "dirname"
+## 출력 형식
+
+2가지 JavaScript 가져오기/내보내기 출력 형식을 지원합니다 : 
+
+- CommonJS: `require('myFile')` and `module.export = ...`.
+- ES6 modules: `import * from 'MyReScriptFile'` and `export let ...`.
+
+형식은 [bsconfig.json](https://rescript-lang.org/docs/manual/latest/build-configuration#package-specs)을 통해 구성할 수 있습니다.
+
+## 자바스크립트에서 가져오기(Import)
+
+### 자바스크립트 모듈의 유명 내보내기(Named Export)를 가져오기
+
+`module` [external](https://rescript-lang.org/docs/manual/latest/external)을 사용하세요 :
+
+<CodeTab labels={["ReScript", "JS Output (CommonJS)", "JS Output (ES6)"]}>
+
+```res example
+// Import nodejs' path.dirname
+@module("path") external dirname: string => string = "dirname"
 let root = dirname("/User/github") // returns "User"
 ```
-
 ```js
-var Path = require('path');
-var root = Path.dirname('/User/github');
+var Path = require("path");
+var root = Path.dirname("/User/github");
+```
+```js
+import * as Path from "path";
+var root = Path.dirname("/User/github");
 ```
 
-Here's what the `external` does:
+</CodeTab>
 
-- `@bs.module("path")`: pass the name of the JS module as a string; in this case, `"path"`. The string can be anything: `"./src/myJsFile"`, `"@myNpmNamespace/myLib"`, etc.
-- `external`: the general keyword for declaring a value that exists on the JS side.
-- `dirname`: the binding name you'll use on the ReScript side.
-- `string => string`: the type signature of `dirname`.
-- `= "dirname"`: the name of the variable inside the `path` JS module. There's repetition in writing the first and second `dirname`, because sometime the binding name you want to use on the ReScript side is different than the variable name the JS module exported.
+아래는 `external`이 수행하는 작업입니다.
 
-### Import a JavaScript Module Itself (CommonJS)
+- `@module("path")`: JS 모듈의 이름, 이 경우 "path"를 전달합니다. 문자열은 무엇이든 가능합니다 : `"/src/myJsFile"`, `"@myNpmNamespace/myLib"` 등
+- `external`: JS 측에 존재하는 값을 선언하기 위한 일반 키워드입니다
+- `dirname`: ReScript 측에서 사용할 바인딩 이름입니다
+- `string => string`: `dirname`의 타입을 정의합니다. `externals`에 필수적인 요소입니다
+- `= "dirname"`: `path` JS 모듈 내부의 변수 이름입니다. ReScript에서 사용하려는 바인딩 이름이 JS 모듈에서 내보낸 변수 이름과 다른 경우가 있기 때문에, 첫 번째와 두 번째 `dirname`를 작성하는 반복되는 과정이 존재합니다
 
-By omitting the string argument to `bs.module`, you bind to the whole JS module:
+### 자바스크립트 모듈을 단일 값으로 가져오기
 
-```reason
-@bs.module external leftPad: string => int => string = "./leftPad"
+모듈에 대한 문자열 인수를 생략하여 전체 JS 모듈에 바인딩합니다.
+
+<CodeTab labels={["ReScript", "JS Output (CommonJS)", "JS Output (ES6)"]}>
+
+```res example
+@module external leftPad: string => int => string = "./leftPad"
 let paddedResult = leftPad("hi", 5)
 ```
-
 ```js
-var LeftPad = require('./leftPad');
-var paddedResult = LeftPad('hi', 5);
+var LeftPad = require("./leftPad");
+var paddedResult = LeftPad("hi", 5);
+```
+```js
+import * as LeftPad from "./leftPad";
+var paddedResult = LeftPad("hi", 5);
 ```
 
-### Import a JavaScript Module Itself (ES6 Module Format)
+</CodeTab>
 
-If your JS project is using ES6, you're likely using Babel to compile it to regular JavaScript. Babel's ES6 default export actually exports the default value under the name `default`. You'd bind to it like this:
+ReScript를 CommonJS 또는 ES6 모듈로 컴파일하는지에 따라 **이 기능은 조금씩 다른 코드를 생성합니다.** 차이점을 보려면 두 출력 탭을 모두 확인하세요. 해당 ES6 출력은 틀리게 나올겁니다!
 
-```reason
-@bs.module("./student") external studentName: string = "default"
+### ES6 기본 내보내기(Default Export)를 가져오기
+
+오른쪽에 `"default"`를 사용하세요 :
+
+<CodeTab labels={["ReScript", "JS Output (ES6)"]}>
+
+```res example
+@module("./student") external studentName: string = "default"
 Js.log(studentName)
 ```
-
 ```js
-var Student = require('./student');
-console.log(Student.default);
+import Student from "./student";
+var studentName = Student;
 ```
 
-## Export To JavaScript
+</CodeTab>
 
-As mentioned in ReScript's idiomatic [Import & Export](import-export.md), every let binding and module is exported by default to other ReScript modules. If you open up the compiled JS file, you'll see that these values can also directly be used by another _JavaScript_ file too.
+## 자바스크립트로 내보내기(Export)
 
-We support 2 JS export formats:
+### 유명값(Named Value) 내보내기
 
-- CommonJS (usable from JS as `require('myFile')`).
-- ES6 modules (usable from JS as `import * from 'myFile'`).
+ReScript의 관용적 [가져오기 및 내보내기](https://green-labs.github.io/rescript-in-korean/Language-Features/22-Import-Export)에서 언급했듯이, 모든 let 바인딩 및 모듈은 기본적으로 다른 ReScript 모듈로 내보내집니다(`.resi` [인터페이스 파일](https://green-labs.github.io/rescript-in-korean/Language-Features/21-Module#%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B3%90)을 사용하지 않는 한). 컴파일된 JS 파일을 열면, 이러한 값을 _JavaScript_ 파일에서도 직접 사용할 수 있음을 알 수 있습니다.
 
-The output format is [configurable in bsb](build-configuration.md#package-specs).
+### ES6 기본값(Default Value) 내보내기
 
-### Export an ES6 default value
-
-If your JS project is using ES6 modules, you're likely exporting & importing some default values:
+JS 프로젝트에서 ES6 모듈을 사용하는 경우, 일부 기본값을 내보내고 가져올 수 있습니다.
 
 ```js
 // student.js
-export default name = 'Al';
+export default name = "Al";
 ```
 
 ```js
@@ -86,30 +115,39 @@ export default name = 'Al';
 import studentName from 'student.js';
 ```
 
-Technically, since a ReScript file maps to a module, there's no such thing as "default" export, only named ones. However, we've made an exception to support default module when you do the following:
+JavaScript 기본 내보내기는 개발자들의 편의성을 높인 코드(syntax sugar)로, 사실 암묵적으로 `default`라 불리는 유명 내보내기 입니다. (이제 아셨을까요?). 따라서 ReScript에서 기본값을 내보내려면 다음과 같이 수행하면 됩니다.
 
-```reason
-/* FavoriteStudent.res */
+<CodeTab labels={["ReScript", "JS Output (CommonJS)", "JS Output (ES6)"]}>
+
+```res example
+// ReScriptStudent.res
 let default = "Bob"
 ```
-
 ```js
-var $$default = 'Bob';
+var $$default = "Bob";
 
 exports.$$default = $$default;
 exports.default = $$default;
+// informal transpiler-compatible marker of a default export compiled from ES6
 exports.__esModule = true;
 ```
+```js
+var $$default = "Bob";
 
-You can then require the default as normal JS side:
+export {
+  $$default,
+  $$default as default,
+}
+```
+
+</CodeTab>
+
+그런 다음 JS 측에서 평소와 같이 이 기본 내보내기를 가져올 수 있습니다 :
 
 ```js
 // teacher2.js
-import studentName from 'FavoriteStudent.js';
+import studentName from 'ReScriptStudent.js';
 ```
 
-**참고**: the above JS snippet _only_ works if you're using that ES6 import/export syntax in JS. If you're still using `require`, you'd need to do:
+자바스크립트의 ES6 기본 가져오기가 Babel/Webpack/Jest에 의해 CommonJS `require`로 변환되는 경우도 처리하였습니다. 해당 내용은 `__esModule`에 대한 CommonJS 출력 탭을 참조하세요.
 
-```js
-let studentName = require('FavoriteStudent').default;
-```
