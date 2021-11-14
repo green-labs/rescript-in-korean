@@ -1,12 +1,12 @@
 ---
-title: 'Inlining Constants'
-metaTitle: 'Inlining Constants'
-metaDescription: 'Inlining constants'
+title: '변수 인라인하기'
+metaTitle: '변수 인라인하기'
+metaDescription: '변수 인라인하기'
 sourceUrl: 'https://rescript-lang.org/docs/manual/latest/inlining-constants'
 canonical: 'https://rescript-lang.org/docs/manual/latest/inlining-constants'
 ---
 
-Sometime, in the JavaScript output, you might want a certain value to be forcefully inlined. For example:
+때때로, 여러분은 자바스크립트 출력에서 특정값이 강제적으로 인라인되는 것을 원할 수 있습니다. 예를 들면:
 
 ```js
 if (process.env.mode === 'development') {
@@ -14,7 +14,7 @@ if (process.env.mode === 'development') {
 }
 ```
 
-The reason is that your JavaScript bundler (e.g. Webpack) might turn that into:
+그 이유는 여러분의 자바스크립트 번들러(웹팩 등)가 위 코드를 다음과 같이 변환할 수 있기 때문입니다:
 
 ```js
 if ('production' === 'development') {
@@ -22,9 +22,9 @@ if ('production' === 'development') {
 }
 ```
 
-Then your subsequent Uglifyjs optimization would remove that entire `if` block. This is how projects like ReactJS provide a development mode code with plenty of dev warnings, while ensuring that the uglified (minified) production code is free of those expensive blocks.
+이 다음에 동작하는 Uglifyjs최적화는 `if`문 전체를 제거하게 됩니다. 이것이 리액트같은 프로젝트들이 많은 양의 개발 경고를 포함한 개발 모드를 제공하는 동시에, uglified (minified)된 프로덕션 코드에 이렇게 비용이 많이 들어가는 블록이 없도록 하는 방법입니다.
 
-So, in ReScript, producing that example `if (process.env.mode === 'development')` output is important. This first try doesn't work:
+그래서 리스트립트에서는 해당 예제 if (process.env.mode === 'development')와 같은 출력을 생성하는 것이 중요합니다. 예시로 아래의 첫 번째 코드는 동작하지 않습니다:
 
 ```reason
 @bs.val external process: 'a = "process"
@@ -44,7 +44,7 @@ if (process.env.mode === mode) {
 }
 ```
 
-The JS output shows `if (process.env.mode === mode)`, which isn't what we wanted. To inline `mode`'s value, use `@bs.inline`:
+자바스크립트는 if (process.env.mode === mode)를 출력하며, 이것은 우리가 원하는 결과가 아닙니다. 원하는 결과를 위해서 mode의 값을 인라인하려면, @bs.inline을 사용하십시오.
 
 ```reason
 @bs.val external process: 'a = "process"
@@ -63,10 +63,10 @@ if (process.env.mode === 'development') {
 }
 ```
 
-Now your resulting JS code can pass through Webpack and Uglifyjs like the rest of your JavaScript code, and that whole `console.log` can be removed.
+이제 결과로 나온 여러분의 자바스크립트 코드는 나머지 자바스크립트 코드처럼 웹팩과 Uglifyjs를 통과할 수 있으며, 이러한 과정에서 console.log는 모두 제거됩니다.
 
-The inlining currently only works for **문자열, 실수 그리고 boolean**.
+인라인은 현재 **문자열, 실수값, 논리값**에서만 동작합니다.
 
 ## 팁과 트릭
 
-이건 최적화는 **아닙니다**. This is an edge-case feature for folks who absolutely need particular values inlined for a JavaScript post-processing step, like conditional compilation. Beside the difference in code that the conditional compilation might end up outputting, there's no performance difference between inlining and not inlining simple values in the eyes of a JavaScript engine.
+이것은 최적화를 위한 것이 **아닙니다**. 이것은 사용자들이 조건부 컴파일등의 자바스크립트 후처리 단계에서 인라인된 특정 값을 필요로 할 때 사용하는 극단적인 기능입니다. 조건부 컴파일에 의해서 출력되는 코드의 차이 이외에, 자바스크립트 엔진의 관점에서 단순히 값을 인라인하는 것과 하지않는 것 사이에는 성능 차이가 없습니다.
