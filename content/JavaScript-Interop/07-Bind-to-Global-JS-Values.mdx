@@ -55,7 +55,7 @@ var id = setTimeout(function(param) {
 clearTimeout(id);
 ```
 
-분명히 `timeId`는 `setTimeout`에 의해서만 만들어질 수 있는 타입입니다! 이제 `clearTimeout`이 반드시 유효한 ID를 전달할 것을 명확하게 해봅시다. 이걸 내부적으로 쓸지 아닐지는 구현하기에 따라 달려있습니다
+분명히 `timeId`는 `setTimeout`에 의해서만 만들어질 수 있는 타입입니다! 이제 `clearTimeout`은 유효한 ID를 전달받는 것이 보장됩니다. ID값으로 숫자를 사용할지 말지는 내부 구현으로 감추어집니다.
 
 `external`은 인라인 처리되어있기 때문에, 손으로 쓴 자바스크립트 만큼 읽기 쉬운 자바스크립트 출력값을 얻을 수 있습니다
 
@@ -87,10 +87,10 @@ external length: int = "length"
 
 ## 특별한 전역값(Special Global Values)
 
-`__filename` , `__DEV__` 와 같은 전역변수는 항상 존재하진 않습니다. 심지어 이러한 전역변수들은 `option`으로 모델링할 수 없습니다. 리스크립트에서는 그들을 참조하는 작은 행위도 브라우저 환경에서 보통 `Uncaught ReferenceError: __filename is not defined` 와 같은 오류를 발생할 수 있기때문입니다. 
+`__filename` , `__DEV__` 와 같은 전역변수는 항상 존재하진 않습니다. 심지어 이러한 전역변수들은 `option`으로 모델링할 수 없습니다. 리스크립트에서 이런 전역변수를 참조하는 것 만으로도 브라우저 환경에서는 `Uncaught ReferenceError: __filename is not defined` 오류를 발생시키는 JS 코드가 생성됩니다. 
 
 
-이러한 전역변수의 문제들을 해결하기위해 리스크립트는 `%external(a_single_identifier)` 와 같은 접근을 제공하고 있습니다.
+이러한 전역변수의 문제들을 해결하기 위해 리스크립트는 특별한 문법을 제공합니다: `%external(a_single_identifier)`.
 
 
 ```reason
@@ -110,7 +110,7 @@ if (match !== undefined) {
 }
 ```
 
-첫번째줄의 `typeof` 와 같은 확인은 자바스크립트의 참조오류가 발생되는 것을 막을 수 있습니다.
+첫번째 줄의 `typeof` 체크는 자바스크립트의 ReferenceError를 발생시키지 않습니다.
 
 
 다른 예제
