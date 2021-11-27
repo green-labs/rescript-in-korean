@@ -58,7 +58,7 @@ var a = 5;
 var b;
 ```
 
-Handling a value that can be `undefined` and `null`, by ditching the `option` type and using `Js.Nullable.t`:
+`option` 유형이 아닌 `Js.Nullable.t`를 사용하므로써, `undefined`과 `null`이 될수 있는 값들을 처리합니다
 
 ```reason
 let jsNull = Js.Nullable.null
@@ -79,13 +79,13 @@ var result2 = Js_null_undefined.fromOption(10);
 var result3 = Caml_option.nullable_to_opt(10);
 ```
 
-## JS Object
+## 자바스크립트 객체
 
-- [Bind to a JS object as a ReScript record](bind-to-js-object#bind-to-record-like-js-objects).
-- [Bind to a JS object that acts like a hash map](bind-to-js-object#bind-to-hash-map-like-js-object).
-- [Bind to a JS object that's a class](bind-to-js-object#bind-to-a-js-object-thats-a-class).
+- [리스크립트 레코드를 사용해 바인딩하기](https://green-labs.github.io/rescript-in-korean/JavaScript-Interop/04-Bind-to-JS-Object#%EB%A0%88%EC%BD%94%EB%93%9C%EC%B2%98%EB%9F%BC%EC%82%AC%EC%9A%A9%ED%95%98%EB%8A%94%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%EA%B0%9D%EC%B2%B4%EB%A5%BC%EB%B0%94%EC%9D%B8%EB%94%A9%ED%95%98%EA%B8%B0)
+- [해시 맵처럼 사용하는 자바스크립트 객체를 바인딩하기](https://green-labs.github.io/rescript-in-korean/JavaScript-Interop/04-Bind-to-JS-Object#%ED%95%B4%EC%8B%9C%EB%A7%B5%EC%B2%98%EB%9F%BC%EC%82%AC%EC%9A%A9%ED%95%98%EB%8A%94%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%EA%B0%9D%EC%B2%B4%EB%A5%BC%EB%B0%94%EC%9D%B8%EB%94%A9%ED%95%98%EA%B8%B0)
+- [클래스인 자바스크립트 객체를 바인딩하기](https://green-labs.github.io/rescript-in-korean/JavaScript-Interop/04-Bind-to-JS-Object#%ED%81%B4%EB%9E%98%EC%8A%A4%EC%9D%B8%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%EA%B0%9D%EC%B2%B4%EB%A5%BC%EB%B0%94%EC%9D%B8%EB%94%A9%ED%95%98%EA%B8%B0)
 
-## Function
+## 함수
 
 ### Object Method & Chaining
 
@@ -110,7 +110,7 @@ console.log(
 );
 ```
 
-### Variadic Arguments
+### 가변 인수
 
 ```reason
 @bs.module("path") @bs.variadic
@@ -121,7 +121,7 @@ external join: array<string> => string = "join"
 // Empty output
 ```
 
-### Polymorphic Function
+### 다형성 함수
 
 ```reason
 @bs.module("Drawing") external drawCat: unit => unit = "draw"
@@ -151,13 +151,13 @@ padLeft('Hello World', 4);
 padLeft('Hello World', 'Message from ReScript: ');
 ```
 
-## JS Module Interop
+## 자바스크립트 모듈의 상호 운용성
 
-[See here](import-from-export-to-js.md)
+[해당 링크에서 확인하세요](https://green-labs.github.io/rescript-in-korean/JavaScript-Interop/06-Import-from-Export-to-JS)
 
 ## Dangerous Type Cast
 
-Final escape hatch converter. Do not abuse.
+최후의 변환 방식입니다. 남용하지 마세요!
 
 ```reason
 external convertToFloat: int => float = "%identity"
