@@ -1,0 +1,94 @@
+---
+title: 라우터
+metaTitle: 08-라우터(Router)
+metaDescription: '리스크립트와 리액트에서 라우터에 대해 자세히 다뤄봅니다'
+canonical: 'https://rescript-lang.org/docs/react/latest/router'
+sourceUrl: 'https://rescript-lang.org/docs/react/latest/router'
+---
+
+RescriptReact는 라우터를 지원합니다! 우리는 언어와 라이브러리 기능들을 활용해서 다음과 같은 라우터를 만들었습니다.
+
+- 가능한 가장 간단하게
+- 기존 코드 어디에서든 쉽게 연결할 수 있게
+- 작고 성능좋게
+
+## 어떻게 할까요?
+
+사용가능한 메소드들은 아래와 같습니다:
+
+- `RescriptReactRouter.push(string)`: 새로운 경로를 사용하고 URL을 업데이트합니다.
+- `RescriptReactRouter.replace(string)`: `push`와 비슷하지만, 현재 URL을 대체합니다.
+- `RescriptReactRouter.watchUrl(f)`: URL변경 감시를 시작하며 구독 토큰을 반환합니다. URL변경시 콜백을 호출하여 `RescriptReactRouter.url`레코드를 전달합니다
+- `RescriptReactRouter.unwatchUrl(watcherID)`: URL 변경 감시를 중지합니다.
+- `RescriptReactRouter.dangerouslyGetInitialUrl()`: `watchUrl`외부에서 `url`레코드를 가져옵니다. 뒤에서 자세히 설명하겠습니다.
+- `RescriptReactRouter.useUrl(~serverUrl)`: 컴포넌트 내부에서 `url`레코드를 반환합니다.
+
+> 어떻게 라우터 인터페이스가 구현되었는지에 대한 로우 레벨의 설계를 알고 싶으시다면 [RescriptReactRouter 구현](https://github.com/rescript-lang/rescript-react/blob/master/src/RescriptReactRouter.res)을 참고하십시오.
+
+## 경로 매칭
+
+_여기는 API가 없습니다_! `watchUrl`은 여러분께 다음과 같은 형식으로 `url`레코드를 반환합니다:
+
+```reason
+type url = {
+  /* 경로는 "/book/filename/edit"와 같은 window.location.pathname을 `list{"book", "filename", "edit"}`로 변환합니다. */
+  path: list<string>,
+  /* URL에 해쉬가 있는 경우. # 기호가 제거되었습니다. */
+  hash: string,
+  /* URL에 쿼리 매개 변수가 있는 경우. ? 기호가 제거되었습니다. */
+  search: string
+}
+```
+
+예시로 `www.hello.com/book/10/edit?name=Jane#author` url의 반환결과는 다음과 같습니다.
+
+```reason
+{
+  path: list{"book", "10", "edit"},
+  hash: "author",
+  search: "name=Jane"
+}
+```
+
+## 기본 예제
+
+아래는 Rescript Response Router의 사용을 보여주는 예시입니다:
+
+```reason
+// App.res
+@react.component
+let make = () => {
+  let url = RescriptReactRouter.useUrl()
+
+  switch url.path {
+    | list{"user", id} => <User id />
+    | list{} => <Home/>
+    | _ => <PageNotFound/>
+  }
+}
+```
+
+## 직접 경로 가져오기
+
+특정한 상황에서, 여러분은 `watchUrl`외부에서 `url`레코드를 보관하는 것을 원할지도 모릅니다. 예를 들어, 여러분이 `watchUrl`을 컴포넌트의 `didMount` 안에 넣어서 URL 변경으로 컴포넌트 상태 변경을 야기했다면, URL에 의해 초기 상태가 지정되는 것을 원했을지도 모릅니다.
+
+달리 말하면, 여러분은 여러분 앱의 로직이 실행될 때 `url`레코드를 한 번 읽으려 합니다. 우리는 이러한 경우를 위해서 `dangerouslyGetInitialUrl()`를 제공합니다.
+
+**Note**: 우리가 그것을 "위험"으로 지정한 이유는 여러분이 임의의 컴포넌트(`render` 등)에서 이 `url`을 읽지 않도록 하기 위해서입니다. url이 변경될 때 컴포넌트가 그것을 리렌더링시키는 `watchUrl` 구독을 포함하지 않는다면 그 정보는 오래되었을 수도 있습니다. 즉, `watchUrl`과는 `dangerouslyGetInitialUrl`만 사용하십시오.
+
+## 새로운 경로 삽입
+
+여러분의 앱 어디에서나 `RescriptReactRouter.push("/books/10/edit#validated")`등을 호출할 수 있습니다. 이렇게하면 (페이지 새로고침없이)URL을 변경하고 `watchUrl`의 콜백이 다시 호출될 것입니다.
+
+향후에 우리는 타입을 가지는 라우팅 + 데이터(payload) 전송을 위한 더 좋은 기능들을 제공할 것입니다.
+
+**Note**: 브라우저의 한계 때문에, 자바스크립트(pushState등)으로 URL을 변경하는 것을 감지할 수 없습니다. 이에 대한 해결법은 URL을 변경한 후 "popState"이벤트를 실행하는 것입니다. 이것이 Router.push가 하는 일이며, watchUrl이 받는 것입니다.
+따라서 여러분이 어떤 이유(점진적인 마이그레이션 등)로든 `RescriptReactRouter.push`의 외부에서 URL 업데이트를 하려 한다면, 그냥 `window.dispatchEvent(new Event('popState'))`을 실행하십시오.
+
+## 디자인 결정
+
+우리는 항상 RescripReact에서 낮은 성능과 학습 오버헤드를 발전시키기 위해서 노력하고 있으며, 라우터 설계에서도 마찬가지입니다. 전체 구현에서 브라우저 기능 감지를 제외한 코드는 약 20줄 정도입니다. 현재 설계는 명확해 보이지만, 여기까지 오기 위해서 우리는 ReactJS의 내부 및 향후 제안서를 다시 파헤쳐서 상태 업데이트 주기, 미래 컨텍스트 제안서, 라이프사이클 순서 등을 이해하고 일부 잘못된 API디자인은 거부해야 했습니다. 그 결과 이렇게 확실한 해결책에 도달할 수 있어서 좋습니다!
+
+또한 API는 일치한 경로가 컴포넌트, 상태업데이트, 사이드이펙트를 반환하는지에 대한 여부는 지시하지 않습니다. 그래서 이것은 유연하게 기존 앱에 적용할 수 있습니다.
+
+성능 측면에서, 자바스크립트와 유사한 API는 경로 문자열 -> 콜백의 자바스크립트 객체를 사용하는 경향이 있습니다. 최신 Rescript는 메모리를 할당하지 않고, (JS JIT를 통해)C++의 빠른 점프 테이블로 컴파일될 수 있으므로 패턴매칭을 선호하지 않습니다. 사실 라우터 매칭의 유일한 역할은 url레코드의 생성입니다!
