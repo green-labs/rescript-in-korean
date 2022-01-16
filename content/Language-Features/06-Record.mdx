@@ -98,7 +98,7 @@ type monster = {age: int, hasTentacles: bool}
 let getAge = (entity) => entity.age
 ```
 
-`getAge`는 인자 `entity`가 `age` 필드와 가장 가까운 레코드 타입인 `monster` 타입이어야한다고 추론할 것입니다. 그래서 다음 코드의 마지막 줄이 실패합니다.
+`getAge`는 매개변수 `entity`가 `age` 필드와 가장 가까운 레코드 타입인 `monster` 타입이어야한다고 추론할 것입니다. 그래서 다음 코드의 마지막 줄이 실패합니다.
 
 ```reason
 let kraken = {age: 9999, hasTentacles: true}
