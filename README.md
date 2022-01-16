@@ -18,7 +18,7 @@
   - 여러분(o)
 - 영어는 그대로 적기보다 음차를 적극적으로 활용합니다.
   - 예) JavaScript(x), 자바스크립트(o)
-- argument, parameter는 인자로 번역합니다.
+- parameter는 매개변수로, argument는 인자로 번역합니다.
   - 인수(x)
   - labeled argument 이름있는 인자
 
