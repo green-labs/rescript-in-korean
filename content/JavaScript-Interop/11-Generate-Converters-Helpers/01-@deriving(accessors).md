@@ -6,7 +6,7 @@ sourceUrl: 'https://rescript-lang.org/docs/manual/latest/inlining-constants'
 canonical: 'https://rescript-lang.org/docs/manual/latest/inlining-constants'
 ---
 
-@deriving(acccessors)는 배리언트나 레코드에 사용할 수 있는 어노테이션입니다.
+@deriving(accessors)는 배리언트나 레코드에 사용할 수 있는 어노테이션입니다.
 
 이 어노테이션이 사용되면 접근자 코드가 자동으로 생성됩니다.
 
