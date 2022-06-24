@@ -6,13 +6,13 @@ sourceUrl: 'https://rescript-lang.org/docs/manual/latest/browser-support-polyfil
 canonical: 'https://rescript-lang.org/docs/manual/latest/browser-support-polyfills'
 ---
 
-ReScript compiles to JavaScript **ES5**, with the exception of optionally allowing to compile to ES6's module import & export.
+리스크립트는 자바스크립트 **ES5**로 컴파일됩니다. 예외적으로 ES6의 모듈은 가져오거나 내보내는 것을 허용하고 있습니다.
 
-For [old browsers](https://caniuse.com/#search=typed%20array), you also need to polyfill TypedArray. The following standard library functions require it:
+[오래된 브라우저](https://caniuse.com/#search=typed%20array)에서 사용할 때, TypedArray를 폴리필해야합야합니다. 다음의 표준 라이브러리 기능은 TypedArray를 필요로합니다.
 
 - `Int64.float_of_bits`
 - `Int64.bits_of_float`
 - `Int32.float_of_bits`
 - `Int32.bits_of_float`
 
-If you don't use these functions, you're fine. Otherwise, it'll be a runtime failure.
+이 함수를 사용하지 않아도 괜찮습니다. 그렇지 않으면, 런타임 오류가 발생할 것입니다
