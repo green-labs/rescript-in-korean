@@ -178,7 +178,7 @@ var ActualComponent = {
 
 ### 시그니쳐 만들기
 
-시그니쳐를 만들기 위해서는 `module type` 키워드를 사용해야 합니다. 시그니쳐 이름은 **반드시** 대문자로 시작해야 합니다. `.resi` 파일에 내용을 작성 했다면 파일 내용은 시그니쳐 정의 안 `{}` 블록에 작성한것과 동일합니다.
+시그니쳐를 만들기 위해서는 `module type` 키워드를 사용해야 합니다. 시그니쳐 이름은 **반드시** 대문자로 시작해야 합니다. `.resi` 파일에 내용을 작성 했다면 파일 내용은 시그니쳐 정의 안 `{}` 블록에 작성한 것과 동일합니다.
 
 ```reason
 /* 이전 목차에서 가져왔습니다. */
@@ -261,7 +261,7 @@ module type ActualComponent = {
 
 **주의**: `BaseComponent`는 모듈이 아니라 모듈 **타입**입니다.
 
-만약 모듈 타입 정의를 모른다면, `include(module type of "실제 모듈 이름")`을 사용해 모듈로부터 모듈 타입 정의를 추출할 수 있습니다. 예들들어 다음 코드조각과 같이 모듈 타입 정의를 사용하지 않고 표준 라이브러리에 있는 `List` 모듈 타입을 확장 할 수 있습니다.
+만약 모듈 타입 정의를 모른다면, `include(module type of "실제 모듈 이름")`을 사용해 모듈로부터 모듈 타입 정의를 추출할 수 있습니다. 예를 들어 다음 코드조각과 같이 모듈 타입 정의를 사용하지 않고 표준 라이브러리에 있는 `List` 모듈 타입을 확장 할 수 있습니다.
 
 ```reason
 module type MyList = {
@@ -311,7 +311,7 @@ let render: string => string
 
 <!-- // let's use a list as our naive backing data structure -->
 
-```reasonml
+```reason
 module type Comparable = {
   type t
   let equal: (t, t) => bool
