@@ -132,7 +132,7 @@ React.createElement(MyComponent.make, MyComponent.makeProps(myChild, undefined))
 React.createElement(MyComponent.make, MyComponent.makeProps(myChild, undefined));
 ```
 
-This is extra useful in the cases where you are handled `myChild` that is already a list of things, and want to forward that without wrapping it an extra time (타입 오류가 될 수 있습니다.) \*. 또한 `children` 위치에서 임이의 자료구조를 전달할 수 있습니다. (기억하세요 JSX `children` 은 완전히 일반적인 prop 입니다.):
+This is extra useful in the cases where you are handled `myChild` that is already a list of things, and want to forward that without wrapping it an extra time (타입 오류가 될 수 있습니다.) \*. 또한 `children` 위치에서 임의의 자료구조를 전달할 수 있습니다. (기억하세요 JSX `children` 은 완전히 일반적인 prop 입니다.):
 
 ```reason
 <MyComponent> ...((theClassName) => <div className=theClassName />) </MyComponent>
@@ -220,4 +220,4 @@ JSX 호출은 [이름있는 인자](12-Function#이름이있는인자) 기능을
 
 ## 디자인 결정
 
-\* 여러분은 아마 왜 children spread 같은 방법이 ReactJS에서 필요하지 않은지 궁금할 것입니다. ReactJS는 일부 특수한 런타임 로직과 특수 구문 변환 그리고 가변 인수 감지 마킹을 사용해 이런 경우를 대부분 방지합니다.([이곳을 참조해주세요](https://github.com/facebook/react/blob/9b36df86c6ccecb73ca44899386e6a72a83ad445/packages/react/src/ReactElement.js#L207)). 이런 동적 사용은 타입 시스템 감지를 _조금_ 복잡하게 만듭니다. 우리가 ReasonReact의 모든 구문을 컨트롤하기 때문에 컴파일 시간 및 런타임 피용없이 래핑하거나 래핑하지 않는 경우를 명확히 구분하기위해 children spread를 사용하기로 때문에 결정했습니다!
+\* 여러분은 아마 왜 children spread 같은 방법이 ReactJS에서 필요하지 않은지 궁금할 것입니다. ReactJS는 일부 특수한 런타임 로직과 특수 구문 변환 그리고 가변 인수 감지 마킹을 사용해 이런 경우를 대부분 방지합니다.([이곳을 참조해주세요](https://github.com/facebook/react/blob/9b36df86c6ccecb73ca44899386e6a72a83ad445/packages/react/src/ReactElement.js#L207)). 이런 동적 사용은 타입 시스템 감지를 _조금_ 복잡하게 만듭니다. 우리가 ReasonReact의 모든 구문을 컨트롤하기 때문에 컴파일 시간 및 런타임 필요없이 래핑하거나 래핑하지 않는 경우를 명확히 구분하기위해 children spread를 사용하기로 결정했습니다!
