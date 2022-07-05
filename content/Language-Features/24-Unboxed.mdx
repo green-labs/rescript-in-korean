@@ -136,7 +136,7 @@ let playerLocalCoordinates = Local({x: 20.5, y: 30.5})
 
 /* 이제 이렇게 호출하면 오류가 발생합니다! */
 /* renderDot(playerLocalCoordinates) */
-/* 대산 이렇게 사용하도록 강제합니다. */
+/* 대신 이렇게 사용하도록 강제합니다. */
 renderDot(playerLocalCoordinates->toWorldCoordinates)
 ```
 
