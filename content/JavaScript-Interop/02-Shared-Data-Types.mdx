@@ -28,7 +28,7 @@ canonical: 'https://rescript-lang.org/docs/manual/latest/shared-data-types'
 **자바스크립트와 약간 다르지만 여전히 자바스크립트에서 사용할 수 있는 타입**
 
 - 정수. **정수는 32비트입니다!** 조심하세요. 자바스크립트 숫자로 취급 할 수 있고, 반대로도 가능합니다. 하지만 숫자가 크면 자바스크립트 숫자를 실수로 취급하는 것이 좋습니다. 예를 들어 `float`를 사용해 `Js.Date`에 바인딩하는 경우입니다.
-- 옵션. `option` 타입의 `None` 은 자바스크립트 `undefined`로 컴파일합니다. `Some`은 실제 값으로 컴파일 합니다.(예: `Some(5)`는 `5`로 컴파일 합니다.) 마찬가지로 자바스크립트 `undefined`는 `None`으로 처라힐 수 있습니다. **자바스크립트 `null`은 여기서 처리하지 않습니다.** 값이 자바스크립트 `null`일 수 있는 경우 [Js.Nullable](https://rescript-lang.org/docs/manual/latest/api/js/nullable) 헬퍼를 사용하세요.
+- 옵션. `option` 타입의 `None` 은 자바스크립트 `undefined`로 컴파일합니다. `Some`은 실제 값으로 컴파일 합니다.(예: `Some(5)`는 `5`로 컴파일 합니다.) 마찬가지로 자바스크립트 `undefined`는 `None`으로 처리할 수 있습니다. **자바스크립트 `null`은 여기서 처리하지 않습니다.** 값이 자바스크립트 `null`일 수 있는 경우 [Js.Nullable](https://rescript-lang.org/docs/manual/latest/api/js/nullable) 헬퍼를 사용하세요.
 - 예외.
 - 배리언트. 배리언트를 컴파일한 자바스크립트 결과물을 확인하세요. 순수 자바스크립트 사용을 위해 리스크립트 배리언트를 내보내는 것은 권장하지 않지만 인터롭이 필요하다면 그렇게 할 수 있습니다.
 - 리스트, 일반적인 배리언트입니다. _(역주: 원문과 달리 컴파일 결과를 보면 아시겠지만 객체로 컴파일 됩니다.)_
