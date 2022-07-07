@@ -223,7 +223,7 @@ let betterDraw = (animal) =>
 betterDraw(MyFloat(1.5))
 ```
 
-**절대 시도하지 마십시오.** 이로 인해 난잡한 결과물이 생성됩니다. 대신 동일한 JS를 호출하는 `externals` 두 개를 정의하세요.
+**절대 시도하지 마십시오.** 이로 인해 난잡한 결과물이 생성됩니다. 대신 동일한 JS를 호출하는 `external` 두 개를 정의하세요.
 
 ```reason
 @bs.module("myLibrary") external drawFloat: float => unit = "draw"
