@@ -30,7 +30,7 @@ let wrapChildren = (children: React.element) => {
   </div>
 }
 
-wrapChildren(<div> React.string("Let's use React with ReScript") </div>)
+wrapChildren(<div> {React.string("Let's use React with ReScript")} </div>)
 ```
 
 `React.element` 타입은 `ReactDOM.render(element, ...)` 등 리액트 API 에서 많이 사용되기 때문에, 정의를 이해하는 것은 필수적입니다. JSX는 `문자열`을 `React.element` 로 자동으로 변환해주지 않습니다. (리스크립트는 이 타입 변환을 명시적으로 강제합니다). 예를 들어 `<div> Hello World </div>`의 경우는 타입 검사를 하지 않습니다. (which is actually a good thing because it's also a huge source for subtle bugs!), 여러분은 우선 `"Hello World"`에 `React.string` 함수를 사용해야합니다.
