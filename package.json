@@ -45,7 +45,7 @@
     "gatsby-remark-copy-linked-files": "^2.8.0",
     "gatsby-remark-images": "^5.2.1",
     "gatsby-source-filesystem": "^3.5.0",
-    "gatsby-transformer-remark": "^2.6.42",
+    "gatsby-transformer-remark": "^5.25.1",
     "graphql": "^15.4.0",
     "is-absolute-url": "^3.0.3",
     "lodash": "^4.17.21",
