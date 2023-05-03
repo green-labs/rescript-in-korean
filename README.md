@@ -1,3 +1,5 @@
+> 이 저장소는 더 이상 관리되지 않습니다. 새로운 저장소는 https://github.com/reason-seoul/ko.rescript 입니다.
+
 # 리스크립트 한국어 판
 ![Deploy](https://github.com/green-labs/rescript-in-korean/workflows/Deploy/badge.svg?branch=main)    
 **https://green-labs.github.io/rescript-in-korean**
